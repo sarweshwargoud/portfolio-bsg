@@ -52,7 +52,7 @@ const projects = [
     description: "Agentic career intelligence platform using RAG, FAISS, and LLaMA-3 to analyze salary trends and automation risks.",
     tags: ["Agentic AI", "LLaMA-3", "FAISS"],
     image: "/Images/Wayzen.png",
-    link: "",
+    link: "https://wayzen-ai.vercel.app/",
     github: "https://github.com/sarweshwargoud/Wayzen-AI.git"
   }
 ];
