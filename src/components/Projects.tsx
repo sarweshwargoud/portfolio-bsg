@@ -36,7 +36,7 @@ const projects = [
     description: "AI-powered learning platform generating personalized syllabi and YouTube playlist rankings using Gemini.",
     tags: ["AI", "Education", "React"],
     image: "/Images/Skillweave.png",
-    link: "https://skillweave-ai-1.onrender.com",
+    link: "https://skill-weave-ai.vercel.app/",
     github: "https://github.com/sarweshwargoud/SkillWeave-AI"
   },
   {
