@@ -40,12 +40,12 @@ const projects = [
     github: "https://github.com/sarweshwargoud/SkillWeave-AI"
   },
   {
-    title: "VisionAID",
-    description: "Assistive technology for the visually impaired using YOLO and MobileNet-SSD for real-time object detection.",
-    tags: ["CV", "YOLO", "Assistive Tech"],
+    title: "LLM-Safety-Evaluator",
+    description: "Prompt injection and jailbreaking prompts detection system for LLMs",
+    tags: ["LLM", "ML", "Model training"],
     image: "/Images/project-eco.png",
-    link: "#",
-    github: "#"
+    link: "https://llm-safety-evaluator.vercel.app/",
+    github: "https://github.com/sarweshwargoud/llmSafetyEvaluator"
   },
   {
     title: "Wayzen AI",
