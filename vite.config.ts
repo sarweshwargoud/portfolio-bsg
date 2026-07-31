@@ -6,6 +6,7 @@ export default defineConfig({
   server: {
     host: "::",
     port: 8080,
+    allowedHosts: ["portfolio-bsg.onrender.com"],
   },
   plugins: [
     react(),
