@@ -6,28 +6,22 @@ import { Briefcase } from 'phosphor-react';
 gsap.registerPlugin(ScrollTrigger);
 
 const experience = [
-    {
-        title: "AI/ML Intern",
-        company: "UPTOSKILLS",
-        period: "December 2025 - Present (3 months)",
-        description: "Working and contributing in building AI-driven projects.",
-        stack: ["Generative Ai", "FineTuning"]
-    },
 
     {
         title: "Gen AI Intern",
         company: "SURE TRUST",
-        period: "December 2025 - Present (3 months)",
-        description: "Assisting in generative AI initiatives and contributing to AI-driven projects.",
+        period: "February 2026 - Present (6 months)",
+        description: "Learned about  LLMs, similarity search, RAG and ai agents and building family health concierge ai agent",
         stack: ["Generative AI", "LLMs", "RAG", "Agentic Workflows"]
     },
     {
-        title: "Artificial intelligencce and machine learning Intern",
-        company: "Edunet Foundation",
-        period: "December 2025 - January 2026 (2 months)",
-        description: "Intensive internship focused on generative AI applications and development.",
-        stack: ["Artificial intelligence", "Machine learning"]
+        title: "AI/ML Intern",
+        company: "UPTOSKILLS",
+        period: "December 2025 - March (3 months)",
+        description: "Built CodeSkills, a LeetCode-style platform for practicing coding problems and applied AI skills (model fine-tuning), using a FastAPI backend and React.js frontend. Developed an LLM-powered question generation pipeline, fine-tuning models to auto-generate domain-specific coding practice problems at scale",
+        stack: ["Generative Ai", "FineTuning"]
     },
+
     {
         title: "AI for Sustainabilty virtual Intern",
         company: "1M1B (1 Million for 1 Billion)",
@@ -43,25 +37,11 @@ const experience = [
         stack: ["Google Cloud", "Gemini", "Vertex AI", "RAG"]
     },
     {
-        title: "Artificial Intelligence and Machine Learning Intern",
-        company: "Elevate Labs",
-        period: "November 2025 - December 2025 (2 months)",
-        description: "Hands-on internship developing AI/ML models and integrating them into real-world applications.",
-        stack: ["Python", "TensorFlow", "Scikit-learn"]
-    },
-    {
         title: "Web Developer",
         company: "Elevate Labs",
         period: "November 2025 - December 2025 (2 months)",
         description: "Collaborated on web development projects, ensuring responsive design and seamless user experiences.",
         stack: ["React", "Html", "JavaScript", "CSS"]
-    },
-    {
-        title: "AI Developer",
-        company: "VISWAM.AI",
-        period: "Project-based",
-        description: "Contributed my experiance in Helping to Build TELUGU LLM.",
-        stack: ["LLM", "Data science"]
     }
 ];
 
