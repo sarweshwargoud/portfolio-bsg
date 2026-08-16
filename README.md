@@ -77,4 +77,4 @@ src/
 - **Styles**: Modify `tailwind.config.ts` or `src/index.css` for theme changes.
 
 ---
-*Built with ❤️ by Sarweshwar*
+*Built  by Sarweshwar*
