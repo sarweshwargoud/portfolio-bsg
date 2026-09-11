@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Medal, Code, Trophy, Eye } from 'phosphor-react';
+import { Medal, Eye, ArrowRight } from 'phosphor-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -10,7 +10,10 @@ const certifications = [
         title: "OCI Certified AI Foundations Associate",
         issuer: "Oracle",
         date: "2024",
-        color: "from-red-500 to-orange-500",
+        gradient: "from-red-500 to-orange-500",
+        accentBg: "bg-red-500/10",
+        accentBorder: "border-red-500/20",
+        accentText: "text-red-500",
         categories: ["AI & ML", "Cloud"],
         certificateUrl: "https://catalog-education.oracle.com/ords/certview/sharebadge?id=7B2DAB82A42F90A2C510796C3D98681EC8B8C94632C5230C439225C3F08717EF"
     },
@@ -18,7 +21,10 @@ const certifications = [
         title: "Retrieval-Augmented Generation (RAG)",
         issuer: "Coursera",
         date: "2025",
-        color: "from-blue-500 to-cyan-500",
+        gradient: "from-blue-500 to-cyan-500",
+        accentBg: "bg-blue-500/10",
+        accentBorder: "border-blue-500/20",
+        accentText: "text-blue-500",
         categories: ["AI & ML"],
         certificateUrl: "https://www.coursera.org/account/accomplishments/verify/4Q4HJVBV0UW7"
     },
@@ -26,7 +32,10 @@ const certifications = [
         title: "Career Essentials in Generative AI",
         issuer: "Microsoft & LinkedIn",
         date: "2024",
-        color: "from-blue-600 to-blue-400",
+        gradient: "from-blue-600 to-indigo-500",
+        accentBg: "bg-indigo-500/10",
+        accentBorder: "border-indigo-500/20",
+        accentText: "text-indigo-500",
         categories: ["AI & ML"],
         certificateUrl: "https://www.linkedin.com/learning/certificates/00f9b1c363487a4d2bfc214af9264ba89f00fdb266824381d42399253156a723/"
     },
@@ -34,7 +43,10 @@ const certifications = [
         title: "Building Agentic Workflows in Python",
         issuer: "Hack2skill",
         date: "2025",
-        color: "from-green-500 to-emerald-500",
+        gradient: "from-green-500 to-emerald-500",
+        accentBg: "bg-emerald-500/10",
+        accentBorder: "border-emerald-500/20",
+        accentText: "text-emerald-500",
         categories: ["AI & ML", "Development"],
         certificateUrl: "https://certificate.hack2skill.com/user/awsworkshop4/2025H2S11AB-W400088"
     },
@@ -42,195 +54,264 @@ const certifications = [
         title: "Responsive Web Design",
         issuer: "freeCodeCamp",
         date: "2023",
-        color: "from-yellow-500 to-orange-500",
+        gradient: "from-yellow-500 to-orange-500",
+        accentBg: "bg-yellow-500/10",
+        accentBorder: "border-yellow-500/20",
+        accentText: "text-yellow-500",
         categories: ["Development"],
         certificateUrl: "https://www.freecodecamp.org/certification/Sarweshwar/responsive-web-design"
     }
 ];
 
+// Triple the cards so the loop has no visible seam
+const marqueeCards = [...certifications, ...certifications, ...certifications];
+
 const Certifications = () => {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const [selectedCategory, setSelectedCategory] = useState("All");
+    const sectionRef = useRef<HTMLDivElement>(null);
+    const headerRef = useRef<HTMLDivElement>(null);
+    const [isPaused, setIsPaused] = useState(false);
+    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Header entrance animation
+    useEffect(() => {
+        const header = headerRef.current;
+        if (!header) return;
+
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: header,
+                start: 'top bottom-=100',
+                toggleActions: 'play none none reverse',
+            },
+        });
+
+        tl.fromTo(
+            header.querySelector('.cert-eyebrow'),
+            { opacity: 0, y: 20 },
+            { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }
+        )
+        .fromTo(
+            header.querySelector('h2'),
+            { opacity: 0, y: 30 },
+            { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' },
+            '-=0.3'
+        )
+        .fromTo(
+            header.querySelector('.cert-subtitle'),
+            { opacity: 0, y: 20 },
+            { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' },
+            '-=0.3'
+        );
+
+        return () => { tl.kill(); };
+    }, []);
+
+    const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         const card = e.currentTarget;
-        const cardInner = card.querySelector('.cert-card-inner') as HTMLDivElement;
-        if (!cardInner) return;
-
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-        
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        
-        const rotateX = -(y - centerY) / 12;
-        const rotateY = (x - centerX) / 12;
-        
-        cardInner.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        const cx = rect.width / 2;
+        const cy = rect.height / 2;
+        const rotateX = -(y - cy) / 14;
+        const rotateY = (x - cx) / 14;
+        card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.04,1.04,1.04)`;
     };
 
-    const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
-        const card = e.currentTarget;
-        const cardInner = card.querySelector('.cert-card-inner') as HTMLDivElement;
-        if (cardInner) {
-            cardInner.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-        }
+    const handleCardMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.currentTarget.style.transform =
+            'perspective(900px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)';
     };
-
-    // Stagger animation on cards when category filter changes
-    useEffect(() => {
-        const cards = containerRef.current?.querySelectorAll('.cert-card');
-        if (cards && cards.length > 0) {
-            gsap.fromTo(cards,
-                { opacity: 0, scale: 0.92, y: 15 },
-                {
-                    opacity: 1,
-                    scale: 1,
-                    y: 0,
-                    duration: 0.5,
-                    stagger: 0.08,
-                    ease: "power2.out",
-                    overwrite: "auto"
-                }
-            );
-        }
-    }, [selectedCategory]);
-
-    useEffect(() => {
-        const heading = containerRef.current?.querySelector('h2');
-        const description = containerRef.current?.querySelector('.section-description');
-
-        // Animate heading
-        if (heading) {
-            gsap.fromTo(heading,
-                { opacity: 0, y: -30 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8,
-                    scrollTrigger: {
-                        trigger: heading,
-                        start: "top bottom-=100",
-                        toggleActions: "play none none reverse"
-                    }
-                }
-            );
-        }
-
-        // Animate description
-        if (description) {
-            gsap.fromTo(description,
-                { opacity: 0, y: 20 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8,
-                    delay: 0.2,
-                    scrollTrigger: {
-                        trigger: description,
-                        start: "top bottom-=100",
-                        toggleActions: "play none none reverse"
-                    }
-                }
-            );
-        }
-    }, []);
-
-    const filteredCerts = selectedCategory === "All"
-        ? certifications
-        : certifications.filter(cert => cert.categories.includes(selectedCategory));
 
     return (
-        <section id="certifications" className="py-24 px-6 md:px-12 bg-background relative overflow-hidden border-t border-white/5">
-            <div ref={containerRef} className="max-w-7xl mx-auto">
-
-                {/* Section Header */}
-                <div className="text-center mb-16 relative z-10">
-                    <h2 className="text-4xl md:text-5xl font-semibold tracking-tight mb-4">
-                        Certifications <span className="text-primary">&</span> <span className="text-secondary">Achievements</span>
-                    </h2>
-                    <p className="section-description text-muted-foreground/80 max-w-2xl mx-auto text-sm md:text-base">
-                        Validating skills through industry-recognized certifications and competitive coding.
-                    </p>
-                </div>
-
-                {/* Category Filters */}
-                <div className="flex flex-wrap items-center justify-center gap-3 mb-16 relative z-10">
-                    {["All", "AI & ML", "Cloud", "Development"].map((cat) => (
-                        <button
-                            key={cat}
-                            onClick={() => setSelectedCategory(cat)}
-                            className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 border ${
-                                selectedCategory === cat
-                                    ? "bg-gradient-to-r from-primary to-secondary text-white border-transparent shadow-[0_0_15px_rgba(124,58,237,0.25)] scale-105"
-                                    : "bg-white/5 text-muted-foreground border-white/5 hover:bg-white/10 hover:text-white"
-                            }`}
-                        >
-                            {cat}
-                        </button>
-                    ))}
-                </div>
-
-                {/* Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12 premium-3d-container">
-                    {filteredCerts.map((cert, index) => (
-                        <div 
-                            key={index} 
-                            className="cert-card group relative p-[1px] rounded-3xl bg-gradient-to-br from-white/10 to-transparent hover:from-primary/40 hover:to-secondary/40 transition-all duration-500"
-                            onMouseMove={handleMouseMove}
-                            onMouseLeave={handleMouseLeave}
-                        >
-                            <div className="cert-card-inner premium-3d-card shine-sweep relative h-full bg-card/25 backdrop-blur-xl p-8 rounded-[23px] overflow-hidden border border-white/5 group-hover:border-transparent transition-all flex flex-col justify-between">
-                                <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${cert.color} blur-[60px] opacity-10 group-hover:opacity-30 transition-opacity`} />
-
-                                <div>
-                                    <div className="flex items-center justify-between mb-6 translate-z-md">
-                                        <Medal size={32} className="text-secondary" weight="duotone" />
-                                        <div className="flex flex-wrap gap-1.5 justify-end">
-                                            {cert.categories.map((cat, i) => (
-                                                <span key={i} className="text-[10px] font-mono px-2 py-0.5 bg-white/5 rounded-full text-white/70">
-                                                    {cat}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                    <h3 className="text-xl font-bold text-white mb-2 leading-tight group-hover:text-primary-glow transition-all translate-z-md">
-                                        {cert.title}
-                                    </h3>
-                                </div>
-
-                                <div>
-                                    <div className="flex justify-between items-center mt-6 pt-6 border-t border-white/5 translate-z-sm">
-                                        <span className="text-sm text-muted-foreground">{cert.issuer}</span>
-                                        <span className="text-xs font-mono px-2 py-1 bg-white/5 rounded text-white/60">{cert.date}</span>
-                                    </div>
-
-                                    {/* View Certificate Button */}
-                                    {cert.certificateUrl && (
-                                        <a
-                                            href={cert.certificateUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="mt-4 flex items-center justify-center gap-2 w-full py-2.5 px-4 bg-primary/10 hover:bg-primary/20 border border-primary/30 hover:border-primary/50 rounded-xl text-primary text-sm font-medium transition-all duration-300 group/btn translate-z-sm"
-                                        >
-                                            <Eye size={16} className="group-hover/btn:scale-110 transition-transform" />
-                                            View Certificate
-                                        </a>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
+        <section
+            id="certifications"
+            ref={sectionRef}
+            className="py-24 bg-transparent relative overflow-hidden border-t border-slate-200/30"
+        >
+            {/* Ambient background glows */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[120px]" />
+                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary/5 rounded-full blur-[120px]" />
             </div>
 
-            {/* Background elements */}
-            <div className="absolute top-1/2 left-0 w-full h-full pointer-events-none overflow-hidden">
-                <div className="absolute top-20 -left-20 w-64 h-64 bg-primary/5 rounded-full blur-[100px] animate-pulse" />
-                <div className="absolute bottom-20 -right-20 w-64 h-64 bg-secondary/5 rounded-full blur-[100px] animate-pulse" />
+            {/* ── Section Header ── */}
+            <div ref={headerRef} className="max-w-4xl mx-auto px-6 text-center mb-16 relative z-10">
+                <div className="cert-eyebrow inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/15 text-primary text-xs font-semibold tracking-widest uppercase mb-6">
+                    <Medal size={14} weight="fill" />
+                    Credentials
+                </div>
+
+                <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900 mb-4">
+                    Certifications{' '}
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
+                        &amp; Achievements
+                    </span>
+                </h2>
+
+                <p className="cert-subtitle text-slate-500 text-base md:text-lg font-light max-w-xl mx-auto leading-relaxed">
+                    Continuous learning, validated.{' '}
+                    <span className="text-slate-400">
+                        Industry-recognized credentials from Oracle, Microsoft, Coursera, and more.
+                    </span>
+                </p>
+            </div>
+
+            {/* ── Marquee Track ── */}
+            <div className="relative">
+                {/* Left fade mask */}
+                <div
+                    className="absolute left-0 top-0 bottom-0 w-28 z-10 pointer-events-none"
+                    style={{ background: 'linear-gradient(to right, #FCFCFD 0%, transparent 100%)' }}
+                />
+                {/* Right fade mask */}
+                <div
+                    className="absolute right-0 top-0 bottom-0 w-28 z-10 pointer-events-none"
+                    style={{ background: 'linear-gradient(to left, #FCFCFD 0%, transparent 100%)' }}
+                />
+
+                {/* Outer clipping box */}
+                <div className="overflow-hidden py-4 px-2">
+                    {/* Scrolling track — animation-play-state controls pause/resume without resetting position */}
+                    <div
+                        className="flex gap-6 w-max"
+                        style={{
+                            animation: 'certMarquee 45s linear infinite',
+                            animationPlayState: isPaused ? 'paused' : 'running',
+                            willChange: 'transform',
+                        }}
+                        onMouseEnter={() => setIsPaused(true)}
+                        onMouseLeave={() => {
+                            setIsPaused(false);
+                            setHoveredIndex(null);
+                        }}
+                    >
+                        {marqueeCards.map((cert, index) => {
+                            const isHovered = hoveredIndex === index;
+                            return (
+                                <div
+                                    key={index}
+                                    className="flex-shrink-0 w-[320px] md:w-[360px]"
+                                    onMouseEnter={() => setHoveredIndex(index)}
+                                    onMouseLeave={(e) => {
+                                        setHoveredIndex(null);
+                                        handleCardMouseLeave(e);
+                                    }}
+                                    onMouseMove={handleCardMouseMove}
+                                    style={{
+                                        transition: 'transform 0.12s ease-out',
+                                        transformStyle: 'preserve-3d',
+                                    }}
+                                >
+                                    {/* Gradient border wrapper */}
+                                    <div
+                                        className="p-[1.5px] rounded-2xl transition-all duration-300"
+                                        style={{
+                                            background: isHovered
+                                                ? `linear-gradient(135deg, var(--tw-gradient-stops))`
+                                                : 'rgba(203,213,225,0.6)',
+                                        }}
+                                    >
+                                        <div
+                                            className={`p-[1.5px] rounded-2xl transition-all duration-300 ${
+                                                isHovered
+                                                    ? `bg-gradient-to-br ${cert.gradient}`
+                                                    : 'bg-slate-200/60'
+                                            }`}
+                                        >
+                                            <div className="relative bg-white/95 backdrop-blur-xl rounded-[14px] p-6 flex flex-col gap-4 min-h-[210px]">
+                                                {/* Ambient colour blob */}
+                                                <div
+                                                    className={`absolute top-0 right-0 w-28 h-28 bg-gradient-to-br ${cert.gradient} rounded-[14px] blur-[55px] transition-opacity duration-300 ${
+                                                        isHovered ? 'opacity-15' : 'opacity-0'
+                                                    }`}
+                                                />
+
+                                                {/* Top row */}
+                                                <div className="flex items-start justify-between relative z-10">
+                                                    <div
+                                                        className={`p-2.5 rounded-xl border ${cert.accentBg} ${cert.accentBorder} transition-all duration-300 ${isHovered ? 'shadow-sm scale-110' : ''}`}
+                                                    >
+                                                        <Medal size={20} weight="fill" className={cert.accentText} />
+                                                    </div>
+                                                    <div className="flex flex-col items-end gap-1.5">
+                                                        <span className="text-xs font-mono font-bold px-2.5 py-1 bg-slate-100 text-slate-500 rounded-lg">
+                                                            {cert.date}
+                                                        </span>
+                                                        <div className="flex flex-wrap gap-1 justify-end">
+                                                            {cert.categories.map((cat, ci) => (
+                                                                <span
+                                                                    key={ci}
+                                                                    className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${cert.accentBg} ${cert.accentText}`}
+                                                                >
+                                                                    {cat}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {/* Title + issuer */}
+                                                <div className="flex-1 relative z-10">
+                                                    <h3
+                                                        className={`text-[15px] font-bold leading-snug transition-colors duration-200 ${
+                                                            isHovered ? cert.accentText : 'text-slate-800'
+                                                        }`}
+                                                    >
+                                                        {cert.title}
+                                                    </h3>
+                                                    <p className="text-slate-400 text-sm mt-1 font-medium">
+                                                        {cert.issuer}
+                                                    </p>
+                                                </div>
+
+                                                {/* CTA */}
+                                                <div className="border-t border-slate-100 pt-3 relative z-10">
+                                                    <a
+                                                        href={cert.certificateUrl}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        onClick={(e) => e.stopPropagation()}
+                                                        className={`flex items-center justify-between w-full text-sm font-semibold transition-all duration-200 group/btn ${
+                                                            isHovered
+                                                                ? `${cert.accentText} opacity-100`
+                                                                : 'text-slate-400'
+                                                        }`}
+                                                    >
+                                                        <span className="flex items-center gap-1.5">
+                                                            <Eye size={14} />
+                                                            View Credential
+                                                        </span>
+                                                        <ArrowRight
+                                                            size={14}
+                                                            className="transition-transform duration-200 group-hover/btn:translate-x-1"
+                                                        />
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </div>
+
+            {/* State hint */}
+            <div className="mt-5 flex items-center justify-center">
+                <p
+                    className={`text-xs font-medium flex items-center gap-2 transition-all duration-300 ${
+                        isPaused ? 'text-primary' : 'text-slate-400'
+                    }`}
+                >
+                    <span
+                        className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${
+                            isPaused ? 'bg-primary animate-pulse' : 'bg-slate-300'
+                        }`}
+                    />
+                    {isPaused ? 'Paused — move mouse away to resume' : 'Hover any card to pause'}
+                </p>
             </div>
         </section>
     );
