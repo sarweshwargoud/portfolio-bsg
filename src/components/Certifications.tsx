@@ -137,21 +137,21 @@ const Certifications = () => {
 
             {/* ── Section Header ── */}
             <div ref={headerRef} className="max-w-4xl mx-auto px-6 text-center mb-16 relative z-10">
-                <div className="cert-eyebrow inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/15 text-primary text-xs font-semibold tracking-widest uppercase mb-6">
+                <div className="cert-eyebrow inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/30 text-primary text-xs font-semibold tracking-widest uppercase mb-6">
                     <Medal size={14} weight="fill" />
                     Credentials
                 </div>
 
-                <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900 mb-4">
+                <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-4">
                     Certifications{' '}
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
                         &amp; Achievements
                     </span>
                 </h2>
 
-                <p className="cert-subtitle text-slate-500 text-base md:text-lg font-light max-w-xl mx-auto leading-relaxed">
+                <p className="cert-subtitle text-white/60 text-base md:text-lg font-light max-w-xl mx-auto leading-relaxed">
                     Continuous learning, validated.{' '}
-                    <span className="text-slate-400">
+                    <span className="text-white/40">
                         Industry-recognized credentials from Oracle, Microsoft, Coursera, and more.
                     </span>
                 </p>
