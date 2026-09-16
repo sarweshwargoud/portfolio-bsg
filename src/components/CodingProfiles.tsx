@@ -18,7 +18,7 @@ const profiles = [
         accentHover: 'hover:border-white/40',
         iconColor: 'text-white',
         stats: [
-            { label: 'Public Repos', value: '39' },
+            { label: 'Public Repos', value: '20' },
             { label: 'Top Stars', value: '29 ⭐' },
             { label: 'Languages', value: 'Python · TS' },
             { label: 'Active Since', value: '2023' },
@@ -157,11 +157,10 @@ const CodingProfiles = () => {
 
                                 {/* Hover info panel */}
                                 <div
-                                    className={`absolute top-full mt-3 left-1/2 -translate-x-1/2 w-72 sm:w-80 z-30 transition-all duration-200 origin-top pointer-events-none ${
-                                        isHovered
+                                    className={`absolute top-full mt-3 left-1/2 -translate-x-1/2 w-72 sm:w-80 z-30 transition-all duration-200 origin-top pointer-events-none ${isHovered
                                             ? 'opacity-100 scale-100 translate-y-0'
                                             : 'opacity-0 scale-95 -translate-y-2'
-                                    }`}
+                                        }`}
                                 >
                                     <div className="bg-[#0e1017]/95 backdrop-blur-2xl border border-white/15 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.9)] p-4 relative">
                                         {/* Arrow pointer */}
