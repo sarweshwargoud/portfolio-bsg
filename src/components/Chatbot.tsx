@@ -521,7 +521,7 @@ const Chatbot: React.FC = () => {
       {isOpen && (
         <div
           ref={chatboxRef}
-          className="mb-3 w-[calc(100vw-24px)] sm:w-[460px] md:w-[480px] h-[82vh] sm:h-[640px] max-h-[700px] flex flex-col bg-zinc-950/90 backdrop-blur-3xl border border-white/15 rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.95)] overflow-hidden transition-all duration-300"
+          className="mb-3 w-[calc(100vw-24px)] sm:w-[460px] md:w-[480px] h-[min(580px,calc(100dvh-115px))] sm:h-[min(580px,calc(100dvh-125px))] max-h-[calc(100dvh-115px)] flex flex-col bg-zinc-950/90 backdrop-blur-3xl border border-white/15 rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.95)] overflow-hidden transition-all duration-300"
           style={{ willChange: 'transform, opacity' }}
         >
           {/* Header */}
