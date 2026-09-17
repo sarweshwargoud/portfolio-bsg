@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Medal, Eye, ArrowRight, X, ArrowUpRight } from 'phosphor-react';
+import { Medal, Eye, ArrowRight, X, ArrowUpRight, CaretLeft, CaretRight } from 'phosphor-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -128,6 +128,148 @@ const Certifications = () => {
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
     const [previewModal, setPreviewModal] = useState<{ title: string; issuer: string; imageUrl: string } | null>(null);
 
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const isUserInteractingRef = useRef<boolean>(false);
+    const interactionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const isDraggingRef = useRef<boolean>(false);
+    const dragStartXRef = useRef<number>(0);
+    const dragStartScrollLeftRef = useRef<number>(0);
+
+    // Close modal on Escape key press
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') setPreviewModal(null);
+        };
+        if (previewModal) {
+            window.addEventListener('keydown', handleKeyDown);
+        }
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [previewModal]);
+
+    // Combined smooth auto-scroll + infinite wrapping loop
+    useEffect(() => {
+        const container = scrollContainerRef.current;
+        if (!container) return;
+
+        let animId: number;
+        let lastTime = performance.now();
+
+        const loop = (time: number) => {
+            const delta = time - lastTime;
+            lastTime = time;
+
+            if (!isPaused && !isUserInteractingRef.current) {
+                // ~35px per second
+                const step = (35 * Math.min(delta, 100)) / 1000;
+                container.scrollLeft += step;
+
+                const oneThird = container.scrollWidth / 3;
+                if (oneThird > 0) {
+                    if (container.scrollLeft >= oneThird * 2) {
+                        container.scrollLeft -= oneThird;
+                    } else if (container.scrollLeft <= 5) {
+                        container.scrollLeft += oneThird;
+                    }
+                }
+            }
+
+            animId = requestAnimationFrame(loop);
+        };
+
+        animId = requestAnimationFrame(loop);
+        return () => cancelAnimationFrame(animId);
+    }, [isPaused]);
+
+    // Handle sideways trackpad gesture or mouse wheel scroll
+    const handleWheel = (e: React.WheelEvent) => {
+        const container = scrollContainerRef.current;
+        if (!container) return;
+
+        isUserInteractingRef.current = true;
+
+        // Support horizontal wheel (deltaX) as well as vertical wheel (deltaY) over the track
+        const delta = Math.abs(e.deltaX) > 0 ? e.deltaX : e.deltaY;
+        container.scrollLeft += delta;
+
+        const oneThird = container.scrollWidth / 3;
+        if (oneThird > 0) {
+            if (container.scrollLeft >= oneThird * 2) {
+                container.scrollLeft -= oneThird;
+            } else if (container.scrollLeft <= 5) {
+                container.scrollLeft += oneThird;
+            }
+        }
+
+        if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current);
+        interactionTimeoutRef.current = setTimeout(() => {
+            isUserInteractingRef.current = false;
+        }, 1200);
+    };
+
+    // Native scroll event (touch swipe or keyboard)
+    const handleScroll = () => {
+        const container = scrollContainerRef.current;
+        if (!container) return;
+
+        const oneThird = container.scrollWidth / 3;
+        if (oneThird > 0) {
+            if (container.scrollLeft >= oneThird * 2) {
+                container.scrollLeft -= oneThird;
+            } else if (container.scrollLeft <= 5) {
+                container.scrollLeft += oneThird;
+            }
+        }
+
+        isUserInteractingRef.current = true;
+        if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current);
+        interactionTimeoutRef.current = setTimeout(() => {
+            isUserInteractingRef.current = false;
+        }, 1200);
+    };
+
+    // Mouse drag to scroll sideways
+    const handleMouseDown = (e: React.MouseEvent) => {
+        const container = scrollContainerRef.current;
+        if (!container) return;
+        if ((e.target as HTMLElement).closest('button, a')) return;
+
+        isDraggingRef.current = true;
+        isUserInteractingRef.current = true;
+        dragStartXRef.current = e.pageX;
+        dragStartScrollLeftRef.current = container.scrollLeft;
+    };
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (!isDraggingRef.current) return;
+        const container = scrollContainerRef.current;
+        if (!container) return;
+        e.preventDefault();
+        const dx = e.pageX - dragStartXRef.current;
+        container.scrollLeft = dragStartScrollLeftRef.current - dx;
+    };
+
+    const handleMouseUpOrLeave = () => {
+        if (isDraggingRef.current) {
+            isDraggingRef.current = false;
+        }
+        if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current);
+        interactionTimeoutRef.current = setTimeout(() => {
+            isUserInteractingRef.current = false;
+        }, 1200);
+    };
+
+    const scrollByDelta = (dir: 'left' | 'right') => {
+        const container = scrollContainerRef.current;
+        if (!container) return;
+        isUserInteractingRef.current = true;
+        const offset = dir === 'left' ? -380 : 380;
+        container.scrollBy({ left: offset, behavior: 'smooth' });
+        if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current);
+        interactionTimeoutRef.current = setTimeout(() => {
+            isUserInteractingRef.current = false;
+        }, 2000);
+    };
+
     // Header entrance animation
     useEffect(() => {
         const header = headerRef.current;
@@ -213,35 +355,62 @@ const Certifications = () => {
                 </p>
             </div>
 
-            {/* ── Marquee Track ── */}
-            <div className="relative">
+            {/* ── Marquee & Horizontal Scroll Track ── */}
+            <div className="relative group/carousel">
                 {/* Left fade mask */}
                 <div
-                    className="absolute left-0 top-0 bottom-0 w-28 z-10 pointer-events-none"
-                    style={{ background: 'linear-gradient(to right, #FCFCFD 0%, transparent 100%)' }}
+                    className="absolute left-0 top-0 bottom-0 w-20 z-10 pointer-events-none hidden sm:block"
+                    style={{ background: 'linear-gradient(to right, rgba(9,9,11,0.95) 0%, transparent 100%)' }}
                 />
                 {/* Right fade mask */}
                 <div
-                    className="absolute right-0 top-0 bottom-0 w-28 z-10 pointer-events-none"
-                    style={{ background: 'linear-gradient(to left, #FCFCFD 0%, transparent 100%)' }}
+                    className="absolute right-0 top-0 bottom-0 w-20 z-10 pointer-events-none hidden sm:block"
+                    style={{ background: 'linear-gradient(to left, rgba(9,9,11,0.95) 0%, transparent 100%)' }}
                 />
 
-                {/* Outer clipping box */}
-                <div className="overflow-hidden py-4 px-2">
-                    {/* Scrolling track — animation-play-state controls pause/resume without resetting position */}
-                    <div
-                        className="flex gap-6 w-max"
-                        style={{
-                            animation: 'certMarquee 45s linear infinite',
-                            animationPlayState: isPaused ? 'paused' : 'running',
-                            willChange: 'transform',
-                        }}
-                        onMouseEnter={() => setIsPaused(true)}
-                        onMouseLeave={() => {
-                            setIsPaused(false);
-                            setHoveredIndex(null);
-                        }}
-                    >
+                {/* Left Arrow Button */}
+                <button
+                    type="button"
+                    onClick={() => scrollByDelta('left')}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-zinc-900/90 hover:bg-zinc-800 border border-white/20 text-white flex items-center justify-center shadow-xl hover:scale-110 active:scale-95 transition-all opacity-0 group-hover/carousel:opacity-100 backdrop-blur-md cursor-pointer"
+                    aria-label="Scroll left"
+                >
+                    <CaretLeft size={22} weight="bold" />
+                </button>
+
+                {/* Right Arrow Button */}
+                <button
+                    type="button"
+                    onClick={() => scrollByDelta('right')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-zinc-900/90 hover:bg-zinc-800 border border-white/20 text-white flex items-center justify-center shadow-xl hover:scale-110 active:scale-95 transition-all opacity-0 group-hover/carousel:opacity-100 backdrop-blur-md cursor-pointer"
+                    aria-label="Scroll right"
+                >
+                    <CaretRight size={22} weight="bold" />
+                </button>
+
+                {/* Outer horizontally scrollable container */}
+                <div
+                    ref={scrollContainerRef}
+                    className="overflow-x-auto py-4 px-2 select-none cursor-grab active:cursor-grabbing scrollbar-none"
+                    style={{
+                        scrollbarWidth: 'none',
+                        msOverflowStyle: 'none',
+                        WebkitOverflowScrolling: 'touch',
+                    }}
+                    onWheel={handleWheel}
+                    onScroll={handleScroll}
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleMouseUpOrLeave}
+                    onMouseEnter={() => setIsPaused(true)}
+                    onMouseLeave={() => {
+                        setIsPaused(false);
+                        setHoveredIndex(null);
+                        handleMouseUpOrLeave();
+                    }}
+                >
+                    {/* Scrolling track */}
+                    <div className="flex gap-6 w-max">
                         {marqueeCards.map((cert, index) => {
                             const isHovered = hoveredIndex === index;
                             return (
@@ -380,17 +549,17 @@ const Certifications = () => {
 
             {/* State hint */}
             <div className="mt-5 flex items-center justify-center">
-                <p
-                    className={`text-xs font-medium flex items-center gap-2 transition-all duration-300 ${
-                        isPaused ? 'text-primary' : 'text-slate-400'
-                    }`}
-                >
+                <p className="text-xs font-medium flex items-center gap-2 text-white/50">
                     <span
                         className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${
-                            isPaused ? 'bg-primary animate-pulse' : 'bg-slate-300'
+                            isPaused ? 'bg-primary animate-pulse' : 'bg-emerald-400'
                         }`}
                     />
-                    {isPaused ? 'Paused — move mouse away to resume' : 'Hover any card to pause'}
+                    <span>
+                        {isPaused
+                            ? 'Paused — swipe sideways, drag, or use arrows'
+                            : 'Auto-scrolling • Swipe, drag, or scroll sideways to explore'}
+                    </span>
                 </p>
             </div>
 

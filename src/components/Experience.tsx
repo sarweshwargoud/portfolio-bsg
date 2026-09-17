@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Briefcase, Medal, ArrowUpRight } from 'phosphor-react';
+import { Briefcase, Medal, ArrowUpRight, Eye, X } from 'phosphor-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -55,6 +55,18 @@ const experience = [
 
 const Experience = () => {
     const timelineRef = useRef<HTMLDivElement>(null);
+    const [previewModal, setPreviewModal] = useState<{ title: string; company: string; imageUrl: string } | null>(null);
+
+    // Close modal on Escape key press
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') setPreviewModal(null);
+        };
+        if (previewModal) {
+            window.addEventListener('keydown', handleKeyDown);
+        }
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [previewModal]);
 
     useEffect(() => {
         const items = timelineRef.current?.querySelectorAll('.timeline-item');
@@ -71,7 +83,7 @@ const Experience = () => {
                     duration: 0.8,
                     scrollTrigger: {
                         trigger: heading,
-                        start: "top bottom-=100",
+                        start: "top 80%",
                         toggleActions: "play none none reverse"
                     }
                 }
@@ -81,7 +93,7 @@ const Experience = () => {
         // Animate description
         if (description) {
             gsap.fromTo(description,
-                { opacity: 0, y: 20 },
+                { opacity: 0, y: -20 },
                 {
                     opacity: 1,
                     y: 0,
@@ -89,29 +101,34 @@ const Experience = () => {
                     delay: 0.2,
                     scrollTrigger: {
                         trigger: description,
-                        start: "top bottom-=100",
+                        start: "top 80%",
                         toggleActions: "play none none reverse"
                     }
                 }
             );
         }
 
-        items?.forEach((item, i) => {
+        // Animate timeline items
+        items?.forEach((item, index) => {
             gsap.fromTo(item,
-                { opacity: 0, x: -30 },
+                { opacity: 0, x: -50 },
                 {
                     opacity: 1,
                     x: 0,
                     duration: 0.8,
-                    stagger: 0.1,
+                    delay: index * 0.2,
                     scrollTrigger: {
                         trigger: item,
-                        start: "top bottom-=50",
+                        start: "top 85%",
                         toggleActions: "play none none reverse"
                     }
                 }
             );
         });
+
+        return () => {
+            ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+        };
 
     }, []);
 
@@ -159,16 +176,19 @@ const Experience = () => {
                                         ))}
                                     </div>
                                     {(exp as any).certificateUrl && (
-                                        <a
-                                            href={(exp as any).certificateUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 hover:bg-emerald-500/20 hover:border-emerald-400 px-3 py-1.5 rounded-lg transition-all shadow-sm"
+                                        <button
+                                            type="button"
+                                            onClick={() => setPreviewModal({
+                                                title: exp.title,
+                                                company: exp.company,
+                                                imageUrl: (exp as any).certificateUrl
+                                            })}
+                                            className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 hover:bg-emerald-500/20 hover:border-emerald-400 px-3 py-1.5 rounded-lg transition-all shadow-sm cursor-pointer active:scale-95"
                                         >
                                             <Medal size={15} weight="bold" />
                                             <span>View Certificate</span>
-                                            <ArrowUpRight size={13} weight="bold" />
-                                        </a>
+                                            <Eye size={14} weight="bold" />
+                                        </button>
                                     )}
                                 </div>
                             </div>
@@ -180,6 +200,51 @@ const Experience = () => {
             {/* Background Elements */}
             <div className="absolute top-1/3 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
             <div className="absolute bottom-1/4 left-0 w-64 h-64 bg-secondary/5 rounded-full blur-[80px] pointer-events-none" />
+
+            {/* Internship Certificate Lightbox Modal Popup (in the same tab) */}
+            {previewModal && (
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md"
+                    onClick={() => setPreviewModal(null)}
+                >
+                    <div 
+                        className="relative max-w-4xl w-full bg-zinc-950/95 border border-white/15 rounded-2xl p-4 sm:p-6 shadow-[0_25px_70px_rgba(0,0,0,0.95)] overflow-hidden flex flex-col max-h-[90vh]"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
+                            <div>
+                                <h4 className="text-base sm:text-lg font-bold text-white tracking-tight">{previewModal.title}</h4>
+                                <p className="text-xs sm:text-sm text-primary font-medium">{previewModal.company}</p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <a
+                                    href={previewModal.imageUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1 text-xs text-secondary hover:text-white px-3 py-1.5 rounded-lg border border-secondary/30 bg-secondary/10 hover:bg-secondary/20 transition-all"
+                                >
+                                    <span>Open Full View</span>
+                                    <ArrowUpRight size={13} weight="bold" />
+                                </a>
+                                <button
+                                    onClick={() => setPreviewModal(null)}
+                                    className="p-1.5 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+                                    aria-label="Close modal"
+                                >
+                                    <X size={20} />
+                                </button>
+                            </div>
+                        </div>
+                        <div className="flex-1 overflow-auto flex items-center justify-center rounded-xl bg-black/50 p-2 border border-white/5">
+                            <img
+                                src={previewModal.imageUrl}
+                                alt={previewModal.title}
+                                className="max-w-full max-h-[72vh] object-contain rounded-lg shadow-md"
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
         </section>
     );
 };
