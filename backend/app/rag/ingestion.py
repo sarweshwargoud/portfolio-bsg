@@ -177,22 +177,31 @@ RAW_PORTFOLIO_DOCUMENTS = [
         "metadata": {
             "section": "certifications",
             "category": "credentials",
-            "topics": ["flyrank", "oracle", "coursera", "microsoft", "hack2skill", "freecodecamp"]
+            "topics": ["oracle", "agentic ai", "flyrank", "aws", "udemy", "uptoskills", "coursera", "microsoft", "hack2skill", "freecodecamp"]
         },
         "content": (
             "Verified Industry Certifications:\n"
-            "1. Certificate of Completion - Backend AI Engineering (FlyRank.ai / FlyRank Corp., September 2026)\n"
+            "1. Agentic AI Certified Foundations Associate (Oracle University, 2026)\n"
+            "   Covers first-principles AI agents, LangChain, OpenAI Agents SDK, Model Context Protocol (MCP) servers, OCI Enterprise AI Agents service, and Oracle AI Database agentic features.\n"
+            "   Credential Link: https://catalog-education.oracle.com/ords/certview/sharebadge?id=C7FB8D23CC99AB62AD50154B42011DB744068E632E4FE7662C0A5189D9B98FED\n\n"
+            "2. Certificate of Completion - Backend AI Engineering (FlyRank.ai / FlyRank Corp., September 2026)\n"
             "   Demonstrated excellence in technical competency, professional conduct, and collaborative contribution in Backend AI Engineering.\n"
             "   Credential ID: FR-D11-C6946-B9F28. Issued by Alen Malkoc, Founder & CEO, FlyRank Corp.\n\n"
-            "2. OCI Certified AI Foundations Associate (Oracle, 2024)\n"
-            "   Covers foundational artificial intelligence, machine learning concepts, and Oracle Cloud AI services.\n\n"
-            "3. Retrieval-Augmented Generation (RAG) (Coursera, 2025)\n"
+            "3. Oracle Cloud Infrastructure 2025 Certified AI Foundations Associate (Oracle University, February 2026)\n"
+            "   Certificate of Recognition awarded by Oracle Corporation. Covers foundational AI, ML concepts, and OCI AI infrastructure. Credential ID: 103395933OCI25AICFA.\n\n"
+            "4. AWS Cloud Practitioner Essentials (AWS Training & Certification, March 2026)\n"
+            "   Completed comprehensive cloud fundamentals, AWS architecture, core cloud services, and security practices. Issued by Michelle Vaz, Director, AWS Training & Certification.\n\n"
+            "5. Full Stack AI Engineer 2026 - Generative AI & LLMs III (Udemy • School of AI, March 2026)\n"
+            "   In-depth engineering curriculum on Generative AI, Large Language Models (LLMs), prompt engineering, and intelligent application deployment. Certificate ID: UC-dc863384-9a13-44a9-85d5-944c925dd3fd.\n\n"
+            "6. AI/ML Intern Certificate of Appreciation (UptoSkills, March 2026)\n"
+            "   Honored for dedicated contributions and engineering excellence as AI/ML Intern from December 2025 to March 2026 at UptoSkills Company.\n\n"
+            "7. Retrieval-Augmented Generation (RAG) (Coursera, 2025)\n"
             "   Comprehensive coursework on vector databases, semantic search, dense embeddings, chunking strategies, and RAG architectures.\n\n"
-            "4. Career Essentials in Generative AI (Microsoft & LinkedIn, 2024)\n"
+            "8. Career Essentials in Generative AI (Microsoft & LinkedIn, 2024)\n"
             "   Covers enterprise generative AI, ethical and responsible AI practices, prompt engineering, and LLM applications.\n\n"
-            "5. Building Agentic Workflows in Python (Hack2skill, 2025)\n"
+            "9. Building Agentic Workflows in Python (Hack2skill, 2025)\n"
             "   Covers multi-agent orchestration, tool use, autonomous planning, and python agentic design patterns.\n\n"
-            "6. Responsive Web Design (freeCodeCamp, 2023)\n"
+            "10. Responsive Web Design (freeCodeCamp, 2023)\n"
             "   Covers modern responsive layouts, CSS Flexbox, CSS Grid, and web accessibility."
         )
     },

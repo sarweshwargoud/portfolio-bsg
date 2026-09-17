@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Medal, Eye, ArrowRight } from 'phosphor-react';
+import { Medal, Eye, ArrowRight, X, ArrowUpRight } from 'phosphor-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -18,15 +18,59 @@ const certifications = [
         certificateUrl: "/Images/FlyRank-Internship-Certificate.png"
     },
     {
-        title: "OCI Certified AI Foundations Associate",
+        title: "Agentic AI Certified Foundations Associate",
         issuer: "Oracle",
-        date: "2024",
+        date: "2026",
+        gradient: "from-red-600 via-orange-500 to-amber-500",
+        accentBg: "bg-red-500/10",
+        accentBorder: "border-red-500/20",
+        accentText: "text-red-500",
+        categories: ["Agentic AI", "AI & ML"],
+        certificateUrl: "https://catalog-education.oracle.com/ords/certview/sharebadge?id=C7FB8D23CC99AB62AD50154B42011DB744068E632E4FE7662C0A5189D9B98FED"
+    },
+    {
+        title: "OCI Certified AI Foundations Associate",
+        issuer: "Oracle University",
+        date: "2026",
         gradient: "from-red-500 to-orange-500",
         accentBg: "bg-red-500/10",
         accentBorder: "border-red-500/20",
         accentText: "text-red-500",
         categories: ["AI & ML", "Cloud"],
-        certificateUrl: "https://catalog-education.oracle.com/ords/certview/sharebadge?id=7B2DAB82A42F90A2C510796C3D98681EC8B8C94632C5230C439225C3F08717EF"
+        certificateUrl: "/Images/Oracle-AI-Foundations-Certificate.png"
+    },
+    {
+        title: "AWS Cloud Practitioner Essentials",
+        issuer: "AWS Training & Certification",
+        date: "2026",
+        gradient: "from-amber-500 to-orange-600",
+        accentBg: "bg-orange-500/10",
+        accentBorder: "border-orange-500/20",
+        accentText: "text-orange-500",
+        categories: ["Cloud", "AWS"],
+        certificateUrl: "/Images/AWS-Cloud-Practitioner-Certificate.png"
+    },
+    {
+        title: "Full Stack AI Engineer 2026 - Generative AI & LLMs",
+        issuer: "Udemy • School of AI",
+        date: "2026",
+        gradient: "from-purple-600 to-indigo-600",
+        accentBg: "bg-purple-500/10",
+        accentBorder: "border-purple-500/20",
+        accentText: "text-purple-500",
+        categories: ["Generative AI", "LLMs"],
+        certificateUrl: "/Images/Udemy-Full-Stack-AI-Engineer-Certificate.png"
+    },
+    {
+        title: "AI/ML Intern Recognition",
+        issuer: "UptoSkills",
+        date: "2026",
+        gradient: "from-teal-600 to-cyan-500",
+        accentBg: "bg-teal-500/10",
+        accentBorder: "border-teal-500/20",
+        accentText: "text-teal-500",
+        categories: ["AI & ML", "Internship"],
+        certificateUrl: "/Images/UptoSkills-AIML-Internship-Certificate.png"
     },
     {
         title: "Retrieval-Augmented Generation (RAG)",
@@ -82,6 +126,7 @@ const Certifications = () => {
     const headerRef = useRef<HTMLDivElement>(null);
     const [isPaused, setIsPaused] = useState(false);
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+    const [previewModal, setPreviewModal] = useState<{ title: string; issuer: string; imageUrl: string } | null>(null);
 
     // Header entrance animation
     useEffect(() => {
@@ -278,26 +323,50 @@ const Certifications = () => {
 
                                                 {/* CTA */}
                                                 <div className="border-t border-slate-100 pt-3 relative z-10">
-                                                    <a
-                                                        href={cert.certificateUrl}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        onClick={(e) => e.stopPropagation()}
-                                                        className={`flex items-center justify-between w-full text-sm font-semibold transition-all duration-200 group/btn ${
-                                                            isHovered
-                                                                ? `${cert.accentText} opacity-100`
-                                                                : 'text-slate-400'
-                                                        }`}
-                                                    >
-                                                        <span className="flex items-center gap-1.5">
-                                                            <Eye size={14} />
-                                                            View Credential
-                                                        </span>
-                                                        <ArrowRight
-                                                            size={14}
-                                                            className="transition-transform duration-200 group-hover/btn:translate-x-1"
-                                                        />
-                                                    </a>
+                                                    {cert.certificateUrl.startsWith('/Images/') ? (
+                                                        <button
+                                                            type="button"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setPreviewModal({ title: cert.title, issuer: cert.issuer, imageUrl: cert.certificateUrl });
+                                                            }}
+                                                            className={`flex items-center justify-between w-full text-sm font-semibold transition-all duration-200 group/btn ${
+                                                                isHovered
+                                                                    ? `${cert.accentText} opacity-100`
+                                                                    : 'text-slate-400'
+                                                            }`}
+                                                        >
+                                                            <span className="flex items-center gap-1.5">
+                                                                <Eye size={14} />
+                                                                View Certificate
+                                                            </span>
+                                                            <ArrowRight
+                                                                size={14}
+                                                                className="transition-transform duration-200 group-hover/btn:translate-x-1"
+                                                            />
+                                                        </button>
+                                                    ) : (
+                                                        <a
+                                                            href={cert.certificateUrl}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            onClick={(e) => e.stopPropagation()}
+                                                            className={`flex items-center justify-between w-full text-sm font-semibold transition-all duration-200 group/btn ${
+                                                                isHovered
+                                                                    ? `${cert.accentText} opacity-100`
+                                                                    : 'text-slate-400'
+                                                            }`}
+                                                        >
+                                                            <span className="flex items-center gap-1.5">
+                                                                <Eye size={14} />
+                                                                Verify Credential
+                                                            </span>
+                                                            <ArrowRight
+                                                                size={14}
+                                                                className="transition-transform duration-200 group-hover/btn:translate-x-1"
+                                                            />
+                                                        </a>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
@@ -324,6 +393,51 @@ const Certifications = () => {
                     {isPaused ? 'Paused — move mouse away to resume' : 'Hover any card to pause'}
                 </p>
             </div>
+
+            {/* Certificate Image Lightbox Modal */}
+            {previewModal && (
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md"
+                    onClick={() => setPreviewModal(null)}
+                >
+                    <div 
+                        className="relative max-w-4xl w-full bg-zinc-950 border border-white/15 rounded-2xl p-4 sm:p-6 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
+                            <div>
+                                <h4 className="text-base sm:text-lg font-bold text-white tracking-tight">{previewModal.title}</h4>
+                                <p className="text-xs sm:text-sm text-muted-foreground">{previewModal.issuer}</p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <a
+                                    href={previewModal.imageUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1 text-xs text-secondary hover:text-white px-3 py-1.5 rounded-lg border border-secondary/30 bg-secondary/10 hover:bg-secondary/20 transition-all"
+                                >
+                                    <span>Open Full View</span>
+                                    <ArrowUpRight size={13} weight="bold" />
+                                </a>
+                                <button
+                                    onClick={() => setPreviewModal(null)}
+                                    className="p-1.5 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                                    aria-label="Close modal"
+                                >
+                                    <X size={20} />
+                                </button>
+                            </div>
+                        </div>
+                        <div className="flex-1 overflow-auto flex items-center justify-center rounded-xl bg-black/40 p-2 border border-white/5">
+                            <img
+                                src={previewModal.imageUrl}
+                                alt={previewModal.title}
+                                className="max-w-full max-h-[70vh] object-contain rounded-lg shadow-md"
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
         </section>
     );
 };

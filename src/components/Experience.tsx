@@ -24,9 +24,10 @@ const experience = [
     {
         title: "AI/ML Intern",
         company: "UPTOSKILLS",
-        period: "December 2025 - March (3 months)",
-        description: "Built CodeSkills, a LeetCode-style platform for practicing coding problems and applied AI skills (model fine-tuning), using a FastAPI backend and React.js frontend. Developed an LLM-powered question generation pipeline, fine-tuning models to auto-generate domain-specific coding practice problems at scale",
-        stack: ["Generative Ai", "FineTuning"]
+        period: "December 2025 - March 2026 (3 months)",
+        description: "Built CodeSkills, a LeetCode-style platform for practicing coding problems and applied AI skills (model fine-tuning), using a FastAPI backend and React.js frontend. Developed an LLM-powered question generation pipeline, fine-tuning models to auto-generate domain-specific coding practice problems at scale. (Verified at hr@uptoskills.com)",
+        stack: ["Generative AI", "FineTuning", "FastAPI", "React.js"],
+        certificateUrl: "/Images/UptoSkills-AIML-Internship-Certificate.png"
     },
 
     {

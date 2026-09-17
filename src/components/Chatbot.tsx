@@ -125,8 +125,12 @@ Before responding, detect the user's intent and energy, and dynamically match yo
 • Tools: Git, GitHub, VS Code, Jupyter, Linux, Docker, Postman, Google Cloud (Vertex AI)
 
 ### CERTIFICATIONS
+• Agentic AI Certified Foundations Associate (Oracle University, 2026)
 • Certificate of Completion: Backend AI Engineering (FlyRank.ai, 2026 - ID: FR-D11-C6946-B9F28)
-• OCI Certified AI Foundations Associate (Oracle, 2024)
+• OCI Certified AI Foundations Associate (Oracle University, 2026)
+• AWS Cloud Practitioner Essentials (AWS Training & Certification, 2026)
+• Full Stack AI Engineer 2026 - Generative AI & LLMs (Udemy, 2026)
+• AI/ML Internship Certificate of Appreciation (UptoSkills, 2026)
 • Retrieval-Augmented Generation (RAG) (Coursera, 2025)
 • Career Essentials in Generative AI (Microsoft & LinkedIn, 2024)
 • Building Agentic Workflows in Python (Hack2skill, 2025)
