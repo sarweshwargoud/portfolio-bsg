@@ -71,25 +71,30 @@ RAW_PORTFOLIO_DOCUMENTS = [
         "metadata": {
             "section": "experience",
             "category": "work_history",
-            "topics": ["internships", "sure trust", "uptoskills", "1m1b", "thesmartbridge", "elevate labs"]
+            "topics": ["internships", "flyrank", "sure trust", "uptoskills", "1m1b", "thesmartbridge", "elevate labs"]
         },
         "content": (
             "Work Experience and Internships:\n"
-            "1. Gen AI Intern at SURE TRUST (February 2026 - Present, 6 months):\n"
+            "1. Backend AI Engineering Intern at FlyRank.ai (FlyRank Corp.) (July 2026 - September 2026, ~2.5 months):\n"
+            "   Completed Backend AI Engineering internship program at FlyRank.ai.\n"
+            "   Demonstrated technical competency in backend AI architecture, AI engineering pipelines, and collaborative engineering contribution.\n"
+            "   Certificate of Completion ID: FR-D11-C6946-B9F28, Issued: September 9, 2026 by Alen Malkoc, Founder & CEO, FlyRank Corp.\n"
+            "   Technologies: Backend AI, AI Engineering, Python, FastAPI, LLMs.\n\n"
+            "2. Gen AI Intern at SURE TRUST (February 2026 - Present, 6 months):\n"
             "   Researched and implemented LLMs, vector similarity search, RAG architectures, and agentic workflows. "
             "   Built Family Health Concierge AI: a document-aware agentic healthcare assistant.\n"
             "   Technologies: Generative AI, LLMs, RAG, Agentic Workflows.\n\n"
-            "2. AI/ML Intern at UPTOSKILLS (December 2025 - March 2026, 3 months):\n"
+            "3. AI/ML Intern at UPTOSKILLS (December 2025 - March 2026, 3 months):\n"
             "   Built CodeSkills: a LeetCode-style platform for applied AI and coding practice using FastAPI backend and React.js frontend. "
             "   Engineered an LLM-powered question generation pipeline, fine-tuning language models to auto-generate domain-specific coding practice problems at scale.\n"
             "   Technologies: Generative AI, Fine-Tuning, FastAPI, React.js.\n\n"
-            "3. AI for Sustainability Virtual Intern at 1M1B (1 Million for 1 Billion) (December 2025 - January 2026, 2 months):\n"
+            "4. AI for Sustainability Virtual Intern at 1M1B (1 Million for 1 Billion) (December 2025 - January 2026, 2 months):\n"
             "   Applied AI and ML workflows to impactful tech solutions focused on sustainability metrics.\n"
             "   Technologies: AI/ML, Data Analytics, Sustainability.\n\n"
-            "4. Google Cloud Generative AI Virtual Intern at TheSmartBridge (November 2025 - January 2026, 3 months):\n"
+            "5. Google Cloud Generative AI Virtual Intern at TheSmartBridge (November 2025 - January 2026, 3 months):\n"
             "   Mastered Gemini, NotebookLM, Vertex AI, Prompt Engineering, RAG architectures, and Responsible AI guidelines on Google Cloud Platform.\n"
             "   Technologies: Google Cloud, Gemini, Vertex AI, RAG.\n\n"
-            "5. Web Developer at Elevate Labs (November 2025 - December 2025, 2 months):\n"
+            "6. Web Developer at Elevate Labs (November 2025 - December 2025, 2 months):\n"
             "   Collaborated on modern web development projects, ensuring responsive UI and smooth transitions.\n"
             "   Technologies: React, HTML5, JavaScript, CSS3."
         )
@@ -172,19 +177,22 @@ RAW_PORTFOLIO_DOCUMENTS = [
         "metadata": {
             "section": "certifications",
             "category": "credentials",
-            "topics": ["oracle", "coursera", "microsoft", "hack2skill", "freecodecamp"]
+            "topics": ["flyrank", "oracle", "coursera", "microsoft", "hack2skill", "freecodecamp"]
         },
         "content": (
             "Verified Industry Certifications:\n"
-            "1. OCI Certified AI Foundations Associate (Oracle, 2024)\n"
+            "1. Certificate of Completion - Backend AI Engineering (FlyRank.ai / FlyRank Corp., September 2026)\n"
+            "   Demonstrated excellence in technical competency, professional conduct, and collaborative contribution in Backend AI Engineering.\n"
+            "   Credential ID: FR-D11-C6946-B9F28. Issued by Alen Malkoc, Founder & CEO, FlyRank Corp.\n\n"
+            "2. OCI Certified AI Foundations Associate (Oracle, 2024)\n"
             "   Covers foundational artificial intelligence, machine learning concepts, and Oracle Cloud AI services.\n\n"
-            "2. Retrieval-Augmented Generation (RAG) (Coursera, 2025)\n"
+            "3. Retrieval-Augmented Generation (RAG) (Coursera, 2025)\n"
             "   Comprehensive coursework on vector databases, semantic search, dense embeddings, chunking strategies, and RAG architectures.\n\n"
-            "3. Career Essentials in Generative AI (Microsoft & LinkedIn, 2024)\n"
+            "4. Career Essentials in Generative AI (Microsoft & LinkedIn, 2024)\n"
             "   Covers enterprise generative AI, ethical and responsible AI practices, prompt engineering, and LLM applications.\n\n"
-            "4. Building Agentic Workflows in Python (Hack2skill, 2025)\n"
+            "5. Building Agentic Workflows in Python (Hack2skill, 2025)\n"
             "   Covers multi-agent orchestration, tool use, autonomous planning, and python agentic design patterns.\n\n"
-            "5. Responsive Web Design (freeCodeCamp, 2023)\n"
+            "6. Responsive Web Design (freeCodeCamp, 2023)\n"
             "   Covers modern responsive layouts, CSS Flexbox, CSS Grid, and web accessibility."
         )
     },

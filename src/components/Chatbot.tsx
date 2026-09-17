@@ -97,6 +97,8 @@ Before responding, detect the user's intent and energy, and dynamically match yo
   Secondary School Certificate (SSC), 2013 - 2021.
 
 ### WORK EXPERIENCE & INTERNSHIPS
+• Backend AI Engineering Intern at FlyRank.ai (FlyRank Corp.) (July 2026 - September 2026):
+  Backend AI systems architecture, engineering workflows, and collaborative technical execution. Certificate ID: FR-D11-C6946-B9F28.
 • Gen AI Intern at SURE TRUST (Feb 2026 - Present):
   LLMs, similarity search, RAG architectures, and building family health concierge AI agent.
 • AI/ML Intern at UPTOSKILLS (Dec 2025 - March 2026):
@@ -123,6 +125,7 @@ Before responding, detect the user's intent and energy, and dynamically match yo
 • Tools: Git, GitHub, VS Code, Jupyter, Linux, Docker, Postman, Google Cloud (Vertex AI)
 
 ### CERTIFICATIONS
+• Certificate of Completion: Backend AI Engineering (FlyRank.ai, 2026 - ID: FR-D11-C6946-B9F28)
 • OCI Certified AI Foundations Associate (Oracle, 2024)
 • Retrieval-Augmented Generation (RAG) (Coursera, 2025)
 • Career Essentials in Generative AI (Microsoft & LinkedIn, 2024)

@@ -1,12 +1,19 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Briefcase } from 'phosphor-react';
+import { Briefcase, Medal, ArrowUpRight } from 'phosphor-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const experience = [
-
+    {
+        title: "Backend AI Engineering Intern",
+        company: "FlyRank.ai",
+        period: "July 2026 - September 2026 (2.5 months)",
+        description: "Completed Backend AI Engineering internship program at FlyRank.ai (FlyRank Corp.). Demonstrated excellence in backend AI systems, technical competency, and collaborative engineering. (Credential ID: FR-D11-C6946-B9F28)",
+        stack: ["Backend AI", "AI Engineering", "Python", "FastAPI", "LLMs"],
+        certificateUrl: "/Images/FlyRank-Internship-Certificate.png"
+    },
     {
         title: "Gen AI Intern",
         company: "SURE TRUST",
@@ -142,12 +149,26 @@ const Experience = () => {
                                     {exp.description}
                                 </p>
 
-                                <div className="flex flex-wrap gap-2">
-                                    {exp.stack.map((tech, i) => (
-                                        <span key={i} className="text-xs font-mono text-secondary/80 bg-secondary/10 px-2 py-1 rounded">
-                                            {tech}
-                                        </span>
-                                    ))}
+                                <div className="flex flex-wrap items-center justify-between gap-3 mt-4">
+                                    <div className="flex flex-wrap gap-2">
+                                        {exp.stack.map((tech, i) => (
+                                            <span key={i} className="text-xs font-mono text-secondary/80 bg-secondary/10 px-2 py-1 rounded">
+                                                {tech}
+                                            </span>
+                                        ))}
+                                    </div>
+                                    {(exp as any).certificateUrl && (
+                                        <a
+                                            href={(exp as any).certificateUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 hover:bg-emerald-500/20 hover:border-emerald-400 px-3 py-1.5 rounded-lg transition-all shadow-sm"
+                                        >
+                                            <Medal size={15} weight="bold" />
+                                            <span>View Certificate</span>
+                                            <ArrowUpRight size={13} weight="bold" />
+                                        </a>
+                                    )}
                                 </div>
                             </div>
                         </div>

@@ -7,6 +7,17 @@ gsap.registerPlugin(ScrollTrigger);
 
 const certifications = [
     {
+        title: "Backend AI Engineering",
+        issuer: "FlyRank.ai",
+        date: "2026",
+        gradient: "from-emerald-500 to-teal-500",
+        accentBg: "bg-emerald-500/10",
+        accentBorder: "border-emerald-500/20",
+        accentText: "text-emerald-500",
+        categories: ["AI & ML", "Engineering"],
+        certificateUrl: "/Images/FlyRank-Internship-Certificate.png"
+    },
+    {
         title: "OCI Certified AI Foundations Associate",
         issuer: "Oracle",
         date: "2024",
