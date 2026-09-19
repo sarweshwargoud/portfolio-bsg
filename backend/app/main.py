@@ -61,7 +61,7 @@ class ContactRequest(BaseModel):
     email: str = Field(..., min_length=5, max_length=255, pattern=r"^[^@]+@[^@]+\.[^@]+$")
     phone: str | None = Field(default=None, max_length=30)
     subject: str = Field(..., min_length=2, max_length=200)
-    message: str = Field(..., min_length=10, max_length=5000)
+    message: str = Field(..., min_length=2, max_length=5000)
     hp_field: str | None = Field(default=None, max_length=100)
 
 class ContactResponse(BaseModel):

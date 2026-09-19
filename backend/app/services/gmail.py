@@ -130,18 +130,18 @@ def send_notification_to_owner(
 <head>
   <meta charset="utf-8">
   <style>
-    body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #09090b; color: #f4f4f5; margin: 0; padding: 24px; }}
-    .card {{ max-width: 600px; margin: 0 auto; background: #18181b; border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }}
-    .header {{ background: linear-gradient(135deg, #06b6d4, #3b82f6); padding: 24px; color: #ffffff; }}
-    .header h2 {{ margin: 0; font-size: 20px; font-weight: 700; }}
-    .header p {{ margin: 4px 0 0 0; font-size: 13px; opacity: 0.9; }}
-    .content {{ padding: 24px; }}
+    body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #f1f5f9; color: #1e293b; margin: 0; padding: 24px; }}
+    .card {{ max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }}
+    .header {{ background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%); padding: 24px; color: #ffffff; }}
+    .header h2 {{ margin: 0; font-size: 20px; font-weight: 700; color: #ffffff; }}
+    .header p {{ margin: 4px 0 0 0; font-size: 13px; opacity: 0.95; color: #ffffff; }}
+    .content {{ padding: 24px; background: #ffffff; }}
     .field {{ margin-bottom: 16px; }}
-    .label {{ font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #a1a1aa; margin-bottom: 4px; font-weight: 600; }}
-    .value {{ font-size: 15px; color: #ffffff; background: #27272a; padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); word-break: break-word; }}
-    .message-box {{ font-size: 14px; color: #f4f4f5; line-height: 1.6; background: #27272a; padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); white-space: pre-wrap; }}
-    .footer {{ padding: 16px 24px; background: #121215; border-top: 1px solid rgba(255,255,255,0.08); font-size: 12px; color: #71717a; display: flex; justify-content: space-between; align-items: center; }}
-    .btn {{ display: inline-block; background: #3b82f6; color: #ffffff !important; text-decoration: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 13px; }}
+    .label {{ font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 4px; font-weight: 700; }}
+    .value {{ font-size: 15px; color: #0f172a; background: #f8fafc; padding: 10px 14px; border-radius: 8px; border: 1px solid #e2e8f0; word-break: break-word; }}
+    .message-box {{ font-size: 14px; color: #0f172a; line-height: 1.6; background: #f8fafc; padding: 14px; border-radius: 8px; border: 1px solid #e2e8f0; white-space: pre-wrap; }}
+    .footer {{ padding: 16px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; font-size: 12px; color: #64748b; display: flex; justify-content: space-between; align-items: center; }}
+    .btn {{ display: inline-block; background: #2563eb; color: #ffffff !important; text-decoration: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 13px; }}
   </style>
 </head>
 <body>
@@ -157,7 +157,7 @@ def send_notification_to_owner(
       </div>
       <div class="field">
         <div class="label">Email Address (Click reply to write back)</div>
-        <div class="value"><a href="mailto:{safe_email}" style="color:#38bdf8; text-decoration:none;">{safe_email}</a></div>
+        <div class="value"><a href="mailto:{safe_email}" style="color:#0284c7; text-decoration:none;">{safe_email}</a></div>
       </div>
       <div class="field">
         <div class="label">Phone</div>
@@ -223,19 +223,19 @@ def send_thank_you_to_visitor(visitor_name: str, visitor_email: str) -> bool:
 <head>
   <meta charset="utf-8">
   <style>
-    body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #09090b; color: #f4f4f5; margin: 0; padding: 24px; }}
-    .card {{ max-width: 600px; margin: 0 auto; background: #18181b; border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }}
-    .header {{ background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%); padding: 28px 24px; color: #ffffff; text-align: center; }}
-    .header h1 {{ margin: 0; font-size: 22px; font-weight: 700; }}
-    .header p {{ margin: 6px 0 0 0; font-size: 13px; opacity: 0.95; }}
-    .content {{ padding: 28px 24px; line-height: 1.7; font-size: 15px; color: #e4e4e7; }}
+    body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #f1f5f9; color: #1e293b; margin: 0; padding: 24px; }}
+    .card {{ max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }}
+    .header {{ background: linear-gradient(135deg, #0284c7 0%, #2563eb 50%, #7c3aed 100%); padding: 28px 24px; color: #ffffff; text-align: center; }}
+    .header h1 {{ margin: 0; font-size: 22px; font-weight: 700; color: #ffffff; }}
+    .header p {{ margin: 6px 0 0 0; font-size: 13px; opacity: 0.95; color: #ffffff; }}
+    .content {{ padding: 28px 24px; line-height: 1.7; font-size: 15px; color: #1e293b; background: #ffffff; }}
     .content p {{ margin: 0 0 16px 0; }}
-    .highlight-box {{ background: rgba(59, 130, 246, 0.1); border-left: 3px solid #3b82f6; padding: 14px 16px; border-radius: 0 8px 8px 0; margin: 20px 0; font-size: 14px; color: #93c5fd; }}
-    .signature {{ margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }}
-    .sig-name {{ font-size: 16px; font-weight: 700; color: #ffffff; }}
-    .sig-title {{ font-size: 13px; color: #38bdf8; font-weight: 500; }}
-    .footer {{ padding: 16px 24px; background: #121215; border-top: 1px solid rgba(255,255,255,0.08); font-size: 12px; color: #71717a; text-align: center; }}
-    .footer a {{ color: #38bdf8; text-decoration: none; }}
+    .highlight-box {{ background: #f0f9ff; border-left: 3px solid #0284c7; padding: 14px 16px; border-radius: 0 8px 8px 0; margin: 20px 0; font-size: 14px; color: #0369a1; }}
+    .signature {{ margin-top: 28px; padding-top: 20px; border-top: 1px solid #e2e8f0; }}
+    .sig-name {{ font-size: 16px; font-weight: 700; color: #0f172a; }}
+    .sig-title {{ font-size: 13px; color: #0284c7; font-weight: 600; }}
+    .footer {{ padding: 16px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; font-size: 12px; color: #64748b; text-align: center; }}
+    .footer a {{ color: #0284c7; text-decoration: none; }}
   </style>
 </head>
 <body>

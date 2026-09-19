@@ -102,8 +102,8 @@ export const HangingContactBot = () => {
       return;
     }
 
-    if (trimmedMessage.length < 10) {
-      setErrorMessage('Message must be at least 10 characters long.');
+    if (trimmedMessage.length < 2) {
+      setErrorMessage('Message must be at least 2 characters long.');
       return;
     }
 
