@@ -181,8 +181,8 @@ RAW_PORTFOLIO_DOCUMENTS = [
         },
         "content": (
             "Verified Industry Certifications:\n"
-            "1. Agentic AI Certified Foundations Associate (Oracle University, 2026)\n"
-            "   Covers first-principles AI agents, LangChain, OpenAI Agents SDK, Model Context Protocol (MCP) servers, OCI Enterprise AI Agents service, and Oracle AI Database agentic features.\n"
+            "1. Agentic AI Certified Foundations Associate (Oracle University, August 16, 2026)\n"
+            "   Certificate of Recognition awarded to Sarweshwar Buddolla by Oracle Corporation. eCertificate ID: 103395933AAI26OFA (valid until August 16, 2028), signed by Gary N Miller (Customer Success Officer, EVP CSS).\n"
             "   Credential Link: https://catalog-education.oracle.com/ords/certview/sharebadge?id=C7FB8D23CC99AB62AD50154B42011DB744068E632E4FE7662C0A5189D9B98FED\n\n"
             "2. Certificate of Completion - Backend AI Engineering (FlyRank.ai / FlyRank Corp., September 2026)\n"
             "   Demonstrated excellence in technical competency, professional conduct, and collaborative contribution in Backend AI Engineering.\n"

@@ -19,14 +19,15 @@ const certifications = [
     },
     {
         title: "Agentic AI Certified Foundations Associate",
-        issuer: "Oracle",
+        issuer: "Oracle University",
         date: "2026",
         gradient: "from-red-600 via-orange-500 to-amber-500",
         accentBg: "bg-red-500/10",
         accentBorder: "border-red-500/20",
         accentText: "text-red-500",
         categories: ["Agentic AI", "AI & ML"],
-        certificateUrl: "https://catalog-education.oracle.com/ords/certview/sharebadge?id=C7FB8D23CC99AB62AD50154B42011DB744068E632E4FE7662C0A5189D9B98FED"
+        certificateUrl: "/Images/Oracle-Agentic-AI-Foundations-Certificate.png",
+        verificationUrl: "https://catalog-education.oracle.com/ords/certview/sharebadge?id=C7FB8D23CC99AB62AD50154B42011DB744068E632E4FE7662C0A5189D9B98FED"
     },
     {
         title: "OCI Certified AI Foundations Associate",
@@ -126,8 +127,9 @@ const Certifications = () => {
     const headerRef = useRef<HTMLDivElement>(null);
     const [isPaused, setIsPaused] = useState(false);
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-    const [previewModal, setPreviewModal] = useState<{ title: string; issuer: string; imageUrl: string } | null>(null);
+    const [previewModal, setPreviewModal] = useState<{ title: string; issuer: string; imageUrl: string; verificationUrl?: string } | null>(null);
 
+    const sidePreviewRef = useRef<HTMLDivElement>(null);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const isUserInteractingRef = useRef<boolean>(false);
     const interactionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -135,15 +137,24 @@ const Certifications = () => {
     const dragStartXRef = useRef<number>(0);
     const dragStartScrollLeftRef = useRef<number>(0);
 
-    // Close modal on Escape key press
+    // Close modal on Escape key press or click outside
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape') setPreviewModal(null);
         };
+        const handleClickOutside = (e: MouseEvent) => {
+            if (sidePreviewRef.current && !sidePreviewRef.current.contains(e.target as Node)) {
+                setPreviewModal(null);
+            }
+        };
         if (previewModal) {
             window.addEventListener('keydown', handleKeyDown);
+            document.addEventListener('mousedown', handleClickOutside);
         }
-        return () => window.removeEventListener('keydown', handleKeyDown);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
     }, [previewModal]);
 
     // Combined smooth auto-scroll + infinite wrapping loop
@@ -159,8 +170,8 @@ const Certifications = () => {
             lastTime = time;
 
             if (!isPaused && !isUserInteractingRef.current) {
-                // ~35px per second
-                const step = (35 * Math.min(delta, 100)) / 1000;
+                // ~80px per second for smooth, pleasant cruising speed
+                const step = (80 * Math.min(delta, 100)) / 1000;
                 container.scrollLeft += step;
 
                 const oneThird = container.scrollWidth / 3;
@@ -497,7 +508,12 @@ const Certifications = () => {
                                                             type="button"
                                                             onClick={(e) => {
                                                                 e.stopPropagation();
-                                                                setPreviewModal({ title: cert.title, issuer: cert.issuer, imageUrl: cert.certificateUrl });
+                                                                setPreviewModal({
+                                                                    title: cert.title,
+                                                                    issuer: cert.issuer,
+                                                                    imageUrl: cert.certificateUrl,
+                                                                    verificationUrl: (cert as any).verificationUrl
+                                                                });
                                                             }}
                                                             className={`flex items-center justify-between w-full text-sm font-semibold transition-all duration-200 group/btn ${
                                                                 isHovered
@@ -563,47 +579,77 @@ const Certifications = () => {
                 </p>
             </div>
 
-            {/* Certificate Image Lightbox Modal */}
+            {/* Compact Side Preview Card (does NOT occupy whole window) */}
             {previewModal && (
                 <div 
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md"
-                    onClick={() => setPreviewModal(null)}
+                    ref={sidePreviewRef}
+                    className="fixed bottom-6 right-4 sm:bottom-8 sm:right-8 z-50 w-[calc(100vw-32px)] sm:w-[420px] bg-zinc-950/95 border border-white/20 rounded-2xl p-4 shadow-[0_20px_60px_rgba(0,0,0,0.9)] backdrop-blur-2xl transition-all animate-in fade-in slide-in-from-bottom-4 sm:slide-in-from-right-4 flex flex-col max-h-[80vh]"
+                    onClick={(e) => e.stopPropagation()}
                 >
-                    <div 
-                        className="relative max-w-4xl w-full bg-zinc-950 border border-white/15 rounded-2xl p-4 sm:p-6 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
-                            <div>
-                                <h4 className="text-base sm:text-lg font-bold text-white tracking-tight">{previewModal.title}</h4>
-                                <p className="text-xs sm:text-sm text-muted-foreground">{previewModal.issuer}</p>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <a
-                                    href={previewModal.imageUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1 text-xs text-secondary hover:text-white px-3 py-1.5 rounded-lg border border-secondary/30 bg-secondary/10 hover:bg-secondary/20 transition-all"
-                                >
-                                    <span>Open Full View</span>
-                                    <ArrowUpRight size={13} weight="bold" />
-                                </a>
-                                <button
-                                    onClick={() => setPreviewModal(null)}
-                                    className="p-1.5 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-                                    aria-label="Close modal"
-                                >
-                                    <X size={20} />
-                                </button>
-                            </div>
+                    {/* Header */}
+                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
+                        <div className="pr-2 min-w-0">
+                            <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full inline-block mb-1">
+                                Certificate Preview
+                            </span>
+                            <h4 className="text-sm font-bold text-white tracking-tight leading-snug truncate">
+                                {previewModal.title}
+                            </h4>
+                            <p className="text-xs text-white/50 truncate">{previewModal.issuer}</p>
                         </div>
-                        <div className="flex-1 overflow-auto flex items-center justify-center rounded-xl bg-black/40 p-2 border border-white/5">
-                            <img
-                                src={previewModal.imageUrl}
-                                alt={previewModal.title}
-                                className="max-w-full max-h-[70vh] object-contain rounded-lg shadow-md"
-                            />
+                        <div className="flex items-center gap-1.5 shrink-0">
+                            <a
+                                href={previewModal.imageUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-1.5 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                                title="Open full view in new tab"
+                            >
+                                <ArrowUpRight size={17} weight="bold" />
+                            </a>
+                            <button
+                                onClick={() => setPreviewModal(null)}
+                                className="p-1.5 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+                                aria-label="Close preview"
+                            >
+                                <X size={18} weight="bold" />
+                            </button>
                         </div>
+                    </div>
+
+                    {/* Image Preview Container */}
+                    <div className="rounded-xl overflow-hidden bg-black/60 border border-white/5 flex items-center justify-center p-2 group">
+                        <img
+                            src={previewModal.imageUrl}
+                            alt={previewModal.title}
+                            className="w-full h-auto max-h-[46vh] object-contain rounded-lg transition-transform duration-300 group-hover:scale-[1.02]"
+                        />
+                    </div>
+
+                    {/* Footer */}
+                    <div className="pt-3 mt-3 border-t border-white/10 flex items-center justify-between text-xs">
+                        {previewModal.verificationUrl ? (
+                            <a
+                                href={previewModal.verificationUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 text-primary hover:text-primary-glow font-medium transition-colors"
+                            >
+                                <span>Verify official badge</span>
+                                <ArrowUpRight size={12} weight="bold" />
+                            </a>
+                        ) : (
+                            <span className="text-white/40 text-[11px]">Click outside or press Esc to close</span>
+                        )}
+                        <a
+                            href={previewModal.imageUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-secondary hover:text-white font-medium transition-colors"
+                        >
+                            <span>Open full size</span>
+                            <ArrowUpRight size={12} weight="bold" />
+                        </a>
                     </div>
                 </div>
             )}

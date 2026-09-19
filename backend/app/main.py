@@ -4,7 +4,7 @@ from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from app.config import settings
-from app.rag.retrieval import generate_rag_response
+from app.rag.retrieval import generate_rag_response, log_chat_to_supabase
 from app.rag.ingestion import ingest_portfolio_knowledge
 
 logging.basicConfig(
@@ -36,6 +36,8 @@ class ChatMessage(BaseModel):
 class ChatRequest(BaseModel):
     message: str = Field(..., min_length=1, max_length=2000)
     history: list[ChatMessage] = Field(default_factory=list)
+    session_id: str | None = None
+    metadata: dict[str, Any] | None = None
 
 class SourceItem(BaseModel):
     id: str
@@ -45,6 +47,13 @@ class SourceItem(BaseModel):
 class ChatResponse(BaseModel):
     reply: str
     sources: list[SourceItem] = Field(default_factory=list)
+
+class LogChatRequest(BaseModel):
+    user_query: str
+    bot_response: str
+    sources: list[dict[str, Any]] | list[Any] = Field(default_factory=list)
+    session_id: str | None = None
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
 @app.get("/")
 def root():
@@ -71,7 +80,8 @@ async def chat_endpoint(request: ChatRequest):
     """
     Main chat endpoint:
     Processes user query -> generates query embedding -> searches Supabase pgvector
-    -> builds RAG context -> queries Gemini LLM with dynamic tone matching.
+    -> builds RAG context -> queries Gemini LLM with dynamic tone matching
+    -> logs user query & bot response to Supabase chat_logs table in real-time.
     """
     user_query = request.message.strip()
     if not user_query:
@@ -86,6 +96,24 @@ async def chat_endpoint(request: ChatRequest):
             for msg in request.history
         ]
         result = generate_rag_response(user_query, history_dicts)
+        
+        # Real-time log to Supabase chat_logs table (live table sheet)
+        try:
+            client_meta = request.metadata or {}
+            client_meta.update({
+                "llm_model": settings.llm_model,
+                "source_count": len(result.get("sources", []))
+            })
+            log_chat_to_supabase(
+                user_query=user_query,
+                bot_response=result["reply"],
+                sources=result.get("sources", []),
+                session_id=request.session_id,
+                metadata=client_meta
+            )
+        except Exception as log_err:
+            logger.warning(f"Background chat logging failed: {log_err}")
+
         return ChatResponse(
             reply=result["reply"],
             sources=result["sources"]
@@ -96,6 +124,21 @@ async def chat_endpoint(request: ChatRequest):
             reply="I couldn't retrieve the relevant portfolio information right now. Please try again in a moment.",
             sources=[]
         )
+
+@app.post("/api/chat/log")
+async def log_chat_endpoint(request: LogChatRequest):
+    """
+    Explicit endpoint to log user query and bot response to Supabase chat_logs table.
+    Ensures interactions are recorded even when client fallback mechanisms are used.
+    """
+    success = log_chat_to_supabase(
+        user_query=request.user_query,
+        bot_response=request.bot_response,
+        sources=request.sources,
+        session_id=request.session_id,
+        metadata=request.metadata
+    )
+    return {"status": "logged" if success else "failed"}
 
 @app.post("/api/ingest")
 async def trigger_ingestion():

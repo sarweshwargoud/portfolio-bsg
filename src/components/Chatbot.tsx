@@ -288,6 +288,9 @@ const Chatbot: React.FC = () => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const robotRef = useRef<HTMLDivElement>(null);
+  const sessionIdRef = useRef<string>(
+    'sess_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now()
+  );
 
   // Auto-scroll to bottom smoothly when new messages arrive
   useEffect(() => {
@@ -461,7 +464,9 @@ const Chatbot: React.FC = () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             message: query,
-            history: history.map((m) => ({ text: m.text, isBot: m.isBot }))
+            history: history.map((m) => ({ text: m.text, isBot: m.isBot })),
+            session_id: sessionIdRef.current,
+            metadata: { client: 'portfolio_web' }
           })
         });
 
@@ -474,6 +479,19 @@ const Chatbot: React.FC = () => {
       } catch (backendError) {
         console.warn('FastAPI RAG backend not reachable, using direct client fallback:', backendError);
         aiReply = await callGemini(query, history);
+
+        // Record interaction in Supabase chat_logs via background log call
+        fetch(`${BACKEND_URL}/api/chat/log`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_query: query,
+            bot_response: aiReply,
+            sources: [],
+            session_id: sessionIdRef.current,
+            metadata: { client: 'client_gemini_fallback' }
+          })
+        }).catch(() => {});
       }
 
       const botResponse = {

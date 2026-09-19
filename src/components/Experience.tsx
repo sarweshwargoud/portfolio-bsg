@@ -29,7 +29,6 @@ const experience = [
         stack: ["Generative AI", "FineTuning", "FastAPI", "React.js"],
         certificateUrl: "/Images/UptoSkills-AIML-Internship-Certificate.png"
     },
-
     {
         title: "AI for Sustainabilty virtual Intern",
         company: "1M1B (1 Million for 1 Billion)",
@@ -55,17 +54,27 @@ const experience = [
 
 const Experience = () => {
     const timelineRef = useRef<HTMLDivElement>(null);
+    const sidePreviewRef = useRef<HTMLDivElement>(null);
     const [previewModal, setPreviewModal] = useState<{ title: string; company: string; imageUrl: string } | null>(null);
 
-    // Close modal on Escape key press
+    // Close modal on Escape key press or click outside
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape') setPreviewModal(null);
         };
+        const handleClickOutside = (e: MouseEvent) => {
+            if (sidePreviewRef.current && !sidePreviewRef.current.contains(e.target as Node)) {
+                setPreviewModal(null);
+            }
+        };
         if (previewModal) {
             window.addEventListener('keydown', handleKeyDown);
+            document.addEventListener('mousedown', handleClickOutside);
         }
-        return () => window.removeEventListener('keydown', handleKeyDown);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
     }, [previewModal]);
 
     useEffect(() => {
@@ -201,47 +210,65 @@ const Experience = () => {
             <div className="absolute top-1/3 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
             <div className="absolute bottom-1/4 left-0 w-64 h-64 bg-secondary/5 rounded-full blur-[80px] pointer-events-none" />
 
-            {/* Internship Certificate Lightbox Modal Popup (in the same tab) */}
+            {/* Compact Internship Certificate Side Preview (does NOT occupy whole window) */}
             {previewModal && (
                 <div 
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md"
-                    onClick={() => setPreviewModal(null)}
+                    ref={sidePreviewRef}
+                    className="fixed bottom-6 right-4 sm:bottom-8 sm:right-8 z-50 w-[calc(100vw-32px)] sm:w-[420px] bg-zinc-950/95 border border-white/20 rounded-2xl p-4 shadow-[0_20px_60px_rgba(0,0,0,0.9)] backdrop-blur-2xl transition-all animate-in fade-in slide-in-from-bottom-4 sm:slide-in-from-right-4 flex flex-col max-h-[80vh]"
+                    onClick={(e) => e.stopPropagation()}
                 >
-                    <div 
-                        className="relative max-w-4xl w-full bg-zinc-950/95 border border-white/15 rounded-2xl p-4 sm:p-6 shadow-[0_25px_70px_rgba(0,0,0,0.95)] overflow-hidden flex flex-col max-h-[90vh]"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
-                            <div>
-                                <h4 className="text-base sm:text-lg font-bold text-white tracking-tight">{previewModal.title}</h4>
-                                <p className="text-xs sm:text-sm text-primary font-medium">{previewModal.company}</p>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <a
-                                    href={previewModal.imageUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1 text-xs text-secondary hover:text-white px-3 py-1.5 rounded-lg border border-secondary/30 bg-secondary/10 hover:bg-secondary/20 transition-all"
-                                >
-                                    <span>Open Full View</span>
-                                    <ArrowUpRight size={13} weight="bold" />
-                                </a>
-                                <button
-                                    onClick={() => setPreviewModal(null)}
-                                    className="p-1.5 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
-                                    aria-label="Close modal"
-                                >
-                                    <X size={20} />
-                                </button>
-                            </div>
+                    {/* Header */}
+                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
+                        <div className="pr-2 min-w-0">
+                            <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full inline-block mb-1">
+                                Internship Certificate
+                            </span>
+                            <h4 className="text-sm font-bold text-white tracking-tight leading-snug truncate">
+                                {previewModal.title}
+                            </h4>
+                            <p className="text-xs text-primary font-medium truncate">{previewModal.company}</p>
                         </div>
-                        <div className="flex-1 overflow-auto flex items-center justify-center rounded-xl bg-black/50 p-2 border border-white/5">
-                            <img
-                                src={previewModal.imageUrl}
-                                alt={previewModal.title}
-                                className="max-w-full max-h-[72vh] object-contain rounded-lg shadow-md"
-                            />
+                        <div className="flex items-center gap-1.5 shrink-0">
+                            <a
+                                href={previewModal.imageUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-1.5 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                                title="Open full view in new tab"
+                            >
+                                <ArrowUpRight size={17} weight="bold" />
+                            </a>
+                            <button
+                                onClick={() => setPreviewModal(null)}
+                                className="p-1.5 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+                                aria-label="Close preview"
+                            >
+                                <X size={18} weight="bold" />
+                            </button>
                         </div>
+                    </div>
+
+                    {/* Image Container */}
+                    <div className="rounded-xl overflow-hidden bg-black/60 border border-white/5 flex items-center justify-center p-2 group">
+                        <img
+                            src={previewModal.imageUrl}
+                            alt={previewModal.title}
+                            className="w-full h-auto max-h-[46vh] object-contain rounded-lg transition-transform duration-300 group-hover:scale-[1.02]"
+                        />
+                    </div>
+
+                    {/* Footer */}
+                    <div className="pt-3 mt-3 border-t border-white/10 flex items-center justify-between text-xs">
+                        <span className="text-white/40 text-[11px]">Click outside or press Esc to close</span>
+                        <a
+                            href={previewModal.imageUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-secondary hover:text-white font-medium transition-colors"
+                        >
+                            <span>Open full size</span>
+                            <ArrowUpRight size={12} weight="bold" />
+                        </a>
                     </div>
                 </div>
             )}

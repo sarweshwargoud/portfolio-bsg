@@ -224,3 +224,36 @@ def generate_rag_response(
         "reply": "I couldn't retrieve the relevant portfolio information right now. Please try again in a moment.",
         "sources": []
     }
+
+def log_chat_to_supabase(
+    user_query: str,
+    bot_response: str,
+    sources: list[dict[str, Any]] | list[Any] | None = None,
+    session_id: str | None = None,
+    metadata: dict[str, Any] | None = None
+) -> bool:
+    """
+    Log user query and bot response to Supabase 'chat_logs' table in real-time.
+    Provides a live updated 'sheet' of all user interactions in the Supabase Table Editor.
+    """
+    cleaned_query = (user_query or "").strip()
+    cleaned_reply = (bot_response or "").strip()
+    if not cleaned_query:
+        return False
+
+    try:
+        supabase = get_supabase_client()
+        record = {
+            "user_query": cleaned_query,
+            "bot_response": cleaned_reply,
+            "sources": sources or [],
+            "session_id": session_id,
+            "metadata": metadata or {}
+        }
+        supabase.table("chat_logs").insert(record).execute()
+        logger.info(f"Successfully logged chat interaction to Supabase chat_logs: '{cleaned_query[:45]}...'")
+        return True
+    except Exception as e:
+        logger.error(f"Failed to log chat interaction to Supabase chat_logs: {e}", exc_info=True)
+        return False
+
