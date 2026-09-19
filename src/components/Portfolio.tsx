@@ -12,6 +12,7 @@ import CodingProfiles from './CodingProfiles';
 import Contact from './Contact';
 import Footer from './Footer';
 import Chatbot from './Chatbot';
+import HangingContactBot from './HangingContactBot';
 
 const Portfolio = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -54,6 +55,7 @@ const Portfolio = () => {
           <CodingProfiles />
           <Contact />
           <Chatbot />
+          <HangingContactBot />
         </main>
         <Footer />
       </div>
