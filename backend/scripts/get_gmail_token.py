@@ -17,7 +17,7 @@ Instructions:
 5. Go to APIs & Services -> Credentials -> Create Credentials -> OAuth client ID:
    - Application type: 'Web application' (or Desktop app)
    - Name: Portfolio Contact Gmail
-   - Authorized redirect URIs: http://localhost:8085/
+   - Authorized redirect URIs: http://localhost:8085/callback
 6. Copy Client ID and Client Secret into backend/.env (or input them when prompted).
 7. Run this script: python backend/scripts/get_gmail_token.py
 """
@@ -34,7 +34,7 @@ BACKEND_DIR = Path(__file__).resolve().parent.parent
 ENV_PATH = BACKEND_DIR / ".env"
 
 SCOPE = "https://www.googleapis.com/auth/gmail.send"
-REDIRECT_URI = "http://localhost:8085/"
+REDIRECT_URI = "http://localhost:8085/callback"
 PORT = 8085
 
 def load_env() -> dict[str, str]:

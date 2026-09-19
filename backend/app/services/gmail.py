@@ -197,20 +197,20 @@ def send_thank_you_to_visitor(visitor_name: str, visitor_email: str) -> bool:
 
     msg = MIMEMultipart("alternative")
     msg["Subject"] = "Thanks for visiting my portfolio! 🚀"
-    msg["From"] = f"Sarweshwar Goud <{sender_email}>"
+    msg["From"] = f"Sarweshwar Buddolla <{sender_email}>"
     msg["To"] = f"{visitor_name} <{visitor_email}>"
-    msg["Reply-To"] = f"Sarweshwar Goud <{sender_email}>"
+    msg["Reply-To"] = f"Sarweshwar Buddolla <{sender_email}>"
 
     # Plain text version matching user's exact specification
     text_content = (
         f"Hi {visitor_name},\n\n"
         f"Thanks for visiting my portfolio! 👋\n\n"
-        f"I'm Sarweshwar, an aspiring AI Engineer passionate about AI, Generative AI, Machine Learning, RAG, and AI-powered applications.\n\n"
+        f"I'm Sarweshwar Buddolla, an aspiring AI Engineer passionate about AI, Generative AI, Machine Learning, RAG, and AI-powered applications.\n\n"
         f"I received your message through my portfolio and really appreciate you taking the time to reach out.\n\n"
         f"If you'd like to discuss an idea, project, collaboration, opportunity, or simply connect, feel free to reply to this email. I'd be happy to connect and discuss! 🤝\n\n"
         f"Looking forward to hearing from you.\n\n"
         f"Best regards,\n\n"
-        f"Sarweshwar Goud\n"
+        f"Sarweshwar Buddolla\n"
         f"Aspiring AI Engineer\n"
         f"{settings.portfolio_url}\n"
     )
@@ -242,7 +242,7 @@ def send_thank_you_to_visitor(visitor_name: str, visitor_email: str) -> bool:
   <div class="card">
     <div class="header">
       <h1>Thanks for reaching out! 🚀</h1>
-      <p>Sarweshwar Goud • AI Engineer Portfolio</p>
+      <p>Sarweshwar Buddolla • AI Engineer Portfolio</p>
     </div>
     <div class="content">
       <p>Hi <strong>{safe_name}</strong>,</p>
@@ -254,7 +254,7 @@ def send_thank_you_to_visitor(visitor_name: str, visitor_email: str) -> bool:
       </div>
       <p>Looking forward to hearing from you.</p>
       <div class="signature">
-        <div class="sig-name">Sarweshwar Goud</div>
+        <div class="sig-name">Sarweshwar Buddolla</div>
         <div class="sig-title">Aspiring AI Engineer</div>
       </div>
     </div>
