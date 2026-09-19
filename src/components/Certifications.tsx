@@ -217,7 +217,7 @@ const Certifications = () => {
         }, 1200);
     };
 
-    // Native scroll event (touch swipe or keyboard)
+    // Native scroll event - handle seamless infinite wrap-around
     const handleScroll = () => {
         const container = scrollContainerRef.current;
         if (!container) return;
@@ -230,8 +230,14 @@ const Certifications = () => {
                 container.scrollLeft += oneThird;
             }
         }
+    };
 
+    const handleTouchStart = () => {
         isUserInteractingRef.current = true;
+        if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current);
+    };
+
+    const handleTouchEnd = () => {
         if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current);
         interactionTimeoutRef.current = setTimeout(() => {
             isUserInteractingRef.current = false;
@@ -410,6 +416,8 @@ const Certifications = () => {
                     }}
                     onWheel={handleWheel}
                     onScroll={handleScroll}
+                    onTouchStart={handleTouchStart}
+                    onTouchEnd={handleTouchEnd}
                     onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUpOrLeave}
@@ -579,64 +587,64 @@ const Certifications = () => {
                 </p>
             </div>
 
-            {/* Compact Side Preview Card (does NOT occupy whole window) */}
+            {/* Bigger Side Preview Card at Middle-Right (does NOT occupy whole window, clear of bottom chat button) */}
             {previewModal && (
                 <div 
                     ref={sidePreviewRef}
-                    className="fixed bottom-6 right-4 sm:bottom-8 sm:right-8 z-50 w-[calc(100vw-32px)] sm:w-[420px] bg-zinc-950/95 border border-white/20 rounded-2xl p-4 shadow-[0_20px_60px_rgba(0,0,0,0.9)] backdrop-blur-2xl transition-all animate-in fade-in slide-in-from-bottom-4 sm:slide-in-from-right-4 flex flex-col max-h-[80vh]"
+                    className="fixed top-1/2 -translate-y-1/2 right-3 sm:right-6 md:right-8 z-50 w-[calc(100vw-24px)] sm:w-[540px] md:w-[620px] lg:w-[680px] bg-zinc-950/95 border border-white/20 rounded-2xl p-4 sm:p-5 shadow-[0_25px_80px_rgba(0,0,0,0.95)] backdrop-blur-2xl transition-all animate-in fade-in slide-in-from-right-8 flex flex-col max-h-[88vh]"
                     onClick={(e) => e.stopPropagation()}
                 >
                     {/* Header */}
-                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
-                        <div className="pr-2 min-w-0">
+                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/10 shrink-0">
+                        <div className="pr-3 min-w-0">
                             <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full inline-block mb-1">
                                 Certificate Preview
                             </span>
-                            <h4 className="text-sm font-bold text-white tracking-tight leading-snug truncate">
+                            <h4 className="text-base font-bold text-white tracking-tight leading-snug truncate">
                                 {previewModal.title}
                             </h4>
                             <p className="text-xs text-white/50 truncate">{previewModal.issuer}</p>
                         </div>
-                        <div className="flex items-center gap-1.5 shrink-0">
+                        <div className="flex items-center gap-2 shrink-0">
                             <a
                                 href={previewModal.imageUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="p-1.5 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                                className="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
                                 title="Open full view in new tab"
                             >
-                                <ArrowUpRight size={17} weight="bold" />
+                                <ArrowUpRight size={18} weight="bold" />
                             </a>
                             <button
                                 onClick={() => setPreviewModal(null)}
-                                className="p-1.5 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+                                className="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
                                 aria-label="Close preview"
                             >
-                                <X size={18} weight="bold" />
+                                <X size={20} weight="bold" />
                             </button>
                         </div>
                     </div>
 
-                    {/* Image Preview Container */}
-                    <div className="rounded-xl overflow-hidden bg-black/60 border border-white/5 flex items-center justify-center p-2 group">
+                    {/* Image Preview Container (Larger & Clearer) */}
+                    <div className="rounded-xl overflow-hidden bg-black/70 border border-white/10 flex items-center justify-center p-2.5 group flex-1 min-h-0">
                         <img
                             src={previewModal.imageUrl}
                             alt={previewModal.title}
-                            className="w-full h-auto max-h-[46vh] object-contain rounded-lg transition-transform duration-300 group-hover:scale-[1.02]"
+                            className="w-full h-auto max-h-[56vh] object-contain rounded-lg transition-transform duration-300 group-hover:scale-[1.01]"
                         />
                     </div>
 
                     {/* Footer */}
-                    <div className="pt-3 mt-3 border-t border-white/10 flex items-center justify-between text-xs">
+                    <div className="pt-3 mt-3 pb-1 border-t border-white/10 flex items-center justify-between text-xs shrink-0">
                         {previewModal.verificationUrl ? (
                             <a
                                 href={previewModal.verificationUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 text-primary hover:text-primary-glow font-medium transition-colors"
+                                className="inline-flex items-center gap-1.5 text-primary hover:text-primary-glow font-medium transition-colors"
                             >
                                 <span>Verify official badge</span>
-                                <ArrowUpRight size={12} weight="bold" />
+                                <ArrowUpRight size={13} weight="bold" />
                             </a>
                         ) : (
                             <span className="text-white/40 text-[11px]">Click outside or press Esc to close</span>
@@ -645,10 +653,10 @@ const Certifications = () => {
                             href={previewModal.imageUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-secondary hover:text-white font-medium transition-colors"
+                            className="inline-flex items-center gap-1.5 text-secondary hover:text-white font-medium transition-colors"
                         >
                             <span>Open full size</span>
-                            <ArrowUpRight size={12} weight="bold" />
+                            <ArrowUpRight size={13} weight="bold" />
                         </a>
                     </div>
                 </div>
