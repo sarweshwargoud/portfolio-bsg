@@ -31,6 +31,14 @@ class Settings(BaseSettings):
         alias="CORS_ORIGINS"
     )
 
+    # Gmail API OAuth Settings
+    google_client_id: str | None = Field(default=None, alias="GOOGLE_CLIENT_ID")
+    google_client_secret: str | None = Field(default=None, alias="GOOGLE_CLIENT_SECRET")
+    google_refresh_token: str | None = Field(default=None, alias="GOOGLE_REFRESH_TOKEN")
+    gmail_sender_email: str | None = Field(default="b.sarweshwar445@gmail.com", alias="GMAIL_SENDER_EMAIL")
+    gmail_notification_email: str | None = Field(default="b.sarweshwar445@gmail.com", alias="GMAIL_NOTIFICATION_EMAIL")
+    portfolio_url: str = Field(default="https://portfolio-bsg.onrender.com", alias="PORTFOLIO_URL")
+
     @property
     def cors_origins_list(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]

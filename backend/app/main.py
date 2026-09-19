@@ -1,11 +1,12 @@
 import logging
 from typing import Any
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from app.config import settings
 from app.rag.retrieval import generate_rag_response, log_chat_to_supabase
 from app.rag.ingestion import ingest_portfolio_knowledge
+from app.services.contact import process_contact_submission
 
 logging.basicConfig(
     level=logging.INFO,
@@ -54,6 +55,18 @@ class LogChatRequest(BaseModel):
     sources: list[dict[str, Any]] | list[Any] = Field(default_factory=list)
     session_id: str | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
+
+class ContactRequest(BaseModel):
+    name: str = Field(..., min_length=2, max_length=100)
+    email: str = Field(..., min_length=5, max_length=255, pattern=r"^[^@]+@[^@]+\.[^@]+$")
+    phone: str | None = Field(default=None, max_length=30)
+    subject: str = Field(..., min_length=2, max_length=200)
+    message: str = Field(..., min_length=10, max_length=5000)
+    hp_field: str | None = Field(default=None, max_length=100)
+
+class ContactResponse(BaseModel):
+    success: bool
+    message: str
 
 @app.get("/")
 def root():
@@ -152,3 +165,40 @@ async def trigger_ingestion():
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Ingestion failed: {str(e)}"
         )
+
+@app.post("/api/contact", response_model=ContactResponse)
+async def contact_endpoint(contact_data: ContactRequest, request: Request):
+    """
+    Production-ready contact submission endpoint:
+    1. Validates visitor inputs server-side
+    2. Honeypot check for bots
+    3. Rate-limits requests per client IP
+    4. Persists contact submission in Supabase
+    5. Dispatches Gmail notification to Sarweshwar with Reply-To visitor
+    6. Sends personalized thank-you greeting to visitor
+    """
+    # Extract client IP supporting proxies
+    forwarded_for = request.headers.get("x-forwarded-for")
+    if forwarded_for:
+        client_ip = forwarded_for.split(",")[0].strip()
+    else:
+        client_ip = request.client.host if request.client else "unknown"
+
+    user_agent = request.headers.get("user-agent", "")
+
+    result = process_contact_submission(
+        name=contact_data.name,
+        email=contact_data.email,
+        phone=contact_data.phone,
+        subject=contact_data.subject,
+        message=contact_data.message,
+        hp_field=contact_data.hp_field,
+        client_ip=client_ip,
+        user_agent=user_agent,
+    )
+
+    return ContactResponse(
+        success=result["success"],
+        message=result["message"]
+    )
+
