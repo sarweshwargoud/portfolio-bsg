@@ -275,6 +275,8 @@ const Chatbot: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -291,6 +293,23 @@ const Chatbot: React.FC = () => {
   const sessionIdRef = useRef<string>(
     'sess_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now()
   );
+
+  // Auto-tuck into edge and dim opacity when user is scrolling
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolling(true);
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+      scrollTimeoutRef.current = setTimeout(() => {
+        setIsScrolling(false);
+      }, 800);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+    };
+  }, []);
 
   // Auto-scroll to bottom smoothly when new messages arrive
   useEffect(() => {
@@ -526,11 +545,18 @@ const Chatbot: React.FC = () => {
   };
 
   return (
-    <div className="fixed bottom-4 right-3 sm:bottom-6 sm:right-6 z-50">
-      {/* Waving Robot Floating Indicator */}
+    <div
+      className={`fixed bottom-3 right-3 sm:bottom-6 sm:right-6 z-50 transition-all duration-300 ${
+        isScrolling && !isOpen
+          ? 'opacity-20 translate-x-4 translate-y-4 pointer-events-none sm:opacity-40 sm:translate-x-2 sm:translate-y-2'
+          : 'opacity-100 translate-x-0 translate-y-0 pointer-events-auto'
+      }`}
+      onTouchStart={() => setIsScrolling(false)}
+    >
+      {/* Waving Robot Floating Indicator - Desktop only so it doesn't clutter mobile view */}
       {!isOpen && (
         <div
-          className="absolute -top-16 right-1 flex items-center gap-2 bg-zinc-950/80 backdrop-blur-xl border border-white/15 rounded-2xl px-3.5 py-2 shadow-[0_10px_30px_rgba(0,0,0,0.6)] cursor-pointer select-none hover:scale-105 transition-all group"
+          className="hidden sm:flex absolute -top-16 right-1 items-center gap-2 bg-zinc-950/80 backdrop-blur-xl border border-white/15 rounded-2xl px-3.5 py-2 shadow-[0_10px_30px_rgba(0,0,0,0.6)] cursor-pointer select-none hover:scale-105 transition-all group"
           onClick={toggleChat}
         >
           <div ref={robotRef} className="text-2xl group-hover:scale-110 transition-transform">
@@ -671,13 +697,19 @@ const Chatbot: React.FC = () => {
       <button
         ref={buttonRef}
         onClick={toggleChat}
-        className="chatbot w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-primary to-secondary text-white rounded-full flex items-center justify-center shadow-glow-primary hover:scale-110 active:scale-95 transition-transform"
+        className="chatbot w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-primary to-secondary text-white rounded-full flex items-center justify-center shadow-glow-primary hover:scale-110 active:scale-95 transition-all"
         aria-label="Toggle portfolio chatbot"
       >
         {isOpen ? (
-          <X size={26} weight="bold" />
+          <>
+            <X size={20} weight="bold" className="sm:hidden" />
+            <X size={26} weight="bold" className="hidden sm:block" />
+          </>
         ) : (
-          <ChatCircle size={28} weight="fill" />
+          <>
+            <ChatCircle size={22} weight="fill" className="sm:hidden" />
+            <ChatCircle size={28} weight="fill" className="hidden sm:block" />
+          </>
         )}
       </button>
     </div>

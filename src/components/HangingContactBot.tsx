@@ -39,6 +39,8 @@ export const HangingContactBot = () => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isBlinking, setIsBlinking] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -49,6 +51,23 @@ export const HangingContactBot = () => {
       setTimeout(() => setIsBlinking(false), 200);
     }, 4000);
     return () => clearInterval(blinkInterval);
+  }, []);
+
+  // Auto-tuck into edge and dim opacity when user is scrolling
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolling(true);
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+      scrollTimeoutRef.current = setTimeout(() => {
+        setIsScrolling(false);
+      }, 800);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+    };
   }, []);
 
   // Close on Escape key press
@@ -174,13 +193,18 @@ export const HangingContactBot = () => {
       {/* ============================================================ */}
       {!isOpen && (
         <div
-          className="fixed right-0 top-[48%] -translate-y-1/2 z-40 flex items-center cursor-pointer group select-none"
+          className={`fixed right-0 top-[48%] -translate-y-1/2 z-40 flex items-center cursor-pointer select-none transition-all duration-300 group ${
+            isScrolling
+              ? 'opacity-20 translate-x-8 sm:opacity-40 sm:translate-x-4 pointer-events-none'
+              : 'opacity-100 translate-x-1 sm:translate-x-0 hover:translate-x-0 active:translate-x-0 pointer-events-auto'
+          }`}
           onClick={() => setIsOpen(true)}
+          onTouchStart={() => setIsScrolling(false)}
           title="Wanna contact?! Send message..."
           aria-label="Open contact form"
         >
-          {/* Speech Bubble attached to the left of the hanging robot */}
-          <div className="relative mr-2 sm:mr-3 flex items-center gap-2 bg-zinc-950/90 backdrop-blur-xl border border-cyan-500/40 hover:border-cyan-400 px-3.5 py-2 rounded-2xl shadow-[0_10px_35px_rgba(6,182,212,0.25)] transition-all duration-300 group-hover:scale-105 group-hover:-translate-x-1">
+          {/* Desktop Speech Bubble: visible on sm+ screens */}
+          <div className="hidden sm:flex relative mr-2 sm:mr-3 items-center gap-2 bg-zinc-950/90 backdrop-blur-xl border border-cyan-500/40 hover:border-cyan-400 px-3.5 py-2 rounded-2xl shadow-[0_10px_35px_rgba(6,182,212,0.25)] transition-all duration-300 group-hover:scale-105 group-hover:-translate-x-1">
             {/* Pulsing indicator light */}
             <span className="relative flex h-2.5 w-2.5 shrink-0">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
@@ -200,14 +224,26 @@ export const HangingContactBot = () => {
             <div className="absolute -right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-zinc-950 border-r border-t border-cyan-500/40 rotate-45" />
           </div>
 
-          {/* Hanging Robot Body */}
-          <div className="relative transition-transform duration-300 group-hover:translate-x-[-4px]">
-            {/* Hanging Cable / Wall Attachment */}
-            <div className="absolute -top-6 right-3 w-1.5 h-6 bg-gradient-to-b from-cyan-500 to-primary/80 rounded-full opacity-75" />
-            <div className="absolute -bottom-6 right-3 w-1.5 h-6 bg-gradient-to-t from-cyan-500 to-primary/80 rounded-full opacity-75" />
+          {/* Mobile Sleek Mini Badge: compact, tucked, expands out on hover/touch */}
+          <div className="flex sm:hidden relative mr-1 items-center gap-1.5 bg-zinc-950/90 backdrop-blur-xl border border-cyan-500/40 px-2 py-1 rounded-xl shadow-[0_4px_15px_rgba(6,182,212,0.25)] transition-all duration-300 group-active:translate-x-0 group-hover:translate-x-0">
+            <span className="relative flex h-2 w-2 shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500" />
+            </span>
+            <span className="text-[10px] font-bold text-cyan-300 whitespace-nowrap">
+              Contact 💬
+            </span>
+            <div className="absolute -right-1 top-1/2 -translate-y-1/2 w-2 h-2 bg-zinc-950 border-r border-t border-cyan-500/40 rotate-45" />
+          </div>
 
-            {/* Robot Container with subtle sway animation */}
-            <div className="relative w-14 h-16 sm:w-16 sm:h-18 flex items-center justify-center filter drop-shadow-[0_0_15px_rgba(6,182,212,0.4)]">
+          {/* Hanging Robot Body */}
+          <div className="relative transition-transform duration-300 group-hover:translate-x-[-4px] group-active:translate-x-[-4px]">
+            {/* Hanging Cable / Wall Attachment */}
+            <div className="absolute -top-4 sm:-top-6 right-2 sm:right-3 w-1 sm:w-1.5 h-4 sm:h-6 bg-gradient-to-b from-cyan-500 to-primary/80 rounded-full opacity-75" />
+            <div className="absolute -bottom-4 sm:-bottom-6 right-2 sm:right-3 w-1 sm:w-1.5 h-4 sm:h-6 bg-gradient-to-t from-cyan-500 to-primary/80 rounded-full opacity-75" />
+
+            {/* Robot Container with subtle sway animation - scaled smaller on mobile */}
+            <div className="relative w-11 h-13 sm:w-16 sm:h-18 flex items-center justify-center filter drop-shadow-[0_0_15px_rgba(6,182,212,0.4)]">
               <svg
                 viewBox="0 0 100 110"
                 className="w-full h-full transform transition-all duration-300 group-hover:scale-110"

@@ -47,9 +47,16 @@ def get_access_token() -> str:
 
     try:
         response = requests.post(token_url, data=payload, timeout=15)
-        response.raise_for_status()
+        if not response.ok:
+            error_data = response.json() if "application/json" in response.headers.get("Content-Type", "") else response.text
+            logger.error(
+                f"Google OAuth token refresh failed ({response.status_code}): {error_data}. "
+                "If 'invalid_grant: Token has been expired or revoked', run `python backend/scripts/get_gmail_token.py` "
+                "and ensure your Google Cloud OAuth consent screen is published to 'In Production' so tokens never expire after 7 days."
+            )
+            response.raise_for_status()
+
         data = response.json()
-        
         access_token = data.get("access_token")
         expires_in = data.get("expires_in", 3600)
 
@@ -61,7 +68,7 @@ def get_access_token() -> str:
         logger.info(f"Successfully refreshed Gmail OAuth access token (expires in {expires_in}s)")
         return access_token
     except Exception as e:
-        logger.error(f"Failed to refresh Google OAuth access token: {e}", exc_info=True)
+        logger.error(f"Failed to refresh Google OAuth access token: {e}")
         raise
 
 def send_raw_email(mime_msg: MIMEMultipart) -> dict[str, Any]:
