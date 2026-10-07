@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     host: str = Field(default="0.0.0.0", alias="HOST")
     port: int = Field(default=8000, alias="PORT")
     cors_origins: str = Field(
-        default="http://localhost:8080,http://localhost:5173,http://127.0.0.1:8080,https://portfolio-bsg.onrender.com",
+        default="http://localhost:8080,http://localhost:5173,http://127.0.0.1:8080,https://sarweshwarr.com,https://www.sarweshwarr.com,https://portfolio-bsg.onrender.com",
         alias="CORS_ORIGINS"
     )
 
@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     google_refresh_token: str | None = Field(default=None, alias="GOOGLE_REFRESH_TOKEN")
     gmail_sender_email: str | None = Field(default="b.sarweshwar445@gmail.com", alias="GMAIL_SENDER_EMAIL")
     gmail_notification_email: str | None = Field(default="b.sarweshwar445@gmail.com", alias="GMAIL_NOTIFICATION_EMAIL")
-    portfolio_url: str = Field(default="https://portfolio-bsg.onrender.com", alias="PORTFOLIO_URL")
+    portfolio_url: str = Field(default="https://sarweshwarr.com", alias="PORTFOLIO_URL")
 
     @property
     def cors_origins_list(self) -> list[str]:
