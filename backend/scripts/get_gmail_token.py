@@ -34,7 +34,7 @@ BACKEND_DIR = Path(__file__).resolve().parent.parent
 ENV_PATH = BACKEND_DIR / ".env"
 
 SCOPE = "https://www.googleapis.com/auth/gmail.send"
-REDIRECT_URI = "http://localhost:8085/callback"
+REDIRECT_URI = "http://localhost:8085/"
 PORT = 8085
 
 def load_env() -> dict[str, str]:
