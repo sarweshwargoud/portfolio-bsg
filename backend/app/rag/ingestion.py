@@ -71,7 +71,7 @@ RAW_PORTFOLIO_DOCUMENTS = [
         "metadata": {
             "section": "experience",
             "category": "work_history",
-            "topics": ["internships", "flyrank", "sure trust", "uptoskills", "1m1b", "thesmartbridge", "elevate labs"]
+            "topics": ["internships", "flyrank", "sure trust", "uptoskills"]
         },
         "content": (
             "Work Experience and Internships:\n"
@@ -87,16 +87,7 @@ RAW_PORTFOLIO_DOCUMENTS = [
             "3. AI/ML Intern at UPTOSKILLS (December 2025 - March 2026, 3 months):\n"
             "   Built CodeSkills: a LeetCode-style platform for applied AI and coding practice using FastAPI backend and React.js frontend. "
             "   Engineered an LLM-powered question generation pipeline, fine-tuning language models to auto-generate domain-specific coding practice problems at scale.\n"
-            "   Technologies: Generative AI, Fine-Tuning, FastAPI, React.js.\n\n"
-            "4. AI for Sustainability Virtual Intern at 1M1B (1 Million for 1 Billion) (December 2025 - January 2026, 2 months):\n"
-            "   Applied AI and ML workflows to impactful tech solutions focused on sustainability metrics.\n"
-            "   Technologies: AI/ML, Data Analytics, Sustainability.\n\n"
-            "5. Google Cloud Generative AI Virtual Intern at TheSmartBridge (November 2025 - January 2026, 3 months):\n"
-            "   Mastered Gemini, NotebookLM, Vertex AI, Prompt Engineering, RAG architectures, and Responsible AI guidelines on Google Cloud Platform.\n"
-            "   Technologies: Google Cloud, Gemini, Vertex AI, RAG.\n\n"
-            "6. Web Developer at Elevate Labs (November 2025 - December 2025, 2 months):\n"
-            "   Collaborated on modern web development projects, ensuring responsive UI and smooth transitions.\n"
-            "   Technologies: React, HTML5, JavaScript, CSS3."
+            "   Technologies: Generative AI, Fine-Tuning, FastAPI, React.js."
         )
     },
     {
@@ -282,6 +273,15 @@ def ingest_portfolio_knowledge() -> dict[str, Any]:
 
     logger.info("Starting portfolio knowledge ingestion into Supabase...")
 
+    # Purge any obsolete chunks containing removed internships
+    for keyword in ["1M1B", "TheSmartBridge", "Elevate Labs"]:
+        try:
+            del_chunks = supabase.table("document_chunks").delete().ilike("content", f"%{keyword}%").execute()
+            if del_chunks.data:
+                logger.info(f"Purged {len(del_chunks.data)} obsolete chunks containing '{keyword}'")
+        except Exception as e:
+            logger.warning(f"Error purging obsolete chunks for '{keyword}': {e}")
+
     for raw_doc in RAW_PORTFOLIO_DOCUMENTS:
         title = raw_doc["title"]
         source = raw_doc["source"]
@@ -290,6 +290,17 @@ def ingest_portfolio_knowledge() -> dict[str, Any]:
         content = raw_doc["content"]
 
         content_hash = compute_hash(content)
+
+        # Remove any old stale versions of this document if content has changed
+        try:
+            old_docs = supabase.table("documents").select("id").eq("title", title).neq("content_hash", content_hash).execute()
+            if old_docs.data:
+                for od in old_docs.data:
+                    supabase.table("document_chunks").delete().eq("document_id", od["id"]).execute()
+                    supabase.table("documents").delete().eq("id", od["id"]).execute()
+                    logger.info(f"Purged old version of document '{title}' (ID: {od['id']})")
+        except Exception as e:
+            logger.warning(f"Error checking/purging old document versions for '{title}': {e}")
 
         # Check if document already exists with identical content_hash
         existing_doc_res = (

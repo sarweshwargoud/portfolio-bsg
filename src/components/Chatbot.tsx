@@ -103,12 +103,6 @@ Before responding, detect the user's intent and energy, and dynamically match yo
   LLMs, similarity search, RAG architectures, and building family health concierge AI agent.
 • AI/ML Intern at UPTOSKILLS (Dec 2025 - March 2026):
   Built CodeSkills (LeetCode-style platform with FastAPI + React), LLM question generation pipeline with fine-tuning.
-• AI for Sustainability Intern at 1M1B (Dec 2025 - Jan 2026):
-  Practical AI/ML workflows for sustainable solutions.
-• Google Cloud GenAI Intern at TheSmartBridge (Nov 2025 - Jan 2026):
-  Gemini, Vertex AI, prompt engineering, RAG.
-• Web Developer at Elevate Labs (Nov 2025 - Dec 2025):
-  Responsive web design with React, HTML, JS, CSS.
 
 ### FEATURED PROJECTS
 • Carbon Footprint Agent: Offline-first Agentic AI with RAG for personalized carbon reduction insights (Streamlit, GitHub).
@@ -135,6 +129,43 @@ Before responding, detect the user's intent and energy, and dynamically match yo
 • Career Essentials in Generative AI (Microsoft & LinkedIn, 2024)
 • Building Agentic Workflows in Python (Hack2skill, 2025)
 • Responsive Web Design (freeCodeCamp, 2023)
+
+### SPECIAL INTERACTION & FLOW RULES:
+1. NAME-ASKING FLOW FOR NEW USERS:
+   When a new user starts a conversation and sends a greeting (e.g. "Hi", "Hello", "Hey", "Hii", "Hiiii", "Good morning", "Good evening", "What's up", "Yo", "Hello chatbot", "Hi there"):
+   Naturally ask:
+   "Hey! 👋 May I know your name?"
+   Do NOT make this overly formal.
+   Once the user provides their name (e.g. "Rahul"), remember/use their name naturally during the current conversation:
+   "Nice to meet you, Rahul! 😄 What would you like to know about Sarweshwar?"
+
+2. IF USER IGNORES THE NAME QUESTION:
+   If the chatbot asks for the user's name and the user ignores it and immediately asks a question instead, do NOT repeatedly ask for their name.
+   Instead, use this exact sarcastic/playful tone:
+   "bro ananomously want to know about sarweshwar 😭🙌"
+   Then answer their question if the question is within the allowed portfolio scope.
+   IMPORTANT: Keep the spelling and tone of the above line exactly:
+   "bro ananomously want to know about sarweshwar 😭🙌"
+   Do not use this line for every message. Only use it when the user ignored the name request and directly asks a question.
+
+3. SPECIAL RULE FOR RELATIONSHIP / LOVE / GF QUESTIONS:
+   If the user specifically asks about Sarweshwar's girlfriend, GF, relationship, love life, dating, crush, romantic relationships, who he likes, whether he has a girlfriend, or personal romantic life:
+   Do NOT invent, speculate, assume, or provide personal information.
+   Use this playful response:
+   "you came here to know abt his things or about professional things? 😭🙌"
+
+4. QUESTIONS OUTSIDE THE ALLOWED PORTFOLIO SCOPE:
+   If the user asks something that is unrelated to Sarweshwar's portfolio, education, skills, projects, internships/experience, certifications, achievements, technical work, professional background, or career:
+   Do NOT invent an answer.
+   Instead, respond naturally with the existing personality/tone and say something similar to:
+   "That's outside my Sarweshwar portfolio zone 😭 Ask your frnd Sarweshwar about that."
+
+5. REMOVED INTERNSHIPS (PERMANENTLY EXCLUDED):
+   The following 3 virtual internships/experiences have been permanently removed and MUST NEVER be mentioned:
+   - AI for Sustainability Virtual Intern — 1M1B (1 Million for 1 Billion)
+   - Google Cloud Generative AI Virtual Intern — TheSmartBridge
+   - Web Developer — Elevate Labs
+   Only discuss his valid internships: FlyRank.ai (Backend AI Engineering Intern), SURE TRUST (Gen AI Intern), and UPTOSKILLS (AI/ML Intern).
 
 ### STRICT GUIDELINES:
 - Only answer about Sarweshwar's portfolio. If asked completely unrelated topics, politely redirect back to his work.
@@ -375,6 +406,36 @@ const Chatbot: React.FC = () => {
   };
 
   const callGemini = async (userQuery: string, history: Array<{ isBot: boolean; text: string }>) => {
+    const greetingRegex = /^(hi+|hey+|hello+|hii+|hiiii+|good\s*(morning|evening|afternoon)|what'?s\s*up|yo+|hello\s*chatbot|hi\s*there)[!.,?\s]*$/i;
+    const relationshipRegex = /\b(gf|girlfriend|girlfriends|relationship|relationships|dating|date|crush|love\s*life|romantic|who\s+he\s+likes|marry|marriage|wife)\b/i;
+    const outOfScopeRegex = /^(what('?s| is) (today'?s )?weather|how('?s| is) the weather|weather today|weather forecast|who is the prime minister|who is the president|stock price of|cricket score|capital of|tell me a joke)\b/i;
+
+    if (relationshipRegex.test(userQuery)) {
+      return "you came here to know abt his things or about professional things? 😭🙌";
+    }
+
+    if (outOfScopeRegex.test(userQuery)) {
+      return "That's outside my Sarweshwar portfolio zone 😭 Ask your frnd Sarweshwar about that.";
+    }
+
+    const hasPriorUser = history.some(m => !m.isBot);
+    if (!hasPriorUser && greetingRegex.test(userQuery)) {
+      return "Hey! 👋 May I know your name?";
+    }
+
+    const lastBotMsg = history.length > 0 ? history[history.length - 1] : null;
+    let ignoredNamePrefix = "";
+    if (lastBotMsg && lastBotMsg.isBot && lastBotMsg.text.includes("May I know your name?")) {
+      const isQueryIntent = /(\?|\b(tell|who|what|where|how|why|which|can|show|skills|projects|experience|internship|resume|education|contact|work|about)\b)/i.test(userQuery);
+      const nameMatch = userQuery.match(/^(?:my name is|i am|i'm|im|this is|it's|its)?\s*([A-Za-z]{2,25}(?:\s+[A-Za-z]{2,25})?)[.!]?$/i);
+      if (nameMatch && !isQueryIntent && userQuery.split(/\s+/).length <= 3) {
+        const extracted = nameMatch[1].charAt(0).toUpperCase() + nameMatch[1].slice(1);
+        return `Nice to meet you, ${extracted}! 😄 What would you like to know about Sarweshwar?`;
+      } else {
+        ignoredNamePrefix = "bro ananomously want to know about sarweshwar 😭🙌\n\n";
+      }
+    }
+
     const apiKey = GEMINI_API_KEY.trim();
 
     if (!apiKey) {
@@ -442,6 +503,9 @@ const Chatbot: React.FC = () => {
         const text = candidate?.content?.parts?.[0]?.text;
 
         if (text) {
+          if (ignoredNamePrefix && !text.includes("bro ananomously")) {
+            return `${ignoredNamePrefix}${text}`;
+          }
           return text;
         }
       } catch (err: any) {

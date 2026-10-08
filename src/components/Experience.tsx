@@ -28,27 +28,6 @@ const experience = [
         description: "Built CodeSkills, a LeetCode-style platform for practicing coding problems and applied AI skills (model fine-tuning), using a FastAPI backend and React.js frontend. Developed an LLM-powered question generation pipeline, fine-tuning models to auto-generate domain-specific coding practice problems at scale. (Verified at hr@uptoskills.com)",
         stack: ["Generative AI", "FineTuning", "FastAPI", "React.js"],
         certificateUrl: "/Images/UptoSkills-AIML-Internship-Certificate.png"
-    },
-    {
-        title: "AI for Sustainabilty virtual Intern",
-        company: "1M1B (1 Million for 1 Billion)",
-        period: "December 2025 - January 2026 (2 months)",
-        description: "Gained practical experience in AI and ML workflows, contributing to impactful tech solutions.",
-        stack: ["AI/ML", "Sustainability"]
-    },
-    {
-        title: "Google Cloud Generative AI Virtual Intern",
-        company: "TheSmartBridge",
-        period: "November 2025 - January 2026 (3 months)",
-        description: "Completed a comprehensive virtual internship on Google Cloud Gen AI. Worked with Gemini, NotebookLM, and Vertex AI. Mastered prompt engineering, RAG, and responsible AI concepts.",
-        stack: ["Google Cloud", "Gemini", "Vertex AI", "RAG"]
-    },
-    {
-        title: "Web Developer",
-        company: "Elevate Labs",
-        period: "November 2025 - December 2025 (2 months)",
-        description: "Collaborated on web development projects, ensuring responsive design and seamless user experiences.",
-        stack: ["React", "Html", "JavaScript", "CSS"]
     }
 ];
 
