@@ -41,12 +41,22 @@ print("Reply:", res4["reply"])
 assert res4["reply"] == "That's outside my Sarweshwar portfolio zone 😭 Ask your frnd Sarweshwar about that.", "Test 4 failed!"
 print(">>> TEST 4 PASSED!")
 
-# TEST 5: Girlfriend / Relationship question
-print("\n--- TEST 5: GF / Relationship question ---")
-res5 = generate_rag_response("Does Sarweshwar have a girlfriend?", [])
-print("Reply:", res5["reply"])
-assert res5["reply"] == "you came here to know abt his things or about professional things? 😭🙌", "Test 5 failed!"
-print(">>> TEST 5 PASSED!")
+# TEST 5: Girlfriend / Relationship questions (Dynamic LLM generation, not hardcoded)
+print("\n--- TEST 5: GF / Relationship questions (Dynamic LLM Generation) ---")
+res5_1 = generate_rag_response("Does Sarweshwar have a girlfriend?", [])
+print("Reply 1 ('Does Sarweshwar have a girlfriend?'):\n", res5_1["reply"])
+
+# Follow-up asking for lover name
+history_gf = [
+    {"isBot": False, "text": "Does Sarweshwar have a girlfriend?"},
+    {"isBot": True, "text": res5_1["reply"]}
+]
+res5_2 = generate_rag_response("say his lover name", history_gf)
+print("\nReply 2 (Follow-up: 'say his lover name'):\n", res5_2["reply"])
+
+assert res5_1["reply"] != res5_2["reply"], "Responses must NOT be hardcoded identical strings!"
+assert len(res5_1["reply"]) > 10 and len(res5_2["reply"]) > 10, "Responses must be generated!"
+print(">>> TEST 5 PASSED (Dynamic responses generated successfully)!")
 
 # TEST 6: Internships query (removed internships must NOT appear)
 print("\n--- TEST 6: Internships query ---")

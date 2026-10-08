@@ -62,13 +62,35 @@ def clean_markdown_artifacts(text: str) -> str:
     cleaned = re.sub(r".*?(1M1B|TheSmartBridge|Elevate Labs).*?\n?", "", cleaned, flags=re.IGNORECASE)
     return cleaned.strip()
 
-def build_system_prompt(context_str: str, user_name: str | None = None, is_name_ignored: bool = False) -> str:
+def build_system_prompt(
+    context_str: str,
+    user_name: str | None = None,
+    is_name_ignored: bool = False,
+    is_relationship_query: bool = False
+) -> str:
     user_context = f"\n- User's Name: {user_name} (address them naturally by name when appropriate)" if user_name else ""
-    turn_instruction = (
-        "\n- CRITICAL INSTRUCTION FOR THIS TURN: The user previously ignored your name request. You MUST prefix your response with: bro ananomously want to know about sarweshwar 😭🙌"
-        if is_name_ignored
-        else "\n- CRITICAL INSTRUCTION FOR THIS TURN: Do NOT use 'bro ananomously want to know about sarweshwar 😭🙌' in this response."
-    )
+    turn_instructions = []
+    if is_name_ignored:
+        turn_instructions.append(
+            "- CRITICAL INSTRUCTION FOR THIS TURN: The user previously ignored your name request. You MUST prefix your response with: bro ananomously want to know about sarweshwar 😭🙌"
+        )
+    else:
+        turn_instructions.append(
+            "- CRITICAL INSTRUCTION FOR THIS TURN: Do NOT use 'bro ananomously want to know about sarweshwar 😭🙌' in this response."
+        )
+
+    if is_relationship_query:
+        turn_instructions.append(
+            "- CRITICAL INSTRUCTION FOR THIS TURN: The user is asking about Sarweshwar's personal romantic life, relationship, girlfriend, lover, dating, crush, or personal romantic matters.\n"
+            "  * DO NOT respond with a fixed, hardcoded, or repetitive sentence. Do NOT repeatedly return 'you came here to know abt his things or about professional things? 😭🙌'.\n"
+            "  * Instead, GENERATE A NEW, NATURAL, CONTEXT-AWARE, PLAYFUL, WITTY, AND SARCASTIC response based on the user's exact question and conversation history.\n"
+            "  * Match the playful/sarcastic vibe (e.g. teasing them for skipping the projects for the personal DLC, opening the secret love-life folder, looking for classified relationship files, or doing a background investigation with emojis like 😭🙌, 😭😂, 👀😂, 💀).\n"
+            "  * If the user persists or continues asking relationship follow-ups, keep that same playful sarcastic tone, acknowledging their persistent curiosity!\n"
+            "  * NEVER invent, guess, hallucinate, or reveal any girlfriend/lover/crush name or personal relationship details.\n"
+            "  * Then naturally tease or redirect them back to checking his real engineering projects, AI systems, and technical skills."
+        )
+
+    turn_instruction = ("\n" + "\n".join(turn_instructions)) if turn_instructions else ""
     return f"""You are Sarweshwar's official Portfolio AI Assistant, powered by Google Gemini and Supabase pgvector.
 You represent Sarweshwar Buddolla, an aspiring AI Engineer.{user_context}{turn_instruction}
 
@@ -123,11 +145,22 @@ You represent Sarweshwar Buddolla, an aspiring AI Engineer.{user_context}{turn_i
    "bro ananomously want to know about sarweshwar 😭🙌"
    Do not use this line for every message. Only use it when the user ignored the name request and directly asks a question.
 
-3. SPECIAL RULE FOR RELATIONSHIP / LOVE / GF QUESTIONS:
-   If the user specifically asks about Sarweshwar's girlfriend, GF, relationship, love life, dating, crush, romantic relationships, who he likes, whether he has a girlfriend, or personal romantic life:
-   Do NOT invent, speculate, assume, or provide personal information.
-   Use this playful response:
-   "you came here to know abt his things or about professional things? 😭🙌"
+3. SPECIAL RULE FOR RELATIONSHIP / LOVE / GF / ROMANTIC QUESTIONS (DYNAMIC GENERATION):
+   When the user asks about Sarweshwar's girlfriend, GF, lover, relationship, love life, dating, crush, romantic life, who he likes, who he is dating, whether he has a girlfriend, lover's name, or relationship status:
+   • DO NOT use a single fixed or repetitive sentence (such as repeatedly returning "you came here to know abt his things or about professional things? 😭🙌").
+   • GENERATE A NEW, DYNAMIC, NATURAL, PLAYFUL/SARCASTIC response every time tailored to the user's exact wording and conversation history.
+   • Vibe / Style Examples (generate unique variations, do not just copy-paste):
+     - "bro really came here for the personal DLC 😭🙌"
+     - "you skipped the projects and went straight to the love department huh 😭😂"
+     - "professional portfolio wasn't enough ah? bro wants the relationship chapter too 😭🙌"
+     - "you came here for Sarweshwar's work or are we opening the secret love-life folder now? 👀😂"
+     - "bro is conducting a full background investigation 😭💀"
+     - "straight to the GF questions? priorities are clear 😭🙌"
+     - "ayoo 😭 you didn't even ask about his projects, you went directly for the secret love-life file 💀"
+     - "nahh 😭 bro wants the classified relationship details instead of the professional ones 💀"
+   • If the user continues asking or persists with more relationship questions, continue with that same playful sarcastic tone, acknowledging their persistent curiosity!
+   • NEVER invent, guess, fabricate, or disclose private romantic information or names.
+   • After the playful banter, naturally tease or redirect them back to checking his real projects and engineering work.
 
 4. QUESTIONS OUTSIDE THE ALLOWED PORTFOLIO SCOPE:
    If the user asks something that is unrelated to Sarweshwar's portfolio, education, skills, projects, internships/experience, certifications, achievements, technical work, professional background, or career:
@@ -213,12 +246,8 @@ def generate_rag_response(
                     immediate_last_asked_name = True
                 break
 
-    # CASE 1: SPECIAL RULE FOR RELATIONSHIP / LOVE / GF QUESTIONS
-    if RELATIONSHIP_REGEX.search(cleaned_query):
-        return {
-            "reply": "you came here to know abt his things or about professional things? 😭🙌",
-            "sources": []
-        }
+    # Topic detection: Relationship / Love / GF / Romantic queries
+    is_relationship_query = bool(RELATIONSHIP_REGEX.search(cleaned_query))
 
     # CASE 2: QUESTIONS OUTSIDE ALLOWED PORTFOLIO SCOPE
     if OUT_OF_SCOPE_REGEX.search(cleaned_query):
@@ -288,7 +317,8 @@ def generate_rag_response(
     system_prompt = build_system_prompt(
         context_str,
         user_name=known_user_name,
-        is_name_ignored=bool(ignored_name_prefix)
+        is_name_ignored=bool(ignored_name_prefix),
+        is_relationship_query=is_relationship_query
     )
 
     # 2. Build multi-turn contents for Gemini
