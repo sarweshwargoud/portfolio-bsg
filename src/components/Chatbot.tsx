@@ -214,13 +214,11 @@ Before responding, detect the user's intent and energy, and dynamically match yo
    "Nice to meet you, Rahul! 😄 What would you like to know about Sarweshwar?"
 
 2. IF USER IGNORES THE NAME QUESTION:
-   If the chatbot asks for the user's name and the user ignores it and immediately asks a question instead, do NOT repeatedly ask for their name.
+   If and ONLY IF the chatbot specifically asked for the user's name ("Hey! 👋 May I know your name?") and the user ignores it in their very next reply and asks a question instead, do NOT repeatedly ask for their name.
    Instead, use this exact sarcastic/playful tone:
    "bro ananomously want to know about sarweshwar 😭🙌"
    Then answer their question if the question is within the allowed portfolio scope.
-   IMPORTANT: Keep the spelling and tone of the above line exactly:
-   "bro ananomously want to know about sarweshwar 😭🙌"
-   Do not use this line for every message. Only use it when the user ignored the name request and directly asks a question.
+   CRITICAL CONSTRAINT: ONLY use this line if the immediately preceding message from the assistant specifically asked "May I know your name?" and the user did not say their name. If the user directly asks a question, starts the conversation with a question instead of greeting, or continues normal conversation, DO NOT use this line under any circumstance. Keep the flow completely normal.
 
 3. SPECIAL RULE FOR RELATIONSHIP / LOVE / GF / ROMANTIC QUESTIONS (DYNAMIC GENERATION):
    When the user asks about Sarweshwar's girlfriend, GF, lover, relationship, love life, dating, crush, romantic life, who he likes, who he is dating, whether he has a girlfriend, lover's name, or relationship status:
@@ -509,7 +507,7 @@ const Chatbot: React.FC = () => {
     if (lastBotMsg && lastBotMsg.isBot && lastBotMsg.text.includes("May I know your name?")) {
       const isQueryIntent = /(\?|\b(tell|who|what|where|how|why|which|can|show|skills|projects|experience|internship|resume|education|contact|work|about)\b)/i.test(userQuery);
       const nameMatch = userQuery.match(/^(?:my name is|i am|i'm|im|this is|it's|its)?\s*([A-Za-z]{2,25}(?:\s+[A-Za-z]{2,25})?)[.!]?$/i);
-      if (nameMatch && !isQueryIntent && userQuery.split(/\s+/).length <= 3) {
+      if (nameMatch && !isQueryIntent && userQuery.split(/\s+/).length <= 5) {
         const extracted = nameMatch[1].charAt(0).toUpperCase() + nameMatch[1].slice(1);
         return `Nice to meet you, ${extracted}! 😄 What would you like to know about Sarweshwar?`;
       } else {
@@ -544,8 +542,8 @@ const Chatbot: React.FC = () => {
       parts: [{ text: userQuery }]
     });
 
-    // Support gemini-2.5-flash, gemini-2.0-flash, and gemini-1.5-flash fallback
-    const models = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+    // Support active Gemini Flash models with fallbacks
+    const models = ['gemini-3.5-flash', 'gemini-3.5-flash-lite', 'gemini-3.8-flash', 'gemini-2.5-flash'];
     let lastError: any = null;
 
     for (const model of models) {
@@ -581,11 +579,19 @@ const Chatbot: React.FC = () => {
 
         const data = await response.json();
         const candidate = data.candidates?.[0];
-        const text = candidate?.content?.parts?.[0]?.text;
+        let text = candidate?.content?.parts?.[0]?.text;
 
         if (text) {
-          if (ignoredNamePrefix && !text.includes("bro ananomously")) {
-            return `${ignoredNamePrefix}${text}`;
+          if (!ignoredNamePrefix) {
+            // Assistant did NOT ask for their name -> Keep flow completely normal, never say 'bro ananomously'
+            text = text
+              .replace(/bro anan?omously want to know about sarweshwar [^\n]*\n*/gi, '')
+              .trim();
+          } else {
+            // Assistant asked 'May I know your name?' and user ignored it -> prepend prefix
+            if (!/bro anan?omously/i.test(text)) {
+              text = `${ignoredNamePrefix}${text}`;
+            }
           }
           return text;
         }

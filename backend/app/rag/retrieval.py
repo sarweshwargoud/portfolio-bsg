@@ -137,12 +137,11 @@ You represent Sarweshwar Buddolla, an aspiring AI Engineer.{user_context}{turn_i
    "Nice to meet you, Rahul! 😄 What would you like to know about Sarweshwar?"
 
 2. IF USER IGNORES THE NAME QUESTION:
-   If the chatbot asks for the user's name and the user ignores it and immediately asks a question instead, do NOT repeatedly ask for their name.
+   If and ONLY IF the chatbot specifically asked for the user's name ("Hey! 👋 May I know your name?") and the user ignores it in their very next reply and asks a question instead, do NOT repeatedly ask for their name.
    Instead, use this exact sarcastic/playful tone:
    "bro ananomously want to know about sarweshwar 😭🙌"
    Then answer their question if the question is within the allowed portfolio scope.
-   IMPORTANT: u can chnage the context of this sentance acording to conversation context like "bro ananomously want to know about sarweshwar 😭🙌" or "bro ananomously want to know about sarweshwar 😭🙌" or "bro ananomously want to know about sarweshwar 😭🙌" or "bro ananomously want to know about sarweshwar 😭🙌" or "bro ananomously want to know about sarweshwar 😭🙌" or "bro ananomously want to know about sarweshwar 😭🙌" or "bro ananomously want to know about sarweshwar 😭🙌" or "bro ananomously want to know about sarweshwar 😭🙌" or "bro ananomously want to know about sarweshwar 😭🙌" or "bro ananomously want to know about sarweshwar 😭🙌"
-   Do not use this line for every message. Only use it when the user ignored the name request and directly asks a question.
+   CRITICAL CONSTRAINT: ONLY use this line if the immediately preceding message from the assistant specifically asked "May I know your name?" and the user did not say their name. If the user directly asks a question, starts the conversation with a question instead of greeting, or continues normal conversation, DO NOT use this line under any circumstance. Keep the flow completely normal.
 
 3. SPECIAL RULE FOR RELATIONSHIP / LOVE / GF / ROMANTIC QUESTIONS (DYNAMIC GENERATION):
    When the user asks about Sarweshwar's girlfriend, GF, lover, relationship, love life, dating, crush, romantic life, who he likes, who he is dating, whether he has a girlfriend, lover's name, or relationship status:
@@ -278,7 +277,7 @@ def generate_rag_response(
             re.IGNORECASE
         )
 
-        if name_match and not is_query_intent and len(query_words) <= 3:
+        if name_match and not is_query_intent and len(query_words) <= 5:
             extracted_name = name_match.group(1).title()
             return {
                 "reply": f"Nice to meet you, {extracted_name}! 😄 What would you like to know about Sarweshwar?",
@@ -344,7 +343,7 @@ def generate_rag_response(
     })
 
     # 3. Call Gemini with validated available models
-    models_to_try = ["gemini-2.5-flash", "gemini-flash-latest", "gemini-2.5-flash-lite", "gemini-2.5-pro"]
+    models_to_try = ["gemini-3.5-flash", "gemini-3.5-flash-lite", "gemini-3.8-flash", "gemini-2.5-flash"]
 
     last_error = None
     for model_name in models_to_try:
@@ -378,11 +377,15 @@ def generate_rag_response(
                     if raw_text:
                         cleaned_reply = clean_markdown_artifacts(raw_text)
                         if ignored_name_prefix:
-                            if "bro ananomously" not in cleaned_reply:
+                            if not re.search(r"bro anan?omously", cleaned_reply, re.IGNORECASE):
                                 cleaned_reply = f"{ignored_name_prefix}{cleaned_reply}"
                         else:
-                            cleaned_reply = cleaned_reply.replace("bro ananomously want to know about sarweshwar 😭🙌\n\n", "")
-                            cleaned_reply = cleaned_reply.replace("bro ananomously want to know about sarweshwar 😭🙌", "").strip()
+                            cleaned_reply = re.sub(
+                                r"bro anan?omously want to know about sarweshwar [^\n]*\n*",
+                                "",
+                                cleaned_reply,
+                                flags=re.IGNORECASE
+                            ).strip()
                         return {
                             "reply": cleaned_reply,
                             "sources": sources
