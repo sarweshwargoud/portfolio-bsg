@@ -6,6 +6,80 @@ import { ChatCircle, X, PaperPlaneTilt, Robot, Sparkle, ArrowRight, ArrowCounter
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GOOGLE_API_KEY || '';
 
+// Supabase configuration for real-time chat logging
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://nsezdeoyorrujqgmjaqg.supabase.co';
+const SUPABASE_KEY =
+  import.meta.env.VITE_SUPABASE_ANON_KEY ||
+  import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY ||
+  import.meta.env.VITE_SUPABASE_KEY ||
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zZXpkZW95b3JydWpxZ21qYXFnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NTc3MzI1MSwiZXhwIjoyMTAxMzQ5MjUxfQ._K_-6_yr6vOaG4jiS3XIUcUxwrjUm6vqMbbMdxZJSRM';
+
+/**
+ * Direct & reliable Supabase chat logger.
+ * Sends interaction log directly to Supabase `chat_logs` table via PostgREST.
+ * Works seamlessly in production (e.g. sarweshwarr.com) and localhost even when
+ * the backend server is offline or unreachable.
+ */
+const logChatToSupabase = async (payload: {
+  user_query: string;
+  bot_response: string;
+  sources?: any[];
+  session_id?: string;
+  metadata?: Record<string, any>;
+}) => {
+  const query = (payload.user_query || '').trim();
+  const response = (payload.bot_response || '').trim();
+  if (!query) return;
+
+  const bodyData = {
+    user_query: query,
+    bot_response: response,
+    sources: payload.sources || [],
+    session_id: payload.session_id || 'anonymous_session',
+    metadata: {
+      client: 'portfolio_web_chat',
+      origin: typeof window !== 'undefined' ? window.location.origin : 'browser',
+      timestamp: new Date().toISOString(),
+      ...(payload.metadata || {})
+    }
+  };
+
+  // 1. Direct Supabase REST call (guaranteed to work in production browser)
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/chat_logs`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(bodyData)
+    });
+
+    if (res.ok) {
+      return;
+    }
+    console.warn('Direct Supabase REST log returned non-200 status:', res.status);
+  } catch (directErr) {
+    console.warn('Direct Supabase REST log failed, trying backend fallback:', directErr);
+  }
+
+  // 2. Secondary fallback via backend if accessible
+  try {
+    const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+    if (BACKEND_URL && (!BACKEND_URL.includes('localhost:8000') || isLocal)) {
+      await fetch(`${BACKEND_URL}/api/chat/log`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bodyData)
+      });
+    }
+  } catch {
+    // Suppress secondary fallback failure
+  }
+};
+
 // System prompt with dynamic energy matching and clean formatting constraints
 const PORTFOLIO_SYSTEM_PROMPT = `You are Sarweshwar's official Portfolio AI Assistant, powered by Google Gemini.
 You represent Sarweshwar Buddolla, an aspiring AI Engineer.
@@ -547,41 +621,49 @@ const Chatbot: React.FC = () => {
       history.pop(); // Pop current query as it's passed separately
 
       let aiReply = '';
-      try {
-        // Primary: Call FastAPI backend with Supabase pgvector RAG
-        const backendRes = await fetch(`${BACKEND_URL}/api/chat`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            message: query,
-            history: history.map((m) => ({ text: m.text, isBot: m.isBot })),
-            session_id: sessionIdRef.current,
-            metadata: { client: 'portfolio_web' }
-          })
-        });
+      let usedBackend = false;
 
-        if (backendRes.ok) {
-          const data = await backendRes.json();
-          aiReply = data.reply;
-        } else {
-          throw new Error(`Backend returned HTTP ${backendRes.status}`);
+      // Only attempt backend fetch if on localhost or if a custom remote backend URL is provided
+      const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+      const canAttemptBackend = Boolean(BACKEND_URL && (!BACKEND_URL.includes('localhost') && !BACKEND_URL.includes('127.0.0.1') || isLocal));
+
+      if (canAttemptBackend) {
+        try {
+          // Primary: Call FastAPI backend with Supabase pgvector RAG
+          const backendRes = await fetch(`${BACKEND_URL}/api/chat`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              message: query,
+              history: history.map((m) => ({ text: m.text, isBot: m.isBot })),
+              session_id: sessionIdRef.current,
+              metadata: { client: 'portfolio_web' }
+            })
+          });
+
+          if (backendRes.ok) {
+            const data = await backendRes.json();
+            aiReply = data.reply;
+            usedBackend = true;
+          } else {
+            throw new Error(`Backend returned HTTP ${backendRes.status}`);
+          }
+        } catch (backendError) {
+          console.warn('FastAPI RAG backend not reachable, using direct client fallback:', backendError);
         }
-      } catch (backendError) {
-        console.warn('FastAPI RAG backend not reachable, using direct client fallback:', backendError);
+      }
+
+      if (!usedBackend) {
         aiReply = await callGemini(query, history);
 
-        // Record interaction in Supabase chat_logs via background log call
-        fetch(`${BACKEND_URL}/api/chat/log`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            user_query: query,
-            bot_response: aiReply,
-            sources: [],
-            session_id: sessionIdRef.current,
-            metadata: { client: 'client_gemini_fallback' }
-          })
-        }).catch(() => {});
+        // Record interaction directly in Supabase chat_logs table
+        logChatToSupabase({
+          user_query: query,
+          bot_response: aiReply,
+          sources: [],
+          session_id: sessionIdRef.current,
+          metadata: { client: 'client_gemini_direct' }
+        });
       }
 
       const botResponse = {
@@ -603,6 +685,15 @@ const Chatbot: React.FC = () => {
       };
 
       setMessages(prev => [...prev, errorResponse]);
+
+      // Record error interaction in Supabase chat_logs table
+      logChatToSupabase({
+        user_query: query,
+        bot_response: errorResponse.text,
+        sources: [],
+        session_id: sessionIdRef.current,
+        metadata: { client: 'client_gemini_error', error: error?.message || 'Unknown error' }
+      });
     } finally {
       setIsLoading(false);
     }

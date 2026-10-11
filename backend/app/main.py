@@ -133,8 +133,19 @@ async def chat_endpoint(request: ChatRequest):
         )
     except Exception as e:
         logger.error(f"Unhandled error in chat endpoint: {e}", exc_info=True)
+        fallback_msg = "I couldn't retrieve the relevant portfolio information right now. Please try again in a moment."
+        try:
+            log_chat_to_supabase(
+                user_query=user_query,
+                bot_response=fallback_msg,
+                sources=[],
+                session_id=request.session_id,
+                metadata={"error": str(e), "llm_model": settings.llm_model}
+            )
+        except Exception:
+            pass
         return ChatResponse(
-            reply="I couldn't retrieve the relevant portfolio information right now. Please try again in a moment.",
+            reply=fallback_msg,
             sources=[]
         )
 
