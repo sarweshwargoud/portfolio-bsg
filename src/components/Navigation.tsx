@@ -52,8 +52,19 @@ const Navigation = () => {
       <div className="container mx-auto px-6 h-20 flex items-center justify-between">
 
         {/* Logo */}
-        <div ref={logoRef} className="text-2xl font-bold tracking-tighter cursor-pointer" onClick={() => scrollTo('hero')}>
-          Sarweshwar's <span className="text-primary">Portfolio</span>
+        <div
+          ref={logoRef}
+          className="flex items-center gap-3 cursor-pointer group select-none"
+          onClick={() => scrollTo('hero')}
+        >
+          <img
+            src="/favicon.png"
+            alt="Sarweshwar Logo"
+            className="w-9 h-9 rounded-xl object-contain shadow-[0_0_20px_rgba(59,130,246,0.45)] border border-white/20 group-hover:scale-110 group-hover:shadow-[0_0_25px_rgba(59,130,246,0.7)] transition-all duration-300"
+          />
+          <div className="text-xl sm:text-2xl font-bold tracking-tighter text-white">
+            Sarweshwar's <span className="text-primary">Portfolio</span>
+          </div>
         </div>
 
         {/* Desktop Menu */}

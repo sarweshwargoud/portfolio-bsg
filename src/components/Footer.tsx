@@ -17,19 +17,26 @@ const Footer = () => {
     <footer ref={footerRef} className="relative py-12 px-6 border-t border-white/5 bg-background">
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
 
-        <div className="text-center md:text-left">
-          <h3 className="text-2xl font-bold text-white mb-1">Sarweshwar Buddolla</h3>
-          <p className="text-muted-foreground text-sm">
-            Building intelligent systems for a better tomorrow.
-          </p>
-          <div className="flex items-center justify-center md:justify-start gap-4 mt-3 text-xs text-muted-foreground">
-            <Link to="/privacy" className="hover:text-cyan-400 transition-colors flex items-center gap-1">
-              <ShieldCheck size={14} /> Privacy Policy
-            </Link>
-            <span>•</span>
-            <Link to="/terms" className="hover:text-primary transition-colors flex items-center gap-1">
-              <FileText size={14} /> Terms of Service
-            </Link>
+        <div className="flex flex-col md:flex-row items-center md:items-start gap-4 text-center md:text-left">
+          <img
+            src="/favicon.png"
+            alt="Sarweshwar Logo"
+            className="w-11 h-11 rounded-xl object-contain border border-white/15 shadow-[0_0_20px_rgba(59,130,246,0.35)] shrink-0"
+          />
+          <div>
+            <h3 className="text-2xl font-bold text-white mb-1">Sarweshwar Buddolla</h3>
+            <p className="text-muted-foreground text-sm">
+              Building intelligent systems for a better tomorrow.
+            </p>
+            <div className="flex items-center justify-center md:justify-start gap-4 mt-3 text-xs text-muted-foreground">
+              <Link to="/privacy" className="hover:text-cyan-400 transition-colors flex items-center gap-1">
+                <ShieldCheck size={14} /> Privacy Policy
+              </Link>
+              <span>•</span>
+              <Link to="/terms" className="hover:text-primary transition-colors flex items-center gap-1">
+                <FileText size={14} /> Terms of Service
+              </Link>
+            </div>
           </div>
         </div>
 
