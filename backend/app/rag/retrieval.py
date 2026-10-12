@@ -173,6 +173,12 @@ You represent Sarweshwar Buddolla, an aspiring AI Engineer.{user_context}{turn_i
    - Web Developer — Elevate Labs
    Only discuss his valid internships: FlyRank.ai (Backend AI Engineering Intern), SURE TRUST (Gen AI Intern), and UPTOSKILLS (AI/ML Intern).
 
+6. OFFENSIVE WORDS, PROFANITY & INAPPROPRIATE CONTENT FILTER:
+   If the user uses offensive words, vulgarity, bad words, profanity, insults, or asks gay-related / sexual orientation questions or inappropriate personal slurs:
+   DO NOT engage with the profanity, argue, or participate in the topic.
+   Respond strictly with:
+   "This is an AI assistant for Sarweshwar's portfolio. Please keep questions focused on his AI/ML projects, skills, education, or professional experience."
+
 ### RETRIEVED PORTFOLIO KNOWLEDGE BASE (GROUND TRUTH):
 The following context was retrieved from Sarweshwar's verified portfolio vector database:
 {context_str}
@@ -196,6 +202,18 @@ RELATIONSHIP_REGEX = re.compile(
 
 OUT_OF_SCOPE_REGEX = re.compile(
     r"^(what('?s| is) (today'?s )?weather|how('?s| is) the weather|weather today|weather forecast|who is the prime minister|who is the president|stock price of|cricket score|capital of|tell me a joke)\b",
+    re.IGNORECASE
+)
+
+OFFENSIVE_OR_INAPPROPRIATE_REGEX = re.compile(
+    r"\b("
+    r"gay|gays|lesbian|lesbians|homo|homosexual|homosexuality|queer|fag|faggot|faggots|fags|chakka|hijra|shemale"
+    r"|fuck|fucking|fucker|fuckers|fucked|f\*ck|fck|stfu|wtf"
+    r"|bitch|bitches|bitching|bastard|bastards|asshole|assholes|dumbass|motherfucker|motherfucking|mf"
+    r"|cunt|cunts|dick|dicks|cock|cocks|pussy|pussies|whore|whores|slut|sluts"
+    r"|retard|retarded|nigger|nigga"
+    r"|bsdk|bhosadike|bhosdike|bhosdiwale|madarchod|bhenchod|behenchod|gandu|gaand|chutiya|chut|choot|lavde|laude|lauda|lodu|randi|harami"
+    r")\b",
     re.IGNORECASE
 )
 
@@ -246,6 +264,13 @@ def generate_rag_response(
 
     # Topic detection: Relationship / Love / GF / Romantic queries
     is_relationship_query = bool(RELATIONSHIP_REGEX.search(cleaned_query))
+
+    # CASE 1: OFFENSIVE WORDS / GAY-RELATED / PROFANITY FILTER
+    if OFFENSIVE_OR_INAPPROPRIATE_REGEX.search(cleaned_query):
+        return {
+            "reply": "This is an AI assistant for Sarweshwar's portfolio. Please keep questions focused on his AI/ML projects, skills, education, or professional experience.",
+            "sources": []
+        }
 
     # CASE 2: QUESTIONS OUTSIDE ALLOWED PORTFOLIO SCOPE
     if OUT_OF_SCOPE_REGEX.search(cleaned_query):

@@ -250,6 +250,12 @@ Before responding, detect the user's intent and energy, and dynamically match yo
    - Web Developer — Elevate Labs
    Only discuss his valid internships: FlyRank.ai (Backend AI Engineering Intern), SURE TRUST (Gen AI Intern), and UPTOSKILLS (AI/ML Intern).
 
+6. OFFENSIVE WORDS, PROFANITY & INAPPROPRIATE CONTENT FILTER:
+   If the user uses offensive words, vulgarity, bad words, profanity, insults, or asks gay-related / sexual orientation questions or inappropriate personal slurs:
+   DO NOT engage with the profanity, argue, or participate in the topic.
+   Respond strictly with:
+   "This is an AI assistant for Sarweshwar's portfolio. Please keep questions focused on his AI/ML projects, skills, education, or professional experience."
+
 ### STRICT GUIDELINES:
 - Only answer about Sarweshwar's portfolio. If asked completely unrelated topics, politely redirect back to his work.
 - DO NOT invent or hallucinate any projects, stats, or employers.
@@ -489,9 +495,14 @@ const Chatbot: React.FC = () => {
   };
 
   const callGemini = async (userQuery: string, history: Array<{ isBot: boolean; text: string }>) => {
+    const offensiveRegex = /\b(gay|gays|lesbian|lesbians|homo|homosexual|homosexuality|queer|fag|faggot|faggots|fags|chakka|hijra|shemale|fuck|fucking|fucker|fuckers|fucked|f\*ck|fck|stfu|wtf|bitch|bitches|bitching|bastard|bastards|asshole|assholes|dumbass|motherfucker|motherfucking|mf|cunt|cunts|dick|dicks|cock|cocks|pussy|pussies|whore|whores|slut|sluts|retard|retarded|nigger|nigga|bsdk|bhosadike|bhosdike|bhosdiwale|madarchod|bhenchod|behenchod|gandu|gaand|chutiya|chut|choot|lavde|laude|lauda|lodu|randi|harami)\b/i;
     const greetingRegex = /^(hi+|hey+|hello+|hii+|hiiii+|good\s*(morning|evening|afternoon)|what'?s\s*up|yo+|hello\s*chatbot|hi\s*there)[!.,?\s]*$/i;
     const relationshipRegex = /\b(gf|girlfriend|girlfriends|relationship|relationships|dating|date|crush|love\s*life|romantic|who\s+he\s+likes|marry|marriage|wife)\b/i;
     const outOfScopeRegex = /^(what('?s| is) (today'?s )?weather|how('?s| is) the weather|weather today|weather forecast|who is the prime minister|who is the president|stock price of|cricket score|capital of|tell me a joke)\b/i;
+
+    if (offensiveRegex.test(userQuery)) {
+      return "This is an AI assistant for Sarweshwar's portfolio. Please keep questions focused on his AI/ML projects, skills, education, or professional experience.";
+    }
 
     if (outOfScopeRegex.test(userQuery)) {
       return "That's outside my Sarweshwar portfolio zone 😭 Ask your frnd Sarweshwar about that.";
@@ -617,6 +628,28 @@ const Chatbot: React.FC = () => {
     const updatedMessages = [...messages, newUserMessage];
     setMessages(updatedMessages);
     setMessage('');
+
+    // Safety & offensive content check: respond immediately if vulgarity, bad words, or gay slurs are used
+    const offensiveCheckRegex = /\b(gay|gays|lesbian|lesbians|homo|homosexual|homosexuality|queer|fag|faggot|faggots|fags|chakka|hijra|shemale|fuck|fucking|fucker|fuckers|fucked|f\*ck|fck|stfu|wtf|bitch|bitches|bitching|bastard|bastards|asshole|assholes|dumbass|motherfucker|motherfucking|mf|cunt|cunts|dick|dicks|cock|cocks|pussy|pussies|whore|whores|slut|sluts|retard|retarded|nigger|nigga|bsdk|bhosadike|bhosdike|bhosdiwale|madarchod|bhenchod|behenchod|gandu|gaand|chutiya|chut|choot|lavde|laude|lauda|lodu|randi|harami)\b/i;
+    if (offensiveCheckRegex.test(query)) {
+      const warningText = "This is an AI assistant for Sarweshwar's portfolio. Please keep questions focused on his AI/ML projects, skills, education, or professional experience.";
+      const botResponse = {
+        id: Date.now() + 1,
+        text: warningText,
+        isBot: true,
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, botResponse]);
+      logChatToSupabase({
+        user_query: query,
+        bot_response: warningText,
+        sources: [],
+        session_id: sessionIdRef.current,
+        metadata: { filter: 'offensive_inappropriate_content' }
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
