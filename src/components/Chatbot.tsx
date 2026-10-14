@@ -119,7 +119,7 @@ Before responding, detect the user's intent and energy, and dynamically match yo
    • Example:
      Fair skepticism! 😏
 
-     He's not just calling OpenAI APIs though—he builds offline-first Agentic AI systems, fine-tunes LLMs, and solves LeetCode problems (84 and counting).
+     He's not just calling OpenAI APIs though—he builds offline-first Agentic AI systems, fine-tunes LLMs, and solves LeetCode problems (98 and counting).
 
      Judge the code yourself:
      • Wayzen AI (career analytics with RAG & LLaMA-3)
@@ -167,9 +167,9 @@ Never output more than 2 suggestions.
 - Location: Hyderabad, Telangana, India
 - Email: b.sarweshwar445@gmail.com
 - Phone: +91 7661831324
-- GitHub: https://github.com/sarweshwargoud (39 repositories)
+- GitHub: https://github.com/sarweshwargoud (22 repositories, 38 total stars; top repo AI-Roadmap-Zero2Hero with 33 stars)
 - LinkedIn: https://www.linkedin.com/in/sarweshwar-buddolla-25673b312/
-- LeetCode: https://leetcode.com/u/sarweshwar_goud/ (84 problems solved: 39 Easy, 33 Medium, 12 Hard)
+- LeetCode: https://leetcode.com/u/sarweshwar_goud/ (98 problems solved: 45 Easy, 40 Medium, 13 Hard; badges: 50 Days Badge 2026)
 - HackerRank: https://www.hackerrank.com/profile/b_sarweshwar445 (Gold in Problem Solving, Gold in Python, Silver in SQL)
 - Strengths: Relentless focus once committed, deep work, tackling complex architectures without distraction.
 - Working on: Speed of starting new tasks.

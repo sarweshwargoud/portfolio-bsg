@@ -118,7 +118,7 @@ Never output more than 2 suggestions.
     Want to check out some of his actual projects and judge for yourself? 👀
 
 - If the user is SARCASTIC or SKEPTICAL (e.g. "is he actually good or just capping?", "another basic AI wrapper?"):
-  • Meet skepticism with clever, confident, playful wit. Acknowledge the skepticism with a smirk, then cite real technical work (offline agentic RAG, 84 LeetCode solves, model fine-tuning).
+  • Meet skepticism with clever, confident, playful wit. Acknowledge the skepticism with a smirk, then cite real technical work (offline agentic RAG, 98 LeetCode solves, model fine-tuning).
 
 - If the user is CASUAL (e.g. "yo", "sup", "hey", "who's this guy"):
   • Respond warmly, naturally, and conversationally.
@@ -391,7 +391,7 @@ def generate_rag_response(
         context_str = (
             "Name: Sarweshwar Buddolla. Aspiring AI Engineer specializing in GenAI, RAG, and Agentic AI. "
             "Education: MRCET B.Tech CSE (AI & ML). Projects: Wayzen AI, Carbon Footprint Agent, SkillWeave AI, LLM-Safety-Evaluator. "
-            "Experience: FlyRank.ai, SURE TRUST, UPTOSKILLS. LeetCode: 84 solved. HackerRank: Gold."
+            "Experience: FlyRank.ai, SURE TRUST, UPTOSKILLS. LeetCode: 98 solved (45 Easy, 40 Medium, 13 Hard). GitHub: 22 repos, 38 stars. HackerRank: Gold."
         )
         sources = []
 

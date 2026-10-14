@@ -18,12 +18,12 @@ const profiles = [
         accentHover: 'hover:border-white/40',
         iconColor: 'text-white',
         stats: [
-            { label: 'Public Repos', value: '20' },
-            { label: 'Top Stars', value: '29 ⭐' },
+            { label: 'Public Repos', value: '22' },
+            { label: 'Top Stars', value: '33 ⭐' },
             { label: 'Languages', value: 'Python · TS' },
             { label: 'Active Since', value: '2023' },
         ],
-        highlight: 'AI-Roadmap-Zero2Hero has 29 stars',
+        highlight: 'AI-Roadmap-Zero2Hero has 33 stars (38 total stars)',
     },
     {
         id: 'leetcode',
@@ -36,12 +36,12 @@ const profiles = [
         accentHover: 'hover:border-[#FFA116]/60',
         iconColor: 'text-[#FFA116]',
         stats: [
-            { label: 'Easy', value: '39' },
-            { label: 'Medium', value: '33' },
-            { label: 'Hard', value: '12' },
-            { label: 'Total Solved', value: '84' },
+            { label: 'Easy', value: '45' },
+            { label: 'Medium', value: '40' },
+            { label: 'Hard', value: '13' },
+            { label: 'Total Solved', value: '98' },
         ],
-        highlight: '84 problems solved across all difficulties',
+        highlight: '98 problems solved across all difficulties (50 Days Badge 2026)',
     },
     {
         id: 'hackerrank',

@@ -208,11 +208,11 @@ RAW_PORTFOLIO_DOCUMENTS = [
         "content": (
             "Competitive Programming and Open Source Stats:\n"
             "• LeetCode: https://leetcode.com/u/sarweshwar_goud/\n"
-            "  Total Solved: 84 problems across all difficulty tiers (39 Easy, 33 Medium, 12 Hard).\n\n"
+            "  Total Solved: 98 problems across all difficulty tiers (45 Easy, 40 Medium, 13 Hard), with 2 badges including 50 Days Badge 2026.\n\n"
             "• HackerRank: https://www.hackerrank.com/profile/b_sarweshwar445\n"
             "  Badges: 🥇 Gold in Problem Solving, 🥇 Gold in Python, 🥈 Silver in SQL (3 total badges).\n\n"
             "• GitHub: https://github.com/sarweshwargoud\n"
-            "  Stats: 39 public repositories, active since 2023. Top starred repo: AI-Roadmap-Zero2Hero with 29 stars."
+            "  Stats: 22 public repositories, 38 total stars, active since 2023. Top starred repo: AI-Roadmap-Zero2Hero with 33 stars."
         )
     }
 ]
