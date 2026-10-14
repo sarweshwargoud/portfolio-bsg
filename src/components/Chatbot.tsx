@@ -391,6 +391,9 @@ const FormattedMessage: React.FC<{
   );
 };
 
+// Cache the fastest responsive Gemini model across requests
+let cachedFastestModel = 'gemini-2.5-flash';
+
 const Chatbot: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
@@ -410,9 +413,80 @@ const Chatbot: React.FC = () => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const robotRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const backendAvailableRef = useRef<boolean | null>(null);
   const sessionIdRef = useRef<string>(
     'sess_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now()
   );
+
+  // Pre-warm connection to Gemini API and probe backend health on site load for instant 1st response
+  useEffect(() => {
+    const checkBackend = async () => {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 600);
+        const res = await fetch(`${BACKEND_URL}/api/health`, {
+          method: 'GET',
+          signal: controller.signal
+        }).catch(() => null);
+        clearTimeout(timeoutId);
+        backendAvailableRef.current = Boolean(res && res.ok);
+      } catch {
+        backendAvailableRef.current = false;
+      }
+    };
+
+    const prewarmGemini = () => {
+      const key = GEMINI_API_KEY.trim();
+      if (!key) return;
+      // Lightweight GET to establish HTTP/2 TLS socket & DNS cache early
+      fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}&pageSize=1`, {
+        method: 'GET'
+      }).catch(() => {});
+    };
+
+    checkBackend();
+    prewarmGemini();
+  }, []);
+
+  /**
+   * Automatically scrolls the page smoothly to the relevant portfolio section
+   * when the user asks questions or clicks suggestions regarding specific topics.
+   */
+  const scrollToSection = (text: string) => {
+    if (typeof window === 'undefined') return;
+    const q = text.toLowerCase();
+    let targetId = '';
+
+    if (/\b(project|projects|work|built|wayzen|safety evaluator|code|apps|applications)\b/i.test(q)) {
+      targetId = 'projects';
+    } else if (/\b(skill|skills|tech stack|technologies|framework|frameworks|tools|stack|programming|languages|python|ai tools|machine learning)\b/i.test(q)) {
+      targetId = 'skills';
+    } else if (/\b(experience|internship|internships|intern|job|jobs|work history|flyrank|sure trust|uptoskills|company|companies)\b/i.test(q)) {
+      targetId = 'experience';
+    } else if (/\b(education|college|degree|mrcet|polytechnic|btech|b\.tech|diploma|university|study|academics|cgpa|gpa|school)\b/i.test(q)) {
+      targetId = 'education';
+    } else if (/\b(certificate|certificates|certification|certifications|certified|aws|oracle|hugging face|kaggle)\b/i.test(q)) {
+      targetId = 'certifications';
+    } else if (/\b(coding profile|coding profiles|leetcode|hackerrank|geeksforgeeks|gfg|problem solving|dsa)\b/i.test(q)) {
+      targetId = 'coding-profiles';
+    } else if (/\b(contact|email|phone|hire|reaching out|reach out|get in touch|message|socials|linkedin)\b/i.test(q)) {
+      targetId = 'contact';
+    } else if (/\b(about|who is sarweshwar|who is he|background|bio|story|tell me about sarweshwar|about him|intro)\b/i.test(q)) {
+      targetId = 'about';
+    }
+
+    if (targetId) {
+      if (window.location.pathname !== '/' && window.location.pathname !== '') {
+        window.location.href = `/#${targetId}`;
+      } else {
+        const el = document.getElementById(targetId);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    }
+  };
 
   // Auto-tuck into edge and dim opacity when user is scrolling
   useEffect(() => {
@@ -444,13 +518,16 @@ const Chatbot: React.FC = () => {
     );
   }, []);
 
-  // Chatbox open animation
+  // Chatbox open animation + input focus
   useEffect(() => {
     if (isOpen) {
       gsap.fromTo(chatboxRef.current,
         { opacity: 0, scale: 0.9, y: 30 },
         { opacity: 1, scale: 1, y: 0, duration: 0.35, ease: "power3.out" }
       );
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 150);
     }
   }, [isOpen]);
 
@@ -553,8 +630,12 @@ const Chatbot: React.FC = () => {
       parts: [{ text: userQuery }]
     });
 
-    // Support active Gemini Flash models with fallbacks
-    const models = ['gemini-3.5-flash', 'gemini-3.5-flash-lite', 'gemini-3.8-flash', 'gemini-2.5-flash'];
+    // Support active Gemini Flash models with fallbacks, prioritizing fastest responding model
+    const allModels = ['gemini-2.5-flash', 'gemini-3.5-flash-lite', 'gemini-3.5-flash'];
+    const models = [
+      cachedFastestModel,
+      ...allModels.filter((m) => m !== cachedFastestModel)
+    ];
     let lastError: any = null;
 
     for (const model of models) {
@@ -593,6 +674,7 @@ const Chatbot: React.FC = () => {
         let text = candidate?.content?.parts?.[0]?.text;
 
         if (text) {
+          cachedFastestModel = model;
           if (!ignoredNamePrefix) {
             // Assistant did NOT ask for their name -> Keep flow completely normal, never say 'bro ananomously'
             text = text
@@ -618,6 +700,9 @@ const Chatbot: React.FC = () => {
     const query = (textToSend || message).trim();
     if (!query || isLoading) return;
 
+    // Smoothly scroll to matching section on the website if query asks about portfolio parts
+    scrollToSection(query);
+
     const newUserMessage = {
       id: Date.now(),
       text: query,
@@ -628,6 +713,11 @@ const Chatbot: React.FC = () => {
     const updatedMessages = [...messages, newUserMessage];
     setMessages(updatedMessages);
     setMessage('');
+
+    // Keep cursor focused right after message submission
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 20);
 
     // Safety & offensive content check: respond immediately if vulgarity, bad words, or gay slurs are used
     const offensiveCheckRegex = /\b(gay|gays|lesbian|lesbians|homo|homosexual|homosexuality|queer|fag|faggot|faggots|fags|chakka|hijra|shemale|fuck|fucking|fucker|fuckers|fucked|f\*ck|fck|stfu|wtf|bitch|bitches|bitching|bastard|bastards|asshole|assholes|dumbass|motherfucker|motherfucking|mf|cunt|cunts|dick|dicks|cock|cocks|pussy|pussies|whore|whores|slut|sluts|retard|retarded|nigger|nigga|bsdk|bhosadike|bhosdike|bhosdiwale|madarchod|bhenchod|behenchod|gandu|gaand|chutiya|chut|choot|lavde|laude|lauda|lodu|randi|harami)\b/i;
@@ -647,6 +737,9 @@ const Chatbot: React.FC = () => {
         session_id: sessionIdRef.current,
         metadata: { filter: 'offensive_inappropriate_content' }
       });
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 50);
       return;
     }
 
@@ -662,16 +755,24 @@ const Chatbot: React.FC = () => {
       let aiReply = '';
       let usedBackend = false;
 
-      // Only attempt backend fetch if on localhost or if a custom remote backend URL is provided
+      // Only attempt backend fetch if known online and not failing
       const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-      const canAttemptBackend = Boolean(BACKEND_URL && (!BACKEND_URL.includes('localhost') && !BACKEND_URL.includes('127.0.0.1') || isLocal));
+      const canAttemptBackend = Boolean(
+        backendAvailableRef.current !== false &&
+        BACKEND_URL &&
+        (!BACKEND_URL.includes('localhost') && !BACKEND_URL.includes('127.0.0.1') || isLocal)
+      );
 
       if (canAttemptBackend) {
         try {
-          // Primary: Call FastAPI backend with Supabase pgvector RAG
+          // Primary: Call FastAPI backend with quick timeout abort so 1st query never stalls
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 1200);
+
           const backendRes = await fetch(`${BACKEND_URL}/api/chat`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            signal: controller.signal,
             body: JSON.stringify({
               message: query,
               history: history.map((m) => ({ text: m.text, isBot: m.isBot })),
@@ -679,15 +780,19 @@ const Chatbot: React.FC = () => {
               metadata: { client: 'portfolio_web' }
             })
           });
+          clearTimeout(timeoutId);
 
           if (backendRes.ok) {
             const data = await backendRes.json();
             aiReply = data.reply;
             usedBackend = true;
+            backendAvailableRef.current = true;
           } else {
+            backendAvailableRef.current = false;
             throw new Error(`Backend returned HTTP ${backendRes.status}`);
           }
         } catch (backendError) {
+          backendAvailableRef.current = false;
           console.warn('FastAPI RAG backend not reachable, using direct client fallback:', backendError);
         }
       }
@@ -735,6 +840,10 @@ const Chatbot: React.FC = () => {
       });
     } finally {
       setIsLoading(false);
+      // Ensure cursor stays focused in input field after bot response finishes
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 50);
     }
   };
 
@@ -829,7 +938,10 @@ const Chatbot: React.FC = () => {
                   <FormattedMessage
                     text={msg.text}
                     isBot={msg.isBot}
-                    onSelectSuggestion={(q) => handleSendMessage(q)}
+                    onSelectSuggestion={(q) => {
+                      handleSendMessage(q);
+                      setTimeout(() => inputRef.current?.focus(), 50);
+                    }}
                   />
                 </div>
               </div>
@@ -859,7 +971,10 @@ const Chatbot: React.FC = () => {
                 {defaultQuickPrompts.map((q, idx) => (
                   <button
                     key={idx}
-                    onClick={() => handleSendMessage(q)}
+                    onClick={() => {
+                      handleSendMessage(q);
+                      setTimeout(() => inputRef.current?.focus(), 50);
+                    }}
                     className="text-xs px-3 py-1.5 rounded-xl bg-white/[0.05] hover:bg-white/[0.12] active:scale-95 border border-white/10 text-white/80 hover:text-white transition-all text-left shadow-sm hover:border-primary/40"
                   >
                     {q}
@@ -873,13 +988,16 @@ const Chatbot: React.FC = () => {
           <div className="p-3 sm:p-4 border-t border-white/10 bg-black/50 backdrop-blur-xl shrink-0">
             <div className="flex items-center space-x-2">
               <input
+                ref={inputRef}
                 type="text"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyPress}
                 placeholder="Ask about AI projects, skills, experience..."
-                disabled={isLoading}
-                className="flex-1 px-4 py-3 bg-white/[0.06] border border-white/10 rounded-2xl text-xs sm:text-sm text-white placeholder-white/40 focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/40 transition-all disabled:opacity-50"
+                readOnly={isLoading}
+                className={`flex-1 px-4 py-3 bg-white/[0.06] border border-white/10 rounded-2xl text-xs sm:text-sm text-white placeholder-white/40 focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/40 transition-all ${
+                  isLoading ? 'opacity-70 cursor-wait' : ''
+                }`}
               />
               <button
                 onClick={() => handleSendMessage()}
