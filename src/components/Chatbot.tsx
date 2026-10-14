@@ -743,26 +743,41 @@ const Chatbot: React.FC = () => {
     };
   }, []);
 
-  // Smart scrolling: track if user scrolled up inside chat messages
+  // Smart scrolling: track if user explicitly scrolled up inside chat messages
+  const userScrolledUpRef = useRef(false);
+
   const handleMessagesScroll = () => {
     const container = messagesContainerRef.current;
     if (!container) return;
-    const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 80;
+    const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
+    const isNearBottom = distanceFromBottom < 80;
+    userScrolledUpRef.current = !isNearBottom;
     setShowScrollBottom(!isNearBottom);
   };
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToBottom = (instant = false) => {
+    userScrolledUpRef.current = false;
     setShowScrollBottom(false);
+    const container = messagesContainerRef.current;
+    if (container) {
+      if (instant) {
+        container.scrollTop = container.scrollHeight;
+      } else {
+        container.scrollTo({
+          top: container.scrollHeight,
+          behavior: 'smooth'
+        });
+      }
+    }
   };
 
-  // Auto-scroll to bottom smoothly when new messages arrive (only if near bottom)
+  // Auto-scroll to bottom smoothly when new messages arrive or stream updates
   useEffect(() => {
     const container = messagesContainerRef.current;
     if (!container) return;
-    const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 120;
-    if (isNearBottom) {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+
+    if (!userScrolledUpRef.current) {
+      container.scrollTop = container.scrollHeight;
     }
   }, [messages, isLoading]);
 
@@ -1155,6 +1170,17 @@ const Chatbot: React.FC = () => {
     setMessages([...updatedMessages, initialBotMessage]);
     setMessage('');
 
+    userScrolledUpRef.current = false;
+    setShowScrollBottom(false);
+
+    // Explicitly roll chat down to bottom immediately upon sending
+    setTimeout(() => {
+      scrollToBottom(true);
+    }, 15);
+    setTimeout(() => {
+      scrollToBottom(false);
+    }, 80);
+
     setTimeout(() => {
       inputRef.current?.focus();
     }, 20);
@@ -1166,6 +1192,9 @@ const Chatbot: React.FC = () => {
       setMessages(prev =>
         prev.map(m => m.id === botMsgId ? { ...m, text: warningText } : m)
       );
+      if (!userScrolledUpRef.current && messagesContainerRef.current) {
+        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+      }
       logChatToSupabase({
         user_query: query,
         bot_response: warningText,
@@ -1222,6 +1251,9 @@ const Chatbot: React.FC = () => {
             setMessages(prev =>
               prev.map(m => m.id === botMsgId ? { ...m, text: aiReply } : m)
             );
+            if (!userScrolledUpRef.current && messagesContainerRef.current) {
+              messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+            }
           } else {
             backendAvailableRef.current = false;
           }
@@ -1235,11 +1267,18 @@ const Chatbot: React.FC = () => {
           setMessages(prev =>
             prev.map(m => m.id === botMsgId ? { ...m, text: streamed } : m)
           );
+          if (!userScrolledUpRef.current && messagesContainerRef.current) {
+            messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+          }
         });
 
         setMessages(prev =>
           prev.map(m => m.id === botMsgId ? { ...m, text: aiReply } : m)
         );
+
+        if (!userScrolledUpRef.current && messagesContainerRef.current) {
+          messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+        }
 
         logChatToSupabase({
           user_query: query,
@@ -1256,6 +1295,10 @@ const Chatbot: React.FC = () => {
         prev.map(m => m.id === botMsgId ? { ...m, text: friendlyError, isError: true } : m)
       );
 
+      if (!userScrolledUpRef.current && messagesContainerRef.current) {
+        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+      }
+
       logChatToSupabase({
         user_query: query,
         bot_response: friendlyError,
@@ -1266,6 +1309,9 @@ const Chatbot: React.FC = () => {
     } finally {
       setIsLoading(false);
       setTimeout(() => {
+        if (!userScrolledUpRef.current && messagesContainerRef.current) {
+          messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+        }
         inputRef.current?.focus();
       }, 50);
     }
