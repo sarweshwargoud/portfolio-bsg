@@ -155,12 +155,11 @@ Before responding, detect the user's intent and energy, and dynamically match yo
 4. Use relevant emojis for section titles (e.g. 🧠 Skills, 🚀 Featured Projects, 💼 Experience, 📬 Contact, 🎯 Focus).
 5. Use clean bullet characters (• ) for lists.
 6. Keep sentences concise, punchy, and easy to scan. No giant walls of text.
-7. Where relevant, conclude with interactive prompt options formatted as:
+7. Where relevant, conclude with at most 1-2 short interactive prompt options formatted as:
 👀 Explore next:
-→ Projects
-→ Tech stack
-→ AI/ML work
-→ Experience
+→ [Option 1]
+→ [Option 2]
+Never output more than 2 suggestions.
 
 ### SARWESHWAR BUDDOLLA'S KNOWLEDGE BASE (FACTUAL GROUNDING):
 - Full Name: Sarweshwar Buddolla
@@ -287,12 +286,10 @@ Before responding, detect the user's intent and energy, and dynamically match yo
    - Always prefer NEW INFORMATION over repeated facts.
 
 4. SMART CONTEXTUAL SUGGESTIONS & PROACTIVE QUESTIONS:
-   - After substantive answers, provide 2–3 contextual interactive suggestions formatted as:
-     👀 Explore next:
-     → [Specific logical topic/action]
-     → [Specific follow-up question]
-   - Proactively ask meaningful follow-up questions instead of ending with "Let me know if you need anything else" (e.g. "Are you more interested in the Agentic RAG workflow or how he handled LLM fine-tuning?").
-   - Offer choice-based chips when appropriate (e.g. "What would you like to explore? → [AI Projects] → [Full Stack] → [RAG & Agents]").
+   - Provide at most 1–2 short contextual suggestions. Never overwhelm the user with a huge list.
+   - When introducing multiple projects or giving an overview, list the projects cleanly. Do NOT dump links for all projects.
+   - When the user asks about or discusses a SPECIFIC project, you can provide its details and suggest its Live Demo or GitHub, followed by 1–2 suggestions (e.g. "→ How it works", "→ Tech stack").
+   - Proactively ask meaningful follow-up questions instead of ending with "Let me know if you need anything else".
 
 5. PROJECT DEEP-DIVE MODE:
    - When the user asks to go deeper into a project, guide them naturally:
@@ -486,13 +483,18 @@ const FormattedMessage: React.FC<{
       continue;
     }
 
-    // Interactive suggestion line (starts with → or ->)
-    if (/^[→\-]\s+/.test(trimmed)) {
-      const suggestionText = trimmed.replace(/^[→\-]\s+/, '').replace(/^\[\s*|\s*\]$/g, '').trim();
+    // Interactive suggestion line (starts explicitly with →, ->, or [→)
+    if (/^(?:→|->|\[→)\s*/.test(trimmed)) {
+      const suggestionText = trimmed.replace(/^(?:→|->|\[→)\s*/, '').replace(/^\[\s*|\s*\]$/g, '').trim();
       if (suggestionText && !suggestionText.includes(':')) {
         interactiveSuggestions.push(suggestionText);
         continue;
       }
+    }
+
+    // Skip redundant suggestion header lines
+    if (/^(?:👀\s*Explore next|✨\s*Suggestions?|Suggested prompts?):?$/i.test(trimmed)) {
+      continue;
     }
 
     // Section headers
@@ -549,74 +551,68 @@ const FormattedMessage: React.FC<{
   }
 
   // Detect mentioned projects for verified action buttons
+  // IMPORTANT: Only display action buttons when specifically discussing a SINGLE project!
+  // If the message is a list, overview, or comparison mentioning multiple projects, DO NOT clutter the message.
   const lowerText = text.toLowerCase();
   const matchedProjects = VERIFIED_PROJECT_ACTIONS.filter(proj =>
     proj.triggers.some(t => lowerText.includes(t))
   );
 
+  // Exactly one project being discussed in this message
+  const targetProject = matchedProjects.length === 1 ? matchedProjects[0] : null;
+
+  // Maximum 1-2 contextual suggestions
+  const contextualSuggestions = interactiveSuggestions.length > 0
+    ? interactiveSuggestions.slice(0, 2)
+    : targetProject
+    ? [`How does ${targetProject.title} work?`, `Tech stack for ${targetProject.title}`]
+    : [];
+
   return (
     <div className="space-y-1">
       {renderedElements}
 
-      {/* Verified Contextual Project Actions */}
-      {matchedProjects.length > 0 && (
-        <div className="mt-2.5 pt-2 border-t border-white/10 flex flex-wrap gap-1.5">
-          {matchedProjects.map(p => (
-            <React.Fragment key={p.title}>
-              {p.demo && (
-                <a
-                  href={p.demo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[11px] px-2.5 py-1 rounded-full bg-primary/20 hover:bg-primary/30 border border-primary/40 text-white font-medium flex items-center gap-1 transition-all shadow-sm active:scale-95"
-                >
-                  <span>🚀 Live Demo ({p.title})</span>
-                  <ArrowSquareOut size={11} />
-                </a>
-              )}
-              {p.github && (
-                <a
-                  href={p.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[11px] px-2.5 py-1 rounded-full bg-white/[0.08] hover:bg-white/[0.15] border border-white/15 text-white/90 hover:text-white flex items-center gap-1 transition-all shadow-sm active:scale-95"
-                >
-                  <GithubLogo size={12} />
-                  <span>GitHub</span>
-                </a>
-              )}
-              {p.sectionId && (
-                <button
-                  onClick={() => onScrollToSection && onScrollToSection(p.sectionId)}
-                  className="text-[11px] px-2.5 py-1 rounded-full bg-white/[0.05] hover:bg-white/[0.10] border border-white/10 text-white/80 hover:text-white flex items-center gap-1 transition-all active:scale-95"
-                >
-                  <span>🔍 View Section</span>
-                </button>
-              )}
-            </React.Fragment>
-          ))}
+      {/* Verified Project Action Links (Only shown when specifically discussing that project) */}
+      {targetProject && (
+        <div className="mt-2.5 pt-2 border-t border-white/10 flex flex-wrap items-center gap-2">
+          {targetProject.demo && (
+            <a
+              href={targetProject.demo}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[11px] px-3 py-1.5 rounded-full bg-primary/20 hover:bg-primary/30 border border-primary/40 text-white font-medium flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
+            >
+              <span>🚀 Live Demo</span>
+              <ArrowSquareOut size={12} />
+            </a>
+          )}
+          {targetProject.github && (
+            <a
+              href={targetProject.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[11px] px-3 py-1.5 rounded-full bg-white/[0.08] hover:bg-white/[0.15] border border-white/15 text-white/90 hover:text-white flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
+            >
+              <GithubLogo size={13} />
+              <span>GitHub</span>
+            </a>
+          )}
         </div>
       )}
 
-      {/* Render interactive suggestions as clickable pills if present */}
-      {interactiveSuggestions.length > 0 && (
-        <div className="mt-3 pt-2 border-t border-white/10">
-          <p className="text-[11px] font-medium text-white/50 mb-2 flex items-center gap-1">
-            <Sparkle size={12} weight="fill" className="text-primary" />
-            Suggested prompts:
-          </p>
-          <div className="flex flex-wrap gap-1.5">
-            {interactiveSuggestions.map((sugg, sIdx) => (
-              <button
-                key={sIdx}
-                onClick={() => onSelectSuggestion && onSelectSuggestion(sugg.startsWith('Tell me') ? sugg : `Tell me more about ${sugg}`)}
-                className="text-[11px] px-3 py-1 rounded-full bg-white/[0.08] hover:bg-gradient-to-r hover:from-primary hover:to-secondary border border-white/15 text-white/90 hover:text-white transition-all flex items-center gap-1 group shadow-sm active:scale-95"
-              >
-                <span>{sugg}</span>
-                <ArrowRight size={10} className="group-hover:translate-x-0.5 transition-transform opacity-70" />
-              </button>
-            ))}
-          </div>
+      {/* 1-2 Contextual Suggestions */}
+      {contextualSuggestions.length > 0 && (
+        <div className={`flex flex-wrap gap-1.5 ${targetProject ? 'mt-2' : 'mt-2.5 pt-2 border-t border-white/10'}`}>
+          {contextualSuggestions.map((sugg, sIdx) => (
+            <button
+              key={sIdx}
+              onClick={() => onSelectSuggestion && onSelectSuggestion(sugg.startsWith('Tell me') || sugg.startsWith('How') ? sugg : `Tell me about ${sugg}`)}
+              className="text-[11px] px-2.5 py-1 rounded-full bg-white/[0.06] hover:bg-white/[0.12] hover:border-primary/40 border border-white/10 text-white/85 hover:text-white transition-all flex items-center gap-1 group shadow-sm active:scale-95"
+            >
+              <span>{sugg}</span>
+              <ArrowRight size={10} className="group-hover:translate-x-0.5 transition-transform opacity-70" />
+            </button>
+          ))}
         </div>
       )}
     </div>
