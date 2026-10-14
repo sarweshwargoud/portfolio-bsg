@@ -1,6 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
-import { ChatCircle, X, PaperPlaneTilt, Robot, Sparkle, ArrowRight, ArrowCounterClockwise } from 'phosphor-react';
+import {
+  ChatCircle,
+  X,
+  PaperPlaneTilt,
+  Robot,
+  Sparkle,
+  ArrowRight,
+  ArrowCounterClockwise,
+  Copy,
+  Check,
+  ArrowDown,
+  ArrowSquareOut,
+  GithubLogo,
+  ArrowClockwise
+} from 'phosphor-react';
 
 // Backend RAG URL and fallback Gemini API key
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
@@ -256,16 +270,116 @@ Before responding, detect the user's intent and energy, and dynamically match yo
    Respond strictly with:
    "This is an AI assistant for Sarweshwar's portfolio. Please keep questions focused on his AI/ML projects, skills, education, or professional experience."
 
+### ADVANCED INTERACTION & INTELLIGENCE PRINCIPLES:
+1. REAL INTENT & CONTEXTUAL AWARENESS:
+   - For every message, implicitly discern: intent, current topic, previous topic, whether it's a follow-up, topic switch, recruiter evaluation, deep technical query, casual chat, testing, or personal questions.
+   - Use conversational history to resolve context. If previous turns were about AI projects, "What did he build?" or "How did he build it?" naturally refers to his AI projects.
+   - Never expose this internal classification to the user.
+
+2. CONTEXTUAL FOLLOW-UP QUESTIONS & ANAPHORA RESOLUTION:
+   - Accurately resolve references: "that project", "the first one", "the second project", "tell me more", "what did he use?", "how did he build it?", "why did he use that?", "does he have more?", "what about the other one?".
+   - Never ask the user to repeat information that already exists in the conversation history.
+
+3. DON'T REPEAT YOURSELF (DRY PRINCIPLE):
+   - If you already explained a project, skill, or role earlier in the conversation, do NOT output the identical summary again.
+   - Acknowledge the context and offer fresh, deeper technical details:
+     Example: "Yep, the Wayzen AI one we just discussed 👀. If you want to go deeper, the interesting part is its RAG pipeline combining FAISS with LLaMA-3..."
+   - Always prefer NEW INFORMATION over repeated facts.
+
+4. SMART CONTEXTUAL SUGGESTIONS & PROACTIVE QUESTIONS:
+   - After substantive answers, provide 2–3 contextual interactive suggestions formatted as:
+     👀 Explore next:
+     → [Specific logical topic/action]
+     → [Specific follow-up question]
+   - Proactively ask meaningful follow-up questions instead of ending with "Let me know if you need anything else" (e.g. "Are you more interested in the Agentic RAG workflow or how he handled LLM fine-tuning?").
+   - Offer choice-based chips when appropriate (e.g. "What would you like to explore? → [AI Projects] → [Full Stack] → [RAG & Agents]").
+
+5. PROJECT DEEP-DIVE MODE:
+   - When the user asks to go deeper into a project, guide them naturally:
+     Overview → Architecture → Tech Stack → Reasoning & Trade-offs → Step-by-Step Flow → Limitations.
+   - If suggesting potential improvements or next steps, explicitly clarify:
+     "That's not something listed in his portfolio, but based on his AI/RAG work, I'd suggest..."
+
+6. PROJECT COMPARISONS:
+   - When asked comparison questions ("Which project is more advanced?", "Compare Wayzen AI and Carbon Footprint Agent", "Which uses more AI?"):
+   - Present clean, structured comparisons using verified portfolio data. Never fabricate missing values.
+
+7. USER PERSONALIZATION & INTEREST INFERENCE:
+   - If the user provided their name (e.g. Rahul), remember it throughout the current session.
+   - Address them naturally and occasionally (e.g., "Rahul, if you're interested in AI specifically, I'd start with Wayzen AI.") — NEVER say their name in every response.
+   - Infer their technical interest (AI, RAG, full-stack, recruiter evaluation) and tailor recommendations to their focus.
+
+8. TOPIC TRANSITIONS & HUMOR ADAPTATION:
+   - Smoothly transition when topics change naturally (Projects → Skills → Experience → Education).
+   - If the user abruptly switches from a technical topic to a personal/relationship question (e.g. from pgvector to girlfriend):
+     Acknowledge the sudden switch with a fresh witty line every time:
+     e.g., "bro 😭 we went from pgvector and RAG straight into the relationship department 💀"
+   - Match the user's energy: professional for recruiter, relaxed for casual, witty for sarcastic, serious and structured for technical questions.
+
+9. RECRUITER MODE & TECHNICAL MODE:
+   - Recruiter evaluating Sarweshwar: structured, crisp, highlighting metrics, skills, work history, and contact options without unnecessary jokes.
+   - Engineer/developer: technical depth on architectures (e.g. RAG pgvector pipeline, LLaMA-3, FAISS, model fine-tuning).
+
+10. DIFFERENTIATING FACTS FROM SPECULATION:
+    - Never present AI-generated recommendations or guesses as existing portfolio facts.
+    - If unknown: "I don't have that in Sarweshwar's portfolio information 😅" and redirect to what is available.
+
 ### STRICT GUIDELINES:
 - Only answer about Sarweshwar's portfolio. If asked completely unrelated topics, politely redirect back to his work.
 - DO NOT invent or hallucinate any projects, stats, or employers.
 - Remember: NO **bold** markdown tags. Write naturally with clean line breaks and emojis!`;
 
+// Verified real links and actions for projects in Sarweshwar's portfolio
+const VERIFIED_PROJECT_ACTIONS = [
+  {
+    triggers: ['wayzen'],
+    title: 'Wayzen AI',
+    demo: 'https://wayzen-ai.vercel.app/',
+    github: 'https://github.com/sarweshwargoud/Wayzen-AI.git',
+    sectionId: 'projects'
+  },
+  {
+    triggers: ['carbon footprint', 'carbon agent'],
+    title: 'Carbon Footprint Agent',
+    demo: 'https://sarweshwargoud-carbon-footprint-agent-appapp-jlyr6u.streamlit.app/',
+    github: 'https://github.com/sarweshwargoud/Carbon-footprint-agent.git',
+    sectionId: 'projects'
+  },
+  {
+    triggers: ['skillweave'],
+    title: 'SkillWeave AI',
+    demo: 'https://skill-weave-ai.vercel.app/',
+    github: 'https://github.com/sarweshwargoud/SkillWeave-AI',
+    sectionId: 'projects'
+  },
+  {
+    triggers: ['safety evaluator', 'llm safety', 'llm-safety'],
+    title: 'LLM-Safety-Evaluator',
+    demo: 'https://llm-safety-evaluator.vercel.app/',
+    github: 'https://github.com/sarweshwargoud/llmSafetyEvaluator',
+    sectionId: 'projects'
+  },
+  {
+    triggers: ['healthcare chatbot', 'mental health'],
+    title: 'Healthcare Chatbot',
+    github: 'https://github.com/sarweshwargoud/Mental-health-care-chatbot',
+    sectionId: 'projects'
+  },
+  {
+    triggers: ['product recommendation', 'product recommender'],
+    title: 'Product Recommendation',
+    github: 'https://github.com/sarweshwargoud/Product-Recommendation-system',
+    sectionId: 'projects'
+  }
+];
+
 const defaultQuickPrompts = [
-  "What are Sarweshwar's top AI projects?",
-  "What technical skills does he specialize in?",
-  "Tell me about his work experience",
-  "How can I get in touch with Sarweshwar?"
+  "🚀 Explore Projects",
+  "🤖 AI & ML Work",
+  "💻 Tech Stack",
+  "🧠 RAG & AI Agents",
+  "👨‍💻 About Sarweshwar",
+  "💼 Experience & Internships"
 ];
 
 // Helper component that cleans and renders responses without raw Markdown syntax
@@ -274,7 +388,8 @@ const FormattedMessage: React.FC<{
   text: string;
   isBot: boolean;
   onSelectSuggestion?: (query: string) => void;
-}> = ({ text, isBot, onSelectSuggestion }) => {
+  onScrollToSection?: (sectionId: string) => void;
+}> = ({ text, isBot, onSelectSuggestion, onScrollToSection }) => {
   if (!isBot) {
     return <span className="font-normal">{text}</span>;
   }
@@ -284,36 +399,103 @@ const FormattedMessage: React.FC<{
   const renderedElements: React.ReactNode[] = [];
   const interactiveSuggestions: string[] = [];
 
-  // Helper to strip markdown asterisks and backticks from inline text
   const cleanInline = (str: string) => {
     return str
-      .replace(/\*\*(.*?)\*\*/g, '$1') // remove **bold**
-      .replace(/__(.*?)__/g, '$1')     // remove __bold__
-      .replace(/\*(.*?)\*/g, '$1')     // remove *italic*
-      .replace(/`(.*?)`/g, '$1')       // remove `code`
-      .replace(/^###\s+/, '')          // remove ###
-      .replace(/^##\s+/, '');          // remove ##
+      .replace(/\*\*(.*?)\*\*/g, '$1')
+      .replace(/__(.*?)__/g, '$1')
+      .replace(/\*(.*?)\*/g, '$1')
+      .replace(/`(.*?)`/g, '$1')
+      .replace(/^###\s+/, '')
+      .replace(/^##\s+/, '');
   };
 
-  lines.forEach((line, idx) => {
-    const trimmed = line.trim();
+  let tableBuffer: string[] = [];
+
+  const flushTableBuffer = (keyIdx: number) => {
+    if (tableBuffer.length < 2) {
+      tableBuffer.forEach((tblLine, tIdx) => {
+        renderedElements.push(
+          <p key={`tbl-fallback-${keyIdx}-${tIdx}`} className="text-xs sm:text-[13px] text-white/85 leading-relaxed">
+            {cleanInline(tblLine)}
+          </p>
+        );
+      });
+      tableBuffer = [];
+      return;
+    }
+
+    const headers = tableBuffer[0]
+      .split('|')
+      .map(c => c.trim())
+      .filter(Boolean);
+    const dataRows = tableBuffer
+      .slice(1)
+      .filter(row => !/^\|[\s\-:|]+\|$/.test(row.trim()))
+      .map(row =>
+        row
+          .split('|')
+          .map(c => c.trim())
+          .filter(Boolean)
+      );
+
+    renderedElements.push(
+      <div key={`table-${keyIdx}`} className="overflow-x-auto my-2 rounded-xl border border-white/10 bg-white/[0.03]">
+        <table className="w-full text-[11px] sm:text-xs text-left border-collapse">
+          {headers.length > 0 && (
+            <thead className="bg-white/[0.08] text-white font-semibold border-b border-white/10">
+              <tr>
+                {headers.map((h, hIdx) => (
+                  <th key={hIdx} className="px-3 py-2 text-white/90 font-medium">
+                    {cleanInline(h)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+          )}
+          <tbody className="divide-y divide-white/5">
+            {dataRows.map((r, rIdx) => (
+              <tr key={rIdx} className="hover:bg-white/[0.02]">
+                {r.map((c, cIdx) => (
+                  <td key={cIdx} className="px-3 py-1.5 text-white/80">
+                    {cleanInline(c)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+    tableBuffer = [];
+  };
+
+  for (let idx = 0; idx < lines.length; idx++) {
+    const trimmed = lines[idx].trim();
+
+    // Check if line is part of a markdown table (starts and ends with |)
+    if (/^\|.*\|$/.test(trimmed)) {
+      tableBuffer.push(trimmed);
+      continue;
+    } else if (tableBuffer.length > 0) {
+      flushTableBuffer(idx);
+    }
 
     // Empty line -> spacing
     if (!trimmed) {
       renderedElements.push(<div key={`spacer-${idx}`} className="h-2" />);
-      return;
+      continue;
     }
 
     // Interactive suggestion line (starts with → or ->)
     if (/^[→\-]\s+/.test(trimmed)) {
-      const suggestionText = trimmed.replace(/^[→\-]\s+/, '').trim();
+      const suggestionText = trimmed.replace(/^[→\-]\s+/, '').replace(/^\[\s*|\s*\]$/g, '').trim();
       if (suggestionText && !suggestionText.includes(':')) {
         interactiveSuggestions.push(suggestionText);
-        return;
+        continue;
       }
     }
 
-    // Section headers (often start with emojis or specific trigger words)
+    // Section headers
     const isHeader =
       /^[🧠🚀💼🎓🛠🏆📬🎯💡👀✨💻😎🔥]\s+/.test(trimmed) ||
       /^(Featured Projects|Technical Skills|Work Experience|Education|Certifications|Contact Information|Main interests|Focus|Explore next):?$/i.test(trimmed);
@@ -321,7 +503,7 @@ const FormattedMessage: React.FC<{
     // Bullet point lines
     const isBullet = /^[•\-\*]\s+/.test(trimmed);
 
-    // Numbered item lines (e.g. "1. Carbon Footprint Agent")
+    // Numbered item lines
     const isNumbered = /^\d+\.\s+/.test(trimmed);
 
     const cleanedText = cleanInline(trimmed);
@@ -360,11 +542,61 @@ const FormattedMessage: React.FC<{
         </p>
       );
     }
-  });
+  }
+
+  if (tableBuffer.length > 0) {
+    flushTableBuffer(lines.length);
+  }
+
+  // Detect mentioned projects for verified action buttons
+  const lowerText = text.toLowerCase();
+  const matchedProjects = VERIFIED_PROJECT_ACTIONS.filter(proj =>
+    proj.triggers.some(t => lowerText.includes(t))
+  );
 
   return (
     <div className="space-y-1">
       {renderedElements}
+
+      {/* Verified Contextual Project Actions */}
+      {matchedProjects.length > 0 && (
+        <div className="mt-2.5 pt-2 border-t border-white/10 flex flex-wrap gap-1.5">
+          {matchedProjects.map(p => (
+            <React.Fragment key={p.title}>
+              {p.demo && (
+                <a
+                  href={p.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[11px] px-2.5 py-1 rounded-full bg-primary/20 hover:bg-primary/30 border border-primary/40 text-white font-medium flex items-center gap-1 transition-all shadow-sm active:scale-95"
+                >
+                  <span>🚀 Live Demo ({p.title})</span>
+                  <ArrowSquareOut size={11} />
+                </a>
+              )}
+              {p.github && (
+                <a
+                  href={p.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[11px] px-2.5 py-1 rounded-full bg-white/[0.08] hover:bg-white/[0.15] border border-white/15 text-white/90 hover:text-white flex items-center gap-1 transition-all shadow-sm active:scale-95"
+                >
+                  <GithubLogo size={12} />
+                  <span>GitHub</span>
+                </a>
+              )}
+              {p.sectionId && (
+                <button
+                  onClick={() => onScrollToSection && onScrollToSection(p.sectionId)}
+                  className="text-[11px] px-2.5 py-1 rounded-full bg-white/[0.05] hover:bg-white/[0.10] border border-white/10 text-white/80 hover:text-white flex items-center gap-1 transition-all active:scale-95"
+                >
+                  <span>🔍 View Section</span>
+                </button>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      )}
 
       {/* Render interactive suggestions as clickable pills if present */}
       {interactiveSuggestions.length > 0 && (
@@ -377,7 +609,7 @@ const FormattedMessage: React.FC<{
             {interactiveSuggestions.map((sugg, sIdx) => (
               <button
                 key={sIdx}
-                onClick={() => onSelectSuggestion && onSelectSuggestion(`Tell me more about ${sugg}`)}
+                onClick={() => onSelectSuggestion && onSelectSuggestion(sugg.startsWith('Tell me') ? sugg : `Tell me more about ${sugg}`)}
                 className="text-[11px] px-3 py-1 rounded-full bg-white/[0.08] hover:bg-gradient-to-r hover:from-primary hover:to-secondary border border-white/15 text-white/90 hover:text-white transition-all flex items-center gap-1 group shadow-sm active:scale-95"
               >
                 <span>{sugg}</span>
@@ -399,8 +631,17 @@ const Chatbot: React.FC = () => {
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [showScrollBottom, setShowScrollBottom] = useState(false);
+  const [copiedId, setCopiedId] = useState<number | null>(null);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [messages, setMessages] = useState([
+
+  const [messages, setMessages] = useState<Array<{
+    id: number;
+    text: string;
+    isBot: boolean;
+    timestamp: Date;
+    isError?: boolean;
+  }>>([
     {
       id: 1,
       text: "👋 Hey there! I'm Sarweshwar's AI Portfolio Assistant.\n\nAsk me anything about his AI/ML projects, skills, internships, certifications, or how to connect!",
@@ -411,6 +652,7 @@ const Chatbot: React.FC = () => {
 
   const chatboxRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const robotRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -488,7 +730,7 @@ const Chatbot: React.FC = () => {
     }
   };
 
-  // Auto-tuck into edge and dim opacity when user is scrolling
+  // Auto-tuck into edge and dim opacity when user is scrolling the main website
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolling(true);
@@ -505,9 +747,27 @@ const Chatbot: React.FC = () => {
     };
   }, []);
 
-  // Auto-scroll to bottom smoothly when new messages arrive
-  useEffect(() => {
+  // Smart scrolling: track if user scrolled up inside chat messages
+  const handleMessagesScroll = () => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 80;
+    setShowScrollBottom(!isNearBottom);
+  };
+
+  const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    setShowScrollBottom(false);
+  };
+
+  // Auto-scroll to bottom smoothly when new messages arrive (only if near bottom)
+  useEffect(() => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 120;
+    if (isNearBottom) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [messages, isLoading]);
 
   // Initial floating button entrance
@@ -571,10 +831,38 @@ const Chatbot: React.FC = () => {
     ]);
   };
 
+  const handleCopyMessage = (id: number, text: string) => {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(text);
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
+    }
+  };
+
+  const handleRegenerate = () => {
+    if (isLoading) return;
+    const userMessages = messages.filter(m => !m.isBot);
+    if (userMessages.length === 0) return;
+    const lastUserMsg = userMessages[userMessages.length - 1];
+
+    setMessages(prev => {
+      const copy = [...prev];
+      if (copy.length > 0 && copy[copy.length - 1].isBot) {
+        copy.pop();
+      }
+      return copy;
+    });
+
+    handleSendMessage(lastUserMsg.text);
+  };
+
+  const handleRetry = () => {
+    handleRegenerate();
+  };
+
   const callGemini = async (userQuery: string, history: Array<{ isBot: boolean; text: string }>) => {
     const offensiveRegex = /\b(gay|gays|lesbian|lesbians|homo|homosexual|homosexuality|queer|fag|faggot|faggots|fags|chakka|hijra|shemale|fuck|fucking|fucker|fuckers|fucked|f\*ck|fck|stfu|wtf|bitch|bitches|bitching|bastard|bastards|asshole|assholes|dumbass|motherfucker|motherfucking|mf|cunt|cunts|dick|dicks|cock|cocks|pussy|pussies|whore|whores|slut|sluts|retard|retarded|nigger|nigga|bsdk|bhosadike|bhosdike|bhosdiwale|madarchod|bhenchod|behenchod|gandu|gaand|chutiya|chut|choot|lavde|laude|lauda|lodu|randi|harami)\b/i;
     const greetingRegex = /^(hi+|hey+|hello+|hii+|hiiii+|good\s*(morning|evening|afternoon)|what'?s\s*up|yo+|hello\s*chatbot|hi\s*there)[!.,?\s]*$/i;
-    const relationshipRegex = /\b(gf|girlfriend|girlfriends|relationship|relationships|dating|date|crush|love\s*life|romantic|who\s+he\s+likes|marry|marriage|wife)\b/i;
     const outOfScopeRegex = /^(what('?s| is) (today'?s )?weather|how('?s| is) the weather|weather today|weather forecast|who is the prime minister|who is the president|stock price of|cricket score|capital of|tell me a joke)\b/i;
 
     if (offensiveRegex.test(userQuery)) {
@@ -597,6 +885,9 @@ const Chatbot: React.FC = () => {
       const nameMatch = userQuery.match(/^(?:my name is|i am|i'm|im|this is|it's|its)?\s*([A-Za-z]{2,25}(?:\s+[A-Za-z]{2,25})?)[.!]?$/i);
       if (nameMatch && !isQueryIntent && userQuery.split(/\s+/).length <= 5) {
         const extracted = nameMatch[1].charAt(0).toUpperCase() + nameMatch[1].slice(1);
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem('portfolio_user_name', extracted);
+        }
         return `Nice to meet you, ${extracted}! 😄 What would you like to know about Sarweshwar?`;
       } else {
         ignoredNamePrefix = "bro ananomously want to know about sarweshwar 😭🙌\n\n";
@@ -604,14 +895,11 @@ const Chatbot: React.FC = () => {
     }
 
     const apiKey = GEMINI_API_KEY.trim();
-
     if (!apiKey) {
       return "⚠️ Gemini API Key Required\n\nPlease add your Gemini API key in the .env file:\nVITE_GEMINI_API_KEY=your_key_here\n\nYou can generate a free API key at Google AI Studio (aistudio.google.com).";
     }
 
-    // Build multi-turn conversation history
     const contents: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }> = [];
-
     history.forEach((m) => {
       contents.push({
         role: m.isBot ? 'model' : 'user',
@@ -619,18 +907,15 @@ const Chatbot: React.FC = () => {
       });
     });
 
-    // Make sure contents starts with a 'user' turn as required by Gemini
     while (contents.length > 0 && contents[0].role !== 'user') {
       contents.shift();
     }
 
-    // Append the current query
     contents.push({
       role: 'user',
       parts: [{ text: userQuery }]
     });
 
-    // Support active Gemini Flash models with fallbacks, prioritizing fastest responding model
     const allModels = ['gemini-2.5-flash', 'gemini-3.5-flash-lite', 'gemini-3.5-flash'];
     const models = [
       cachedFastestModel,
@@ -644,13 +929,9 @@ const Chatbot: React.FC = () => {
           `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
           {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              systemInstruction: {
-                parts: [{ text: PORTFOLIO_SYSTEM_PROMPT }]
-              },
+              systemInstruction: { parts: [{ text: PORTFOLIO_SYSTEM_PROMPT }] },
               contents: contents,
               generationConfig: {
                 temperature: 0.85,
@@ -665,8 +946,7 @@ const Chatbot: React.FC = () => {
           const errBody = await response.json().catch(() => ({}));
           const errMsg = errBody.error?.message || `HTTP ${response.status}`;
           lastError = new Error(errMsg);
-          console.warn(`Gemini (${model}) failed:`, errMsg);
-          continue; // Try next model fallback
+          continue;
         }
 
         const data = await response.json();
@@ -676,15 +956,9 @@ const Chatbot: React.FC = () => {
         if (text) {
           cachedFastestModel = model;
           if (!ignoredNamePrefix) {
-            // Assistant did NOT ask for their name -> Keep flow completely normal, never say 'bro ananomously'
-            text = text
-              .replace(/bro anan?omously want to know about sarweshwar [^\n]*\n*/gi, '')
-              .trim();
-          } else {
-            // Assistant asked 'May I know your name?' and user ignored it -> prepend prefix
-            if (!/bro anan?omously/i.test(text)) {
-              text = `${ignoredNamePrefix}${text}`;
-            }
+            text = text.replace(/bro anan?omously want to know about sarweshwar [^\n]*\n*/gi, '').trim();
+          } else if (!/bro anan?omously/i.test(text)) {
+            text = `${ignoredNamePrefix}${text}`;
           }
           return text;
         }
@@ -696,40 +970,206 @@ const Chatbot: React.FC = () => {
     throw lastError || new Error("Failed to get response from Gemini API");
   };
 
+  /**
+   * Real-time streaming response from Gemini using streamGenerateContent via SSE.
+   * Enables tokens to render incrementally in real time.
+   */
+  const callGeminiStream = async (
+    userQuery: string,
+    history: Array<{ isBot: boolean; text: string }>,
+    onChunk: (currentFullText: string) => void
+  ): Promise<string> => {
+    const offensiveRegex = /\b(gay|gays|lesbian|lesbians|homo|homosexual|homosexuality|queer|fag|faggot|faggots|fags|chakka|hijra|shemale|fuck|fucking|fucker|fuckers|fucked|f\*ck|fck|stfu|wtf|bitch|bitches|bitching|bastard|bastards|asshole|assholes|dumbass|motherfucker|motherfucking|mf|cunt|cunts|dick|dicks|cock|cocks|pussy|pussies|whore|whores|slut|sluts|retard|retarded|nigger|nigga|bsdk|bhosadike|bhosdike|bhosdiwale|madarchod|bhenchod|behenchod|gandu|gaand|chutiya|chut|choot|lavde|laude|lauda|lodu|randi|harami)\b/i;
+    const greetingRegex = /^(hi+|hey+|hello+|hii+|hiiii+|good\s*(morning|evening|afternoon)|what'?s\s*up|yo+|hello\s*chatbot|hi\s*there)[!.,?\s]*$/i;
+    const outOfScopeRegex = /^(what('?s| is) (today'?s )?weather|how('?s| is) the weather|weather today|weather forecast|who is the prime minister|who is the president|stock price of|cricket score|capital of|tell me a joke)\b/i;
+
+    if (offensiveRegex.test(userQuery)) {
+      const text = "This is an AI assistant for Sarweshwar's portfolio. Please keep questions focused on his AI/ML projects, skills, education, or professional experience.";
+      onChunk(text);
+      return text;
+    }
+
+    if (outOfScopeRegex.test(userQuery)) {
+      const text = "That's outside my Sarweshwar portfolio zone 😭 Ask your frnd Sarweshwar about that.";
+      onChunk(text);
+      return text;
+    }
+
+    const hasPriorUser = history.some(m => !m.isBot);
+    if (!hasPriorUser && greetingRegex.test(userQuery)) {
+      const text = "Hey! 👋 May I know your name?";
+      onChunk(text);
+      return text;
+    }
+
+    const lastBotMsg = history.length > 0 ? history[history.length - 1] : null;
+    let ignoredNamePrefix = "";
+    if (lastBotMsg && lastBotMsg.isBot && lastBotMsg.text.includes("May I know your name?")) {
+      const isQueryIntent = /(\?|\b(tell|who|what|where|how|why|which|can|show|skills|projects|experience|internship|resume|education|contact|work|about)\b)/i.test(userQuery);
+      const nameMatch = userQuery.match(/^(?:my name is|i am|i'm|im|this is|it's|its)?\s*([A-Za-z]{2,25}(?:\s+[A-Za-z]{2,25})?)[.!]?$/i);
+      if (nameMatch && !isQueryIntent && userQuery.split(/\s+/).length <= 5) {
+        const extracted = nameMatch[1].charAt(0).toUpperCase() + nameMatch[1].slice(1);
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem('portfolio_user_name', extracted);
+        }
+        const text = `Nice to meet you, ${extracted}! 😄 What would you like to know about Sarweshwar?`;
+        onChunk(text);
+        return text;
+      } else {
+        ignoredNamePrefix = "bro ananomously want to know about sarweshwar 😭🙌\n\n";
+      }
+    }
+
+    const apiKey = GEMINI_API_KEY.trim();
+    if (!apiKey) {
+      const text = "⚠️ Gemini API Key Required\n\nPlease add your Gemini API key in the .env file:\nVITE_GEMINI_API_KEY=your_key_here\n\nYou can generate a free API key at Google AI Studio (aistudio.google.com).";
+      onChunk(text);
+      return text;
+    }
+
+    const contents: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }> = [];
+    history.forEach((m) => {
+      contents.push({
+        role: m.isBot ? 'model' : 'user',
+        parts: [{ text: m.text }]
+      });
+    });
+
+    while (contents.length > 0 && contents[0].role !== 'user') {
+      contents.shift();
+    }
+
+    contents.push({
+      role: 'user',
+      parts: [{ text: userQuery }]
+    });
+
+    const allModels = ['gemini-2.5-flash', 'gemini-3.5-flash-lite', 'gemini-3.5-flash'];
+    const models = [
+      cachedFastestModel,
+      ...allModels.filter((m) => m !== cachedFastestModel)
+    ];
+
+    for (const model of models) {
+      try {
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?key=${apiKey}&alt=sse`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              systemInstruction: { parts: [{ text: PORTFOLIO_SYSTEM_PROMPT }] },
+              contents: contents,
+              generationConfig: {
+                temperature: 0.85,
+                maxOutputTokens: 950,
+                topP: 0.95
+              }
+            })
+          }
+        );
+
+        if (!response.ok) {
+          continue;
+        }
+
+        const reader = response.body?.getReader();
+        if (!reader) {
+          throw new Error('ReadableStream not available');
+        }
+
+        const decoder = new TextDecoder();
+        let streamedAccumulator = '';
+        let done = false;
+
+        while (!done) {
+          const { value, done: readerDone } = await reader.read();
+          if (readerDone) {
+            done = true;
+            break;
+          }
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = chunk.split('\n');
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const dataStr = line.slice(6).trim();
+              if (dataStr === '[DONE]') continue;
+              try {
+                const parsed = JSON.parse(dataStr);
+                const part = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (part) {
+                  streamedAccumulator += part;
+                  let display = streamedAccumulator;
+                  if (!ignoredNamePrefix) {
+                    display = display.replace(/bro anan?omously want to know about sarweshwar [^\n]*\n*/gi, '').trim();
+                  } else if (!/bro anan?omously/i.test(display)) {
+                    display = `${ignoredNamePrefix}${display}`;
+                  }
+                  onChunk(display);
+                }
+              } catch {
+                // Ignore partial JSON chunks
+              }
+            }
+          }
+        }
+
+        if (streamedAccumulator.trim()) {
+          cachedFastestModel = model;
+          let finalText = streamedAccumulator.trim();
+          if (!ignoredNamePrefix) {
+            finalText = finalText.replace(/bro anan?omously want to know about sarweshwar [^\n]*\n*/gi, '').trim();
+          } else if (!/bro anan?omously/i.test(finalText)) {
+            finalText = `${ignoredNamePrefix}${finalText}`;
+          }
+          return finalText;
+        }
+      } catch (err: any) {
+        console.warn(`Streaming with ${model} failed, trying fallback:`, err);
+      }
+    }
+
+    return callGemini(userQuery, history);
+  };
+
   const handleSendMessage = async (textToSend?: string) => {
     const query = (textToSend || message).trim();
     if (!query || isLoading) return;
 
-    // Smoothly scroll to matching section on the website if query asks about portfolio parts
     scrollToSection(query);
 
+    const userMsgId = Date.now();
+    const botMsgId = userMsgId + 1;
+
     const newUserMessage = {
-      id: Date.now(),
+      id: userMsgId,
       text: query,
       isBot: false,
       timestamp: new Date()
     };
 
+    const initialBotMessage = {
+      id: botMsgId,
+      text: '',
+      isBot: true,
+      timestamp: new Date()
+    };
+
     const updatedMessages = [...messages, newUserMessage];
-    setMessages(updatedMessages);
+    setMessages([...updatedMessages, initialBotMessage]);
     setMessage('');
 
-    // Keep cursor focused right after message submission
     setTimeout(() => {
       inputRef.current?.focus();
     }, 20);
 
-    // Safety & offensive content check: respond immediately if vulgarity, bad words, or gay slurs are used
+    // Safety & offensive content check
     const offensiveCheckRegex = /\b(gay|gays|lesbian|lesbians|homo|homosexual|homosexuality|queer|fag|faggot|faggots|fags|chakka|hijra|shemale|fuck|fucking|fucker|fuckers|fucked|f\*ck|fck|stfu|wtf|bitch|bitches|bitching|bastard|bastards|asshole|assholes|dumbass|motherfucker|motherfucking|mf|cunt|cunts|dick|dicks|cock|cocks|pussy|pussies|whore|whores|slut|sluts|retard|retarded|nigger|nigga|bsdk|bhosadike|bhosdike|bhosdiwale|madarchod|bhenchod|behenchod|gandu|gaand|chutiya|chut|choot|lavde|laude|lauda|lodu|randi|harami)\b/i;
     if (offensiveCheckRegex.test(query)) {
       const warningText = "This is an AI assistant for Sarweshwar's portfolio. Please keep questions focused on his AI/ML projects, skills, education, or professional experience.";
-      const botResponse = {
-        id: Date.now() + 1,
-        text: warningText,
-        isBot: true,
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, botResponse]);
+      setMessages(prev =>
+        prev.map(m => m.id === botMsgId ? { ...m, text: warningText } : m)
+      );
       logChatToSupabase({
         user_query: query,
         bot_response: warningText,
@@ -750,12 +1190,9 @@ const Chatbot: React.FC = () => {
         .filter((m) => m.id !== 1)
         .map((m) => ({ isBot: m.isBot, text: m.text }));
 
-      history.pop(); // Pop current query as it's passed separately
-
       let aiReply = '';
       let usedBackend = false;
 
-      // Only attempt backend fetch if known online and not failing
       const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
       const canAttemptBackend = Boolean(
         backendAvailableRef.current !== false &&
@@ -765,7 +1202,6 @@ const Chatbot: React.FC = () => {
 
       if (canAttemptBackend) {
         try {
-          // Primary: Call FastAPI backend with quick timeout abort so 1st query never stalls
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), 1200);
 
@@ -787,20 +1223,28 @@ const Chatbot: React.FC = () => {
             aiReply = data.reply;
             usedBackend = true;
             backendAvailableRef.current = true;
+            setMessages(prev =>
+              prev.map(m => m.id === botMsgId ? { ...m, text: aiReply } : m)
+            );
           } else {
             backendAvailableRef.current = false;
-            throw new Error(`Backend returned HTTP ${backendRes.status}`);
           }
         } catch (backendError) {
           backendAvailableRef.current = false;
-          console.warn('FastAPI RAG backend not reachable, using direct client fallback:', backendError);
         }
       }
 
       if (!usedBackend) {
-        aiReply = await callGemini(query, history);
+        aiReply = await callGeminiStream(query, history, (streamed) => {
+          setMessages(prev =>
+            prev.map(m => m.id === botMsgId ? { ...m, text: streamed } : m)
+          );
+        });
 
-        // Record interaction directly in Supabase chat_logs table
+        setMessages(prev =>
+          prev.map(m => m.id === botMsgId ? { ...m, text: aiReply } : m)
+        );
+
         logChatToSupabase({
           user_query: query,
           bot_response: aiReply,
@@ -809,38 +1253,22 @@ const Chatbot: React.FC = () => {
           metadata: { client: 'client_gemini_direct' }
         });
       }
-
-      const botResponse = {
-        id: Date.now() + 1,
-        text: aiReply,
-        isBot: true,
-        timestamp: new Date()
-      };
-
-      setMessages(prev => [...prev, botResponse]);
     } catch (error: any) {
-      console.error('Error calling Gemini API:', error);
+      console.error('Error in chat generation:', error);
+      const friendlyError = "Oops 😭 my AI brain hit a small roadblock. Try that again?";
+      setMessages(prev =>
+        prev.map(m => m.id === botMsgId ? { ...m, text: friendlyError, isError: true } : m)
+      );
 
-      const errorResponse = {
-        id: Date.now() + 1,
-        text: `⚠️ Error connecting to Gemini:\n${error.message || 'Please check your API key in the .env file.'}\n\nPlease check that your VITE_GEMINI_API_KEY in .env is valid.`,
-        isBot: true,
-        timestamp: new Date()
-      };
-
-      setMessages(prev => [...prev, errorResponse]);
-
-      // Record error interaction in Supabase chat_logs table
       logChatToSupabase({
         user_query: query,
-        bot_response: errorResponse.text,
+        bot_response: friendlyError,
         sources: [],
         session_id: sessionIdRef.current,
         metadata: { client: 'client_gemini_error', error: error?.message || 'Unknown error' }
       });
     } finally {
       setIsLoading(false);
-      // Ensure cursor stays focused in input field after bot response finishes
       setTimeout(() => {
         inputRef.current?.focus();
       }, 50);
@@ -863,7 +1291,7 @@ const Chatbot: React.FC = () => {
       }`}
       onTouchStart={() => setIsScrolling(false)}
     >
-      {/* Waving Robot Floating Indicator - Desktop only so it doesn't clutter mobile view */}
+      {/* Waving Robot Floating Indicator */}
       {!isOpen && (
         <div
           className="hidden sm:flex absolute -top-16 right-1 items-center gap-2 bg-zinc-950/80 backdrop-blur-xl border border-white/15 rounded-2xl px-3.5 py-2 shadow-[0_10px_30px_rgba(0,0,0,0.6)] cursor-pointer select-none hover:scale-105 transition-all group"
@@ -882,7 +1310,7 @@ const Chatbot: React.FC = () => {
       {isOpen && (
         <div
           ref={chatboxRef}
-          className="mb-3 w-[calc(100vw-24px)] sm:w-[460px] md:w-[480px] h-[min(580px,calc(100dvh-115px))] sm:h-[min(580px,calc(100dvh-125px))] max-h-[calc(100dvh-115px)] flex flex-col bg-zinc-950/90 backdrop-blur-3xl border border-white/15 rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.95)] overflow-hidden transition-all duration-300"
+          className="mb-3 w-[calc(100vw-24px)] sm:w-[460px] md:w-[480px] h-[min(580px,calc(100dvh-115px))] sm:h-[min(580px,calc(100dvh-125px))] max-h-[calc(100dvh-115px)] flex flex-col bg-zinc-950/90 backdrop-blur-3xl border border-white/15 rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.95)] overflow-hidden transition-all duration-300 relative"
           style={{ willChange: 'transform, opacity' }}
         >
           {/* Header */}
@@ -925,41 +1353,114 @@ const Chatbot: React.FC = () => {
           </div>
 
           {/* Messages Area */}
-          <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 scrollbar-thin scrollbar-thumb-white/10 hover:scrollbar-thumb-white/20">
-            {messages.map((msg) => (
-              <div key={msg.id} className={`flex ${msg.isBot ? 'justify-start' : 'justify-end'}`}>
-                <div
-                  className={`max-w-[88%] px-4 py-3 rounded-2xl shadow-md transition-all ${
-                    msg.isBot
-                      ? 'bg-zinc-900/80 border border-white/10 text-white rounded-tl-sm'
-                      : 'bg-gradient-to-r from-primary to-secondary text-white rounded-tr-sm text-sm'
-                  }`}
-                >
-                  <FormattedMessage
-                    text={msg.text}
-                    isBot={msg.isBot}
-                    onSelectSuggestion={(q) => {
-                      handleSendMessage(q);
-                      setTimeout(() => inputRef.current?.focus(), 50);
-                    }}
-                  />
-                </div>
-              </div>
-            ))}
+          <div
+            ref={messagesContainerRef}
+            onScroll={handleMessagesScroll}
+            className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 scrollbar-thin scrollbar-thumb-white/10 hover:scrollbar-thumb-white/20 relative"
+          >
+            {messages.map((msg, idx) => {
+              const isLatestBot = msg.isBot && idx === messages.length - 1;
+              return (
+                <div key={msg.id} className={`flex ${msg.isBot ? 'justify-start' : 'justify-end'}`}>
+                  <div
+                    className={`max-w-[88%] px-4 py-3 rounded-2xl shadow-md transition-all ${
+                      msg.isBot
+                        ? 'bg-zinc-900/80 border border-white/10 text-white rounded-tl-sm'
+                        : 'bg-gradient-to-r from-primary to-secondary text-white rounded-tr-sm text-sm'
+                    }`}
+                  >
+                    {msg.isBot && !msg.text && isLoading ? (
+                      <div className="flex items-center space-x-2 py-1">
+                        <span className="text-xs text-white/60 font-medium">Thinking</span>
+                        <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                        <div className="w-1.5 h-1.5 bg-secondary rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                        <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                      </div>
+                    ) : (
+                      <>
+                        <FormattedMessage
+                          text={msg.text}
+                          isBot={msg.isBot}
+                          onSelectSuggestion={(q) => {
+                            handleSendMessage(q);
+                            setTimeout(() => inputRef.current?.focus(), 50);
+                          }}
+                          onScrollToSection={scrollToSection}
+                        />
 
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="px-4 py-3 rounded-2xl bg-zinc-900/80 border border-white/10 text-white rounded-tl-sm shadow-md">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                    <div className="w-2 h-2 bg-secondary rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                        {/* Interactive message action bar for assistant answers */}
+                        {msg.isBot && msg.text && (
+                          <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-white/5 text-[10px] text-white/40">
+                            <div className="flex items-center gap-1 select-none">
+                              <Sparkle size={10} className="text-primary" />
+                              <span>Sarweshwar AI</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                              <button
+                                onClick={() => handleCopyMessage(msg.id, msg.text)}
+                                className="px-1.5 py-0.5 hover:text-white rounded hover:bg-white/10 transition-all flex items-center gap-1"
+                                title="Copy response"
+                              >
+                                {copiedId === msg.id ? (
+                                  <>
+                                    <Check size={11} className="text-emerald-400" />
+                                    <span className="text-emerald-400">Copied</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Copy size={11} />
+                                    <span>Copy</span>
+                                  </>
+                                )}
+                              </button>
+                              {isLatestBot && !isLoading && (
+                                <button
+                                  onClick={handleRegenerate}
+                                  className="px-1.5 py-0.5 hover:text-white rounded hover:bg-white/10 transition-all flex items-center gap-1"
+                                  title="Regenerate answer"
+                                >
+                                  <ArrowClockwise size={11} />
+                                  <span>Regenerate</span>
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Friendly error recovery button */}
+                        {msg.isError && (
+                          <div className="mt-2 pt-2 border-t border-red-500/20">
+                            <button
+                              onClick={handleRetry}
+                              className="text-xs px-3 py-1 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-200 border border-red-500/30 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
+                            >
+                              <ArrowClockwise size={12} weight="bold" />
+                              <span>Try again</span>
+                            </button>
+                          </div>
+                        )}
+                      </>
+                    )}
                   </div>
                 </div>
-              </div>
-            )}
+              );
+            })}
+
             <div ref={messagesEndRef} />
           </div>
+
+          {/* Floating "New response" pill if user has scrolled up */}
+          {showScrollBottom && (
+            <div className="absolute bottom-20 left-0 right-0 flex justify-center pointer-events-none z-30">
+              <button
+                onClick={scrollToBottom}
+                className="pointer-events-auto px-3.5 py-1.5 rounded-full bg-zinc-900/95 border border-primary/40 text-white text-[11px] font-medium shadow-[0_8px_25px_rgba(0,0,0,0.8)] hover:bg-primary/20 hover:border-primary transition-all flex items-center gap-1.5 backdrop-blur-xl animate-bounce"
+              >
+                <ArrowDown size={12} weight="bold" className="text-primary" />
+                <span>New response</span>
+              </button>
+            </div>
+          )}
 
           {/* Quick Suggestion Chips (when conversation is fresh) */}
           {messages.length <= 2 && !isLoading && (
