@@ -169,8 +169,7 @@ const About = () => {
                 <strong className="text-white">Relentless Focus Once Committed.</strong>
               </p>
               <p className="text-muted-foreground leading-relaxed text-sm translate-z-sm">
-                When I decide to build something, I don't leave it halfway. Once I start, I work consistently with full intensity until completion.
-                I can maintain long focused sessions, refine systems deeply, Never distracts and push through complexity without losing direction.
+                When I decide to build something, I don't leave it halfway. Once I start, I work consistently with full focus until completion. I can maintain long focused sessions, refine things deeply, stay free from distractions, and push through difficulties without losing direction.
               </p>
             </div>
           </div>
@@ -192,9 +191,9 @@ const About = () => {
                 <strong className="text-white">Delayed Momentum at the Starting Line.</strong>
               </p>
               <p className="text-muted-foreground leading-relaxed text-sm translate-z-sm">
-                I sometimes struggle with initiating tasks due to overthinking and Laziness. However, once I take the first step, my energy shifts completely—I become deeply disciplined and unstoppable in execution.
+                I sometimes take time to start because I overthink the initial steps. However, once I take that first step, my energy shifts completely—I become deeply disciplined and unstoppable in execution.
                 <br />
-                - So I'm actively working on improving my starting speed.
+                - I'm actively working on taking immediate action and building momentum faster.
               </p>
             </div>
           </div>
