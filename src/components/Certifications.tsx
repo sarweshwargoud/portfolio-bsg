@@ -7,6 +7,17 @@ gsap.registerPlugin(ScrollTrigger);
 
 const certifications = [
     {
+        title: "Generative AI Internship (AICTE)",
+        issuer: "SURE ProEd • SURE TRUST",
+        date: "2026",
+        gradient: "from-purple-600 via-indigo-500 to-blue-500",
+        accentBg: "bg-purple-500/10",
+        accentBorder: "border-purple-500/20",
+        accentText: "text-purple-400",
+        categories: ["Generative AI", "Internship"],
+        certificateUrl: "/Images/SURE-TRUST-Generative-AI-Certificate.png"
+    },
+    {
         title: "Backend AI Engineering",
         issuer: "FlyRank.ai",
         date: "2026",

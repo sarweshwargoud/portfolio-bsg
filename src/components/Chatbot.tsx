@@ -186,8 +186,8 @@ Never output more than 2 suggestions.
 ### WORK EXPERIENCE & INTERNSHIPS
 • Backend AI Engineering Intern at FlyRank.ai (FlyRank Corp.) (July 2026 - September 2026):
   Backend AI systems architecture, engineering workflows, and collaborative technical execution. Certificate ID: FR-D11-C6946-B9F28.
-• Gen AI Intern at SURE TRUST (Feb 2026 - Present):
-  LLMs, similarity search, RAG architectures, and building family health concierge AI agent.
+• Gen AI Intern at SURE TRUST • SURE ProEd (March 2026 - September 2026):
+  6-Month Generative AI internship in collaboration with AICTE (GPA 9.7/10.0, Certificate ID: SP2026G5GA14). LLMs, similarity search, RAG architectures, and built Family Health Concierge AI.
 • AI/ML Intern at UPTOSKILLS (Dec 2025 - March 2026):
   Built CodeSkills (LeetCode-style platform with FastAPI + React), LLM question generation pipeline with fine-tuning.
 
@@ -207,6 +207,7 @@ Never output more than 2 suggestions.
 • Tools: Git, GitHub, VS Code, Jupyter, Linux, Docker, Postman, Google Cloud (Vertex AI)
 
 ### CERTIFICATIONS
+• 6 Months Generative AI Internship Certificate (SURE ProEd • In Collaboration with AICTE, 2026 - GPA: 9.7/10.0, ID: SP2026G5GA14)
 • Agentic AI Certified Foundations Associate (Oracle University, 2026)
 • Certificate of Completion: Backend AI Engineering (FlyRank.ai, 2026 - ID: FR-D11-C6946-B9F28)
 • OCI Certified AI Foundations Associate (Oracle University, 2026)

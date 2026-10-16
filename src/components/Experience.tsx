@@ -16,10 +16,11 @@ const experience = [
     },
     {
         title: "Gen AI Intern",
-        company: "SURE TRUST",
-        period: "February 2026 - Present (6 months)",
-        description: "Learned about  LLMs, similarity search, RAG and ai agents and building family health concierge ai agent",
-        stack: ["Generative AI", "LLMs", "RAG", "Agentic Workflows"]
+        company: "SURE TRUST • SURE ProEd",
+        period: "March 2026 - September 2026 (6 months)",
+        description: "Completed 6-Month Generative AI internship in collaboration with AICTE with a GPA of 9.7/10.0, followed by a 3-week soft skills training. Mastered LLMs, similarity search, RAG architectures, and built Family Health Concierge AI. (Certificate ID: SP2026G5GA14)",
+        stack: ["Generative AI", "LLMs", "RAG", "Agentic Workflows"],
+        certificateUrl: "/Images/SURE-TRUST-Generative-AI-Certificate.png"
     },
     {
         title: "AI/ML Intern",

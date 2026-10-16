@@ -80,9 +80,10 @@ RAW_PORTFOLIO_DOCUMENTS = [
             "   Demonstrated technical competency in backend AI architecture, AI engineering pipelines, and collaborative engineering contribution.\n"
             "   Certificate of Completion ID: FR-D11-C6946-B9F28, Issued: September 9, 2026 by Alen Malkoc, Founder & CEO, FlyRank Corp.\n"
             "   Technologies: Backend AI, AI Engineering, Python, FastAPI, LLMs.\n\n"
-            "2. Gen AI Intern at SURE TRUST (February 2026 - Present, 6 months):\n"
+            "2. Gen AI Intern at SURE TRUST • SURE ProEd (March 2026 - September 2026, 6 months):\n"
+            "   Completed 6-Month Generative AI internship in collaboration with AICTE with a GPA of 9.7/10.0, followed by 3-week soft skills training. "
             "   Researched and implemented LLMs, vector similarity search, RAG architectures, and agentic workflows. "
-            "   Built Family Health Concierge AI: a document-aware agentic healthcare assistant.\n"
+            "   Built Family Health Concierge AI: a document-aware agentic healthcare assistant. Certificate ID: SP2026G5GA14.\n"
             "   Technologies: Generative AI, LLMs, RAG, Agentic Workflows.\n\n"
             "3. AI/ML Intern at UPTOSKILLS (December 2025 - March 2026, 3 months):\n"
             "   Built CodeSkills: a LeetCode-style platform for applied AI and coding practice using FastAPI backend and React.js frontend. "
@@ -170,7 +171,9 @@ RAW_PORTFOLIO_DOCUMENTS = [
         },
         "content": (
             "Verified Industry Certifications:\n"
-            "1. Agentic AI Certified Foundations Associate (Oracle University, August 16, 2026)\n"
+            "1. 6 Months Internship Completion Certificate in Generative AI (SURE ProEd • In Collaboration with AICTE, March 2026 - September 2026)\n"
+            "   Awarded to Mr. Sarweshwar Buddolla for successful completion in Generative AI with a GPA of 9.7/10.0, followed by a 3-Week Mandatory Soft Skills Training. Certificate ID: SP2026G5GA14.\n\n"
+            "2. Agentic AI Certified Foundations Associate (Oracle University, August 16, 2026)\n"
             "   Certificate of Recognition awarded to Sarweshwar Buddolla by Oracle Corporation. eCertificate ID: 103395933AAI26OFA (valid until August 16, 2028), signed by Gary N Miller (Customer Success Officer, EVP CSS).\n"
             "   Credential Link: https://catalog-education.oracle.com/ords/certview/sharebadge?id=C7FB8D23CC99AB62AD50154B42011DB744068E632E4FE7662C0A5189D9B98FED\n\n"
             "2. Certificate of Completion - Backend AI Engineering (FlyRank.ai / FlyRank Corp., September 2026)\n"
