@@ -191,13 +191,14 @@ Never output more than 2 suggestions.
 • AI/ML Intern at UPTOSKILLS (Dec 2025 - March 2026):
   Built CodeSkills (LeetCode-style platform with FastAPI + React), LLM question generation pipeline with fine-tuning.
 
-### FEATURED PROJECTS
-• Carbon Footprint Agent: Offline-first Agentic AI with RAG for personalized carbon reduction insights (Streamlit, GitHub).
-• Healthcare Chatbot: Safety-first Gemini API chatbot with NLP for mental health conversations.
-• Product Recommendation System: Hybrid recommendation engine (collaborative + content-based filtering).
-• SkillWeave AI: AI learning platform generating personalized syllabi & ranked YouTube playlists using Gemini (React).
-• LLM-Safety-Evaluator: Prompt injection & jailbreak detection system for LLMs with custom model training.
-• Wayzen AI: Agentic career intelligence platform using RAG, FAISS, and LLaMA-3.
+### FEATURED PROJECTS (GITHUB PINNED)
+• Family Health Concierge AI: AI-powered healthcare platform with OCR, RAG, embeddings, Gemini, and multilingual conversational AI (GitHub: https://github.com/sarweshwargoud/Family-AI-Health-Concierge).
+• SkillWeave AI: AI learning platform generating personalized syllabi & ranked YouTube playlists using Gemini (Live: https://skill-weave-ai.vercel.app/ | GitHub: https://github.com/sarweshwargoud/SkillWeave-AI).
+• LLM Safety Evaluator: Advanced real-time prompt injection & jailbreak detection system with Random Forest & Isolation Forest (Live: https://llmsafetyevaluator.onrender.com/ | GitHub: https://github.com/sarweshwargoud/llmSafetyEvaluator).
+• LLM Usage Metering & Billing Engine: High-reliability token metering, micro-cent pricing, TOCTOU-free atomic quotas, and Stripe billing (GitHub: https://github.com/sarweshwargoud/LLM-Usage-Metering-Billing-Engine).
+• Interview Guru AI (student-mock-interview-ai): AI-powered mock interview simulator with tailored questions, scoring, and feedback via Gemini (Live: https://interview-guru-pi.vercel.app | GitHub: https://github.com/sarweshwargoud/student-mock-interview-ai).
+• GEOlytics: AI intelligence platform combining traditional SEO analysis with GEO (Generative Engine Optimization) and AI search visibility tracking (GitHub: https://github.com/sarweshwargoud/GEOlytics).
+• (Also previously built: Wayzen AI, Carbon Footprint Agent, Product Recommendation System).
 
 ### SKILLS
 • Programming: Python, Java, C++, C, SQL
@@ -329,17 +330,9 @@ Never output more than 2 suggestions.
 // Verified real links and actions for projects in Sarweshwar's portfolio
 const VERIFIED_PROJECT_ACTIONS = [
   {
-    triggers: ['wayzen'],
-    title: 'Wayzen AI',
-    demo: 'https://wayzen-ai.vercel.app/',
-    github: 'https://github.com/sarweshwargoud/Wayzen-AI.git',
-    sectionId: 'projects'
-  },
-  {
-    triggers: ['carbon footprint', 'carbon agent'],
-    title: 'Carbon Footprint Agent',
-    demo: 'https://sarweshwargoud-carbon-footprint-agent-appapp-jlyr6u.streamlit.app/',
-    github: 'https://github.com/sarweshwargoud/Carbon-footprint-agent.git',
+    triggers: ['family health concierge', 'health concierge', 'family health'],
+    title: 'Family Health Concierge AI',
+    github: 'https://github.com/sarweshwargoud/Family-AI-Health-Concierge',
     sectionId: 'projects'
   },
   {
@@ -351,21 +344,42 @@ const VERIFIED_PROJECT_ACTIONS = [
   },
   {
     triggers: ['safety evaluator', 'llm safety', 'llm-safety'],
-    title: 'LLM-Safety-Evaluator',
-    demo: 'https://llm-safety-evaluator.vercel.app/',
+    title: 'LLM Safety Evaluator',
+    demo: 'https://llmsafetyevaluator.onrender.com/',
     github: 'https://github.com/sarweshwargoud/llmSafetyEvaluator',
     sectionId: 'projects'
   },
   {
-    triggers: ['healthcare chatbot', 'mental health'],
-    title: 'Healthcare Chatbot',
-    github: 'https://github.com/sarweshwargoud/Mental-health-care-chatbot',
+    triggers: ['usage metering', 'billing engine', 'llm metering', 'token metering'],
+    title: 'LLM Usage Metering & Billing Engine',
+    github: 'https://github.com/sarweshwargoud/LLM-Usage-Metering-Billing-Engine',
     sectionId: 'projects'
   },
   {
-    triggers: ['product recommendation', 'product recommender'],
-    title: 'Product Recommendation',
-    github: 'https://github.com/sarweshwargoud/Product-Recommendation-system',
+    triggers: ['interview guru', 'mock interview', 'student interview'],
+    title: 'Interview Guru AI',
+    demo: 'https://interview-guru-pi.vercel.app',
+    github: 'https://github.com/sarweshwargoud/student-mock-interview-ai',
+    sectionId: 'projects'
+  },
+  {
+    triggers: ['geolytics', 'geo analytics', 'generative engine optimization'],
+    title: 'GEOlytics',
+    github: 'https://github.com/sarweshwargoud/GEOlytics',
+    sectionId: 'projects'
+  },
+  {
+    triggers: ['wayzen'],
+    title: 'Wayzen AI',
+    demo: 'https://wayzen-ai.vercel.app/',
+    github: 'https://github.com/sarweshwargoud/Wayzen-AI.git',
+    sectionId: 'projects'
+  },
+  {
+    triggers: ['carbon footprint', 'carbon agent'],
+    title: 'Carbon Footprint Agent',
+    demo: 'https://sarweshwargoud-carbon-footprint-agent-appapp-jlyr6u.streamlit.app/',
+    github: 'https://github.com/sarweshwargoud/Carbon-footprint-agent.git',
     sectionId: 'projects'
   }
 ];

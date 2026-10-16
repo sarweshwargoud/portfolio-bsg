@@ -91,56 +91,54 @@ RAW_PORTFOLIO_DOCUMENTS = [
         )
     },
     {
-        "title": "Featured AI Projects - Wayzen AI, Carbon Footprint Agent, SkillWeave AI",
+        "title": "Featured GitHub Pinned Projects (Part 1) - Family Health Concierge AI, SkillWeave AI, LLM Safety Evaluator",
         "source": "portfolio",
         "document_type": "projects",
         "metadata": {
             "section": "projects",
             "category": "ai_agents_and_rag",
-            "topics": ["wayzen ai", "carbon footprint agent", "skillweave ai"]
+            "topics": ["family health concierge ai", "skillweave ai", "llm safety evaluator"]
         },
         "content": (
-            "Key AI Projects (Part 1):\n"
-            "1. Wayzen AI:\n"
-            "   Description: An agentic career intelligence platform leveraging RAG, FAISS vector storage, and LLaMA-3 to analyze salary trends, "
-            "   automation risk assessments, and future career path projections.\n"
-            "   Tech Stack: Agentic AI, LLaMA-3, FAISS, Python, React.\n"
-            "   Live Demo: https://wayzen-ai.vercel.app/ | GitHub: https://github.com/sarweshwargoud/Wayzen-AI.git\n\n"
-            "2. Carbon Footprint Agent:\n"
-            "   Description: An offline-first Agentic AI system leveraging RAG to analyze lifestyle habits and provide personalized carbon reduction strategies.\n"
-            "   Tech Stack: Agentic AI, RAG, Sustainability, Streamlit, Python.\n"
-            "   Live Demo: https://sarweshwargoud-carbon-footprint-agent-appapp-jlyr6u.streamlit.app/ | GitHub: https://github.com/sarweshwargoud/Carbon-footprint-agent.git\n\n"
-            "3. SkillWeave AI:\n"
-            "   Description: An AI-powered learning curriculum platform that generates personalized learning syllabi and dynamically ranked YouTube playlist rankings using Gemini API.\n"
-            "   Tech Stack: AI, Education, React, Gemini API.\n"
-            "   Live Demo: https://skill-weave-ai.vercel.app/ | GitHub: https://github.com/sarweshwargoud/SkillWeave-AI"
+            "Featured GitHub Pinned Projects (Part 1):\n"
+            "1. Family Health Concierge AI:\n"
+            "   Description: An AI-powered family healthcare platform using OCR, RAG, embeddings, and Gemini to securely index, retrieve, and summarize medical records for entire families under a unified account.\n"
+            "   Tech Stack: Agentic AI, Healthcare, RAG, FastAPI, Supabase, React 19.\n"
+            "   GitHub: https://github.com/sarweshwargoud/Family-AI-Health-Concierge\n\n"
+            "2. SkillWeave AI:\n"
+            "   Description: Intelligent AI/ML system that transforms scattered YouTube educational videos into structured, continuous syllabi and ranked playlists with accent and teaching style matching.\n"
+            "   Tech Stack: Gen AI, Gemini API, FastAPI, Python, React, Tailwind CSS.\n"
+            "   Live Demo: https://skill-weave-ai.vercel.app/ | GitHub: https://github.com/sarweshwargoud/SkillWeave-AI\n\n"
+            "3. LLM Safety Evaluator:\n"
+            "   Description: Advanced real-time prompt injection & jailbreak detection system combining Random Forest classifiers and Isolation Forest anomaly detection to safeguard LLM applications.\n"
+            "   Tech Stack: LLM Security, Machine Learning, Python, Scikit-Learn, Flask.\n"
+            "   Live Demo: https://llmsafetyevaluator.onrender.com/ | GitHub: https://github.com/sarweshwargoud/llmSafetyEvaluator"
         )
     },
     {
-        "title": "Featured Projects - Healthcare Chatbot, LLM-Safety-Evaluator, Product Recommender, Interview Guru",
+        "title": "Featured GitHub Pinned Projects (Part 2) - LLM Usage Metering, Interview Guru AI, GEOlytics",
         "source": "portfolio",
         "document_type": "projects",
         "metadata": {
             "section": "projects",
             "category": "llm_and_ml_systems",
-            "topics": ["healthcare chatbot", "llm safety evaluator", "product recommender", "interview guru", "family health concierge"]
+            "topics": ["llm usage metering and billing", "interview guru ai", "geolytics", "wayzen ai", "carbon footprint agent"]
         },
         "content": (
-            "Key AI Projects (Part 2):\n"
-            "4. LLM-Safety-Evaluator:\n"
-            "   Description: A security-focused evaluation platform for detecting prompt injection and jailbreaking attacks targeting Large Language Models using custom trained models.\n"
-            "   Tech Stack: LLM, ML, Model Training, Python.\n"
-            "   Live Demo: https://llm-safety-evaluator.vercel.app/ | GitHub: https://github.com/sarweshwargoud/llmSafetyEvaluator\n\n"
-            "5. Healthcare Chatbot:\n"
-            "   Description: A safety-first generative AI conversational agent utilizing Gemini API with context-aware NLP for empathetic, supportive mental health conversations.\n"
-            "   Tech Stack: Generative AI, Gemini API, NLP, Python.\n"
-            "   GitHub: https://github.com/sarweshwargoud/Mental-health-care-chatbot\n\n"
-            "6. Product Recommendation System:\n"
-            "   Description: A hybrid recommendation engine combining collaborative filtering and content-based filtering algorithms for personalized product discovery.\n"
-            "   Tech Stack: Machine Learning, Recommender Systems, Python, Scikit-Learn.\n"
-            "   GitHub: https://github.com/sarweshwargoud/Product-Recommendation-system\n\n"
-            "7. Interview Guru & Family Health Concierge AI:\n"
-            "   Description: Interview Guru is an interactive AI mock interview platform; Family Health Concierge AI is a multi-agent RAG system built to parse and reason over family health records."
+            "Featured GitHub Pinned Projects (Part 2):\n"
+            "4. LLM Usage Metering & Billing Engine:\n"
+            "   Description: Production-grade usage metering, quota enforcement, and billing engine for LLM APIs with micro-cent token pricing, TOCTOU-free atomic quotas, and Stripe webhooks.\n"
+            "   Tech Stack: FastAPI, PostgreSQL, SQLAlchemy, Stripe, System Design, Docker.\n"
+            "   GitHub: https://github.com/sarweshwargoud/LLM-Usage-Metering-Billing-Engine\n\n"
+            "5. Interview Guru AI (student-mock-interview-ai):\n"
+            "   Description: AI-powered mock interview simulator that generates tailored technical & behavioral interview questions and scores candidate answers with real-time feedback and radar analytics via Gemini.\n"
+            "   Tech Stack: Next.js, Gemini API, FastAPI, Clerk, PostgreSQL.\n"
+            "   Live Demo: https://interview-guru-pi.vercel.app | GitHub: https://github.com/sarweshwargoud/student-mock-interview-ai\n\n"
+            "6. GEOlytics:\n"
+            "   Description: AI-powered intelligence platform combining traditional technical SEO analysis with GEO (Generative Engine Optimization) and AI-search visibility tracking.\n"
+            "   Tech Stack: AI Search, GEO, SEO Analytics, Supabase, React, FastAPI.\n"
+            "   GitHub: https://github.com/sarweshwargoud/GEOlytics\n\n"
+            "Additional projects by Sarweshwar: Wayzen AI (Career intelligence), Carbon Footprint Agent (Eco-sustainability AI), Product Recommendation System."
         )
     },
     {

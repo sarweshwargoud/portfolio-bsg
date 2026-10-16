@@ -390,7 +390,7 @@ def generate_rag_response(
     else:
         context_str = (
             "Name: Sarweshwar Buddolla. Aspiring AI Engineer specializing in GenAI, RAG, and Agentic AI. "
-            "Education: MRCET B.Tech CSE (AI & ML). Projects: Wayzen AI, Carbon Footprint Agent, SkillWeave AI, LLM-Safety-Evaluator. "
+            "Education: MRCET B.Tech CSE (AI & ML). GitHub Pinned Projects: Family Health Concierge AI, SkillWeave AI, LLM Safety Evaluator, LLM Usage Metering & Billing Engine, Interview Guru AI, GEOlytics. "
             "Experience: FlyRank.ai, SURE TRUST, UPTOSKILLS. LeetCode: 98 solved (45 Easy, 40 Medium, 13 Hard). GitHub: 22 repos, 38 stars. HackerRank: Gold."
         )
         sources = []

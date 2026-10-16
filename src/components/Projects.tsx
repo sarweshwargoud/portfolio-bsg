@@ -8,52 +8,52 @@ gsap.registerPlugin(ScrollTrigger);
 
 const projects = [
   {
-    title: "Carbon Footprint Agent",
-    description: "An offline-first Agentic AI system leveraging RAG to analyze lifestyle data and provide personalized carbon reduction insights.",
-    tags: ["Agentic AI", "RAG", "Sustainability"],
-    image: "/Images/Carbon.png",
-    link: "https://sarweshwargoud-carbon-footprint-agent-appapp-jlyr6u.streamlit.app/",
-    github: "https://github.com/sarweshwargoud/Carbon-footprint-agent.git"
-  },
-  {
-    title: "Healthcare Chatbot",
-    description: "Safety-first generative AI chatbot using Gemini API with context-aware NLP for supportive mental health conversations.",
-    tags: ["Gen AI", "Gemini", "NLP"],
-    image: "/Images/Health.png",
+    title: "Family Health Concierge AI",
+    description: "An AI-powered family healthcare platform using OCR, RAG, embeddings, and Gemini to securely index, retrieve, and summarize medical records for entire families.",
+    tags: ["Agentic AI", "Healthcare", "RAG", "FastAPI"],
+    image: "/Images/family-health-concierge.jpg",
     link: "",
-    github: "https://github.com/sarweshwargoud/Mental-health-care-chatbot"
-  },
-  {
-    title: "Product Recommendation system",
-    description: "Hybrid recommendation engine combining collaborative and content-based filtering for hyper-personalized suggestions.",
-    tags: ["ML", "Recommender", "Python"],
-    image: "/Images/product.png",
-    link: "#",
-    github: "https://github.com/sarweshwargoud/Product-Recommendation-system"
+    github: "https://github.com/sarweshwargoud/Family-AI-Health-Concierge"
   },
   {
     title: "SkillWeave AI",
-    description: "AI-powered learning platform generating personalized syllabi and YouTube playlist rankings using Gemini.",
-    tags: ["AI", "Education", "React"],
+    description: "Intelligent AI/ML platform that transforms scattered educational content into structured syllabi and ranked YouTube playlists with accent & style matching.",
+    tags: ["Gen AI", "Gemini", "FastAPI", "React"],
     image: "/Images/Skillweave.png",
     link: "https://skill-weave-ai.vercel.app/",
     github: "https://github.com/sarweshwargoud/SkillWeave-AI"
   },
   {
-    title: "LLM-Safety-Evaluator",
-    description: "Prompt injection and jailbreaking prompts detection system for LLMs",
-    tags: ["LLM", "ML", "Model training"],
-    image: "/Images/project-eco.png",
-    link: "https://llm-safety-evaluator.vercel.app/",
+    title: "LLM Safety Evaluator",
+    description: "Advanced real-time prompt injection & jailbreak detection system combining Random Forest classifiers and Isolation Forest anomaly detection to safeguard LLMs.",
+    tags: ["LLM Security", "Machine Learning", "Python", "Scikit-Learn"],
+    image: "/Images/llm-safety-evaluator.jpg",
+    link: "https://llmsafetyevaluator.onrender.com/",
     github: "https://github.com/sarweshwargoud/llmSafetyEvaluator"
   },
   {
-    title: "Wayzen AI",
-    description: "Agentic career intelligence platform using RAG, FAISS, and LLaMA-3 to analyze salary trends and automation risks.",
-    tags: ["Agentic AI", "LLaMA-3", "FAISS"],
-    image: "/Images/Wayzen.png",
-    link: "https://wayzen-ai.vercel.app/",
-    github: "https://github.com/sarweshwargoud/Wayzen-AI.git"
+    title: "LLM Usage Metering & Billing Engine",
+    description: "Production-grade usage metering, quota enforcement, and billing engine for LLM APIs with micro-cent token pricing, TOCTOU-free atomic quotas, and Stripe webhooks.",
+    tags: ["FastAPI", "PostgreSQL", "Stripe", "System Design"],
+    image: "/Images/llm-metering-billing.jpg",
+    link: "",
+    github: "https://github.com/sarweshwargoud/LLM-Usage-Metering-Billing-Engine"
+  },
+  {
+    title: "Interview Guru AI",
+    description: "AI-powered mock interview platform that generates tailored technical and behavioral questions and scores answers with real-time feedback and radar analytics via Gemini.",
+    tags: ["Next.js", "Gemini AI", "FastAPI", "Clerk"],
+    image: "/Images/interview-guru.jpg",
+    link: "https://interview-guru-pi.vercel.app",
+    github: "https://github.com/sarweshwargoud/student-mock-interview-ai"
+  },
+  {
+    title: "GEOlytics",
+    description: "An AI-powered intelligence platform combining traditional technical SEO analysis with GEO (Generative Engine Optimization) and AI-search visibility tracking.",
+    tags: ["AI Search", "GEO", "SEO Analytics", "Supabase"],
+    image: "/Images/geolytics.jpg",
+    link: "",
+    github: "https://github.com/sarweshwargoud/GEOlytics"
   }
 ];
 
