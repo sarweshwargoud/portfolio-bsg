@@ -193,11 +193,10 @@ export const HangingContactBot = () => {
       {/* ============================================================ */}
       {!isOpen && (
         <div
-          className={`fixed right-0 top-[48%] -translate-y-1/2 z-40 flex items-center cursor-pointer select-none transition-all duration-300 group ${
-            isScrolling
+          className={`fixed right-0 top-[48%] -translate-y-1/2 z-40 flex items-center cursor-pointer select-none transition-all duration-300 group ${isScrolling
               ? 'opacity-20 translate-x-8 sm:opacity-40 sm:translate-x-4 pointer-events-none'
               : 'opacity-100 translate-x-1 sm:translate-x-0 hover:translate-x-0 active:translate-x-0 pointer-events-auto'
-          }`}
+            }`}
           onClick={() => setIsOpen(true)}
           onTouchStart={() => setIsScrolling(false)}
           title="Wanna contact?! Send message..."

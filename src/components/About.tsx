@@ -16,13 +16,13 @@ const About = () => {
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    
+
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    
+
     const rotateX = -(y - centerY) / 12;
     const rotateY = (x - centerX) / 12;
-    
+
     cardInner.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
   };
 
@@ -84,7 +84,7 @@ const About = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 premium-3d-container">
 
           {/* Card 1: Who Am I */}
-          <div 
+          <div
             className="about-card group relative"
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
@@ -105,7 +105,7 @@ const About = () => {
           </div>
 
           {/* Card 2: Technical Strength */}
-          <div 
+          <div
             className="about-card group relative"
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
@@ -132,7 +132,7 @@ const About = () => {
           </div>
 
           {/* Card 3: Academic Excellence */}
-          <div 
+          <div
             className="about-card group relative"
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
@@ -153,7 +153,7 @@ const About = () => {
           </div>
 
           {/* Card 4: Strength */}
-          <div 
+          <div
             className="about-card group relative"
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
@@ -175,7 +175,7 @@ const About = () => {
           </div>
 
           {/* Card 5: Weakness */}
-          <div 
+          <div
             className="about-card group relative"
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
@@ -199,7 +199,7 @@ const About = () => {
           </div>
 
           {/* Card 6: Hobbies */}
-          <div 
+          <div
             className="about-card group relative"
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}

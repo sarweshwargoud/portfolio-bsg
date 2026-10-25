@@ -38,7 +38,7 @@ const Hero = () => {
       <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50 pointer-events-none z-0" />
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center pt-28 pb-12 lg:py-0 min-h-screen">
-        
+
         {/* Left Side: Content */}
         <div ref={contentRef} className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6 relative z-10">
           {/* Status Badge */}

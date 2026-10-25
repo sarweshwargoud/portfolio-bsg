@@ -37,13 +37,13 @@ const Education = () => {
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-        
+
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
-        
+
         const rotateX = -(y - centerY) / 12;
         const rotateY = (x - centerX) / 12;
-        
+
         cardInner.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
     };
 
@@ -118,7 +118,7 @@ const Education = () => {
             const card = item.querySelector('.edu-card-inner');
             const isEven = i % 2 === 0;
             const xOffset = isEven ? 100 : -100;
-            
+
             gsap.fromTo(card,
                 { opacity: 0, x: xOffset },
                 {
@@ -153,25 +153,24 @@ const Education = () => {
                     {education.map((edu, index) => {
                         const isEven = index % 2 === 0;
                         return (
-                            <div 
-                                key={index} 
+                            <div
+                                key={index}
                                 className="edu-item relative flex flex-col md:flex-row items-center justify-between w-full group"
                             >
                                 {/* Connector Dot */}
                                 <div className="edu-dot absolute left-4 md:left-1/2 top-8 md:top-1/2 -translate-y-1/2 -translate-x-1/2 z-10 w-5 h-5 rounded-full bg-background border-4 border-primary group-hover:border-secondary transition-all duration-300 shadow-[0_0_10px_rgba(124,58,237,0.3)]" />
 
                                 {/* Card Container */}
-                                <div 
-                                    className={`w-full md:w-[45%] pl-10 md:pl-0 ${
-                                        isEven ? 'md:ml-auto' : 'md:mr-auto'
-                                    }`}
+                                <div
+                                    className={`w-full md:w-[45%] pl-10 md:pl-0 ${isEven ? 'md:ml-auto' : 'md:mr-auto'
+                                        }`}
                                 >
-                                    <div 
+                                    <div
                                         className="edu-card-inner"
                                         onMouseMove={handleMouseMove}
                                         onMouseLeave={handleMouseLeave}
                                     >
-                                        <div 
+                                        <div
                                             className="premium-3d-card relative p-8 rounded-3xl bg-card/25 border border-white/5 hover:border-primary/40 transition-all duration-300 hover:bg-card/30 backdrop-blur-md"
                                         >
                                             <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-l-3xl" />

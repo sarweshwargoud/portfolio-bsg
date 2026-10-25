@@ -316,18 +316,18 @@ const Certifications = () => {
             { opacity: 0, y: 20 },
             { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }
         )
-        .fromTo(
-            header.querySelector('h2'),
-            { opacity: 0, y: 30 },
-            { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' },
-            '-=0.3'
-        )
-        .fromTo(
-            header.querySelector('.cert-subtitle'),
-            { opacity: 0, y: 20 },
-            { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' },
-            '-=0.3'
-        );
+            .fromTo(
+                header.querySelector('h2'),
+                { opacity: 0, y: 30 },
+                { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' },
+                '-=0.3'
+            )
+            .fromTo(
+                header.querySelector('.cert-subtitle'),
+                { opacity: 0, y: 20 },
+                { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' },
+                '-=0.3'
+            );
 
         return () => { tl.kill(); };
     }, []);
@@ -468,18 +468,16 @@ const Certifications = () => {
                                         }}
                                     >
                                         <div
-                                            className={`p-[1.5px] rounded-2xl transition-all duration-300 ${
-                                                isHovered
+                                            className={`p-[1.5px] rounded-2xl transition-all duration-300 ${isHovered
                                                     ? `bg-gradient-to-br ${cert.gradient}`
                                                     : 'bg-slate-200/60'
-                                            }`}
+                                                }`}
                                         >
                                             <div className="relative bg-white/95 backdrop-blur-xl rounded-[14px] p-6 flex flex-col gap-4 min-h-[210px]">
                                                 {/* Ambient colour blob */}
                                                 <div
-                                                    className={`absolute top-0 right-0 w-28 h-28 bg-gradient-to-br ${cert.gradient} rounded-[14px] blur-[55px] transition-opacity duration-300 ${
-                                                        isHovered ? 'opacity-15' : 'opacity-0'
-                                                    }`}
+                                                    className={`absolute top-0 right-0 w-28 h-28 bg-gradient-to-br ${cert.gradient} rounded-[14px] blur-[55px] transition-opacity duration-300 ${isHovered ? 'opacity-15' : 'opacity-0'
+                                                        }`}
                                                 />
 
                                                 {/* Top row */}
@@ -509,9 +507,8 @@ const Certifications = () => {
                                                 {/* Title + issuer */}
                                                 <div className="flex-1 relative z-10">
                                                     <h3
-                                                        className={`text-[15px] font-bold leading-snug transition-colors duration-200 ${
-                                                            isHovered ? cert.accentText : 'text-slate-800'
-                                                        }`}
+                                                        className={`text-[15px] font-bold leading-snug transition-colors duration-200 ${isHovered ? cert.accentText : 'text-slate-800'
+                                                            }`}
                                                     >
                                                         {cert.title}
                                                     </h3>
@@ -534,11 +531,10 @@ const Certifications = () => {
                                                                     verificationUrl: (cert as any).verificationUrl
                                                                 });
                                                             }}
-                                                            className={`flex items-center justify-between w-full text-sm font-semibold transition-all duration-200 group/btn ${
-                                                                isHovered
+                                                            className={`flex items-center justify-between w-full text-sm font-semibold transition-all duration-200 group/btn ${isHovered
                                                                     ? `${cert.accentText} opacity-100`
                                                                     : 'text-slate-400'
-                                                            }`}
+                                                                }`}
                                                         >
                                                             <span className="flex items-center gap-1.5">
                                                                 <Eye size={14} />
@@ -555,11 +551,10 @@ const Certifications = () => {
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             onClick={(e) => e.stopPropagation()}
-                                                            className={`flex items-center justify-between w-full text-sm font-semibold transition-all duration-200 group/btn ${
-                                                                isHovered
+                                                            className={`flex items-center justify-between w-full text-sm font-semibold transition-all duration-200 group/btn ${isHovered
                                                                     ? `${cert.accentText} opacity-100`
                                                                     : 'text-slate-400'
-                                                            }`}
+                                                                }`}
                                                         >
                                                             <span className="flex items-center gap-1.5">
                                                                 <Eye size={14} />
@@ -586,9 +581,8 @@ const Certifications = () => {
             <div className="mt-5 flex items-center justify-center">
                 <p className="text-xs font-medium flex items-center gap-2 text-white/50">
                     <span
-                        className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${
-                            isPaused ? 'bg-primary animate-pulse' : 'bg-emerald-400'
-                        }`}
+                        className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${isPaused ? 'bg-primary animate-pulse' : 'bg-emerald-400'
+                            }`}
                     />
                     <span>
                         {isPaused
@@ -600,7 +594,7 @@ const Certifications = () => {
 
             {/* Bigger Side Preview Card at Middle-Right (does NOT occupy whole window, clear of bottom chat button) */}
             {previewModal && (
-                <div 
+                <div
                     ref={sidePreviewRef}
                     className="fixed top-1/2 -translate-y-1/2 right-3 sm:right-6 md:right-8 z-50 w-[calc(100vw-24px)] sm:w-[540px] md:w-[620px] lg:w-[680px] bg-zinc-950/95 border border-white/20 rounded-2xl p-4 sm:p-5 shadow-[0_25px_80px_rgba(0,0,0,0.95)] backdrop-blur-2xl transition-all animate-in fade-in slide-in-from-right-8 flex flex-col max-h-[88vh]"
                     onClick={(e) => e.stopPropagation()}
