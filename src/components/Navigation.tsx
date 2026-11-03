@@ -61,6 +61,10 @@ const Navigation = () => {
           <img
             src="/favicon.png"
             alt="Sarweshwar Logo"
+            width="36"
+            height="36"
+            loading="eager"
+            decoding="async"
             className="w-9 h-9 rounded-xl object-contain shadow-[0_0_20px_rgba(59,130,246,0.45)] border border-white/20 group-hover:scale-110 group-hover:shadow-[0_0_25px_rgba(59,130,246,0.7)] transition-all duration-300"
           />
           <div className="text-xl sm:text-2xl font-bold tracking-tighter text-white">
@@ -95,7 +99,11 @@ const Navigation = () => {
         </div>
 
         {/* Mobile Toggle */}
-        <button className="md:hidden text-white" onClick={() => setIsOpen(!isOpen)}>
+        <button
+          aria-label="Toggle mobile navigation menu"
+          className="md:hidden text-white"
+          onClick={() => setIsOpen(!isOpen)}
+        >
           {isOpen ? <X size={24} /> : <List size={24} />}
         </button>
       </div>

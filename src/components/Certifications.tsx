@@ -15,7 +15,7 @@ const certifications = [
         accentBorder: "border-purple-500/20",
         accentText: "text-purple-400",
         categories: ["Generative AI", "Internship"],
-        certificateUrl: "/Images/SURE-TRUST-Generative-AI-Certificate.png"
+        certificateUrl: "/Images/SURE-TRUST-Generative-AI-Certificate.webp"
     },
     {
         title: "Backend AI Engineering",
@@ -26,7 +26,7 @@ const certifications = [
         accentBorder: "border-emerald-500/20",
         accentText: "text-emerald-500",
         categories: ["AI & ML", "Engineering"],
-        certificateUrl: "/Images/FlyRank-Internship-Certificate.png"
+        certificateUrl: "/Images/FlyRank-Internship-Certificate.webp"
     },
     {
         title: "Agentic AI Certified Foundations Associate",
@@ -37,7 +37,7 @@ const certifications = [
         accentBorder: "border-red-500/20",
         accentText: "text-red-500",
         categories: ["Agentic AI", "AI & ML"],
-        certificateUrl: "/Images/Oracle-Agentic-AI-Foundations-Certificate.png",
+        certificateUrl: "/Images/Oracle-Agentic-AI-Foundations-Certificate.webp",
         verificationUrl: "https://catalog-education.oracle.com/ords/certview/sharebadge?id=C7FB8D23CC99AB62AD50154B42011DB744068E632E4FE7662C0A5189D9B98FED"
     },
     {
@@ -49,7 +49,7 @@ const certifications = [
         accentBorder: "border-red-500/20",
         accentText: "text-red-500",
         categories: ["AI & ML", "Cloud"],
-        certificateUrl: "/Images/Oracle-AI-Foundations-Certificate.png"
+        certificateUrl: "/Images/Oracle-AI-Foundations-Certificate.webp"
     },
     {
         title: "AWS Cloud Practitioner Essentials",
@@ -60,7 +60,7 @@ const certifications = [
         accentBorder: "border-orange-500/20",
         accentText: "text-orange-500",
         categories: ["Cloud", "AWS"],
-        certificateUrl: "/Images/AWS-Cloud-Practitioner-Certificate.png"
+        certificateUrl: "/Images/AWS-Cloud-Practitioner-Certificate.webp"
     },
     {
         title: "Full Stack AI Engineer 2026 - Generative AI & LLMs",
@@ -71,7 +71,7 @@ const certifications = [
         accentBorder: "border-purple-500/20",
         accentText: "text-purple-500",
         categories: ["Generative AI", "LLMs"],
-        certificateUrl: "/Images/Udemy-Full-Stack-AI-Engineer-Certificate.png"
+        certificateUrl: "/Images/Udemy-Full-Stack-AI-Engineer-Certificate.webp"
     },
     {
         title: "AI/ML Intern Recognition",
@@ -82,7 +82,7 @@ const certifications = [
         accentBorder: "border-teal-500/20",
         accentText: "text-teal-500",
         categories: ["AI & ML", "Internship"],
-        certificateUrl: "/Images/UptoSkills-AIML-Internship-Certificate.png"
+        certificateUrl: "/Images/UptoSkills-AIML-Internship-Certificate.webp"
     },
     {
         title: "Retrieval-Augmented Generation (RAG)",
@@ -488,7 +488,7 @@ const Certifications = () => {
                                                         <Medal size={20} weight="fill" className={cert.accentText} />
                                                     </div>
                                                     <div className="flex flex-col items-end gap-1.5">
-                                                        <span className="text-xs font-mono font-bold px-2.5 py-1 bg-slate-100 text-slate-500 rounded-lg">
+                                                        <span className="text-xs font-mono font-bold px-2.5 py-1 bg-slate-100 text-slate-700 rounded-lg">
                                                             {cert.date}
                                                         </span>
                                                         <div className="flex flex-wrap gap-1 justify-end">
@@ -512,7 +512,7 @@ const Certifications = () => {
                                                     >
                                                         {cert.title}
                                                     </h3>
-                                                    <p className="text-slate-400 text-sm mt-1 font-medium">
+                                                    <p className="text-slate-600 text-sm mt-1 font-medium">
                                                         {cert.issuer}
                                                     </p>
                                                 </div>
@@ -533,7 +533,7 @@ const Certifications = () => {
                                                             }}
                                                             className={`flex items-center justify-between w-full text-sm font-semibold transition-all duration-200 group/btn ${isHovered
                                                                     ? `${cert.accentText} opacity-100`
-                                                                    : 'text-slate-400'
+                                                                    : 'text-slate-600'
                                                                 }`}
                                                         >
                                                             <span className="flex items-center gap-1.5">
@@ -553,7 +553,7 @@ const Certifications = () => {
                                                             onClick={(e) => e.stopPropagation()}
                                                             className={`flex items-center justify-between w-full text-sm font-semibold transition-all duration-200 group/btn ${isHovered
                                                                     ? `${cert.accentText} opacity-100`
-                                                                    : 'text-slate-400'
+                                                                    : 'text-slate-600'
                                                                 }`}
                                                         >
                                                             <span className="flex items-center gap-1.5">
@@ -635,6 +635,8 @@ const Certifications = () => {
                         <img
                             src={previewModal.imageUrl}
                             alt={previewModal.title}
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-auto max-h-[56vh] object-contain rounded-lg transition-transform duration-300 group-hover:scale-[1.01]"
                         />
                     </div>

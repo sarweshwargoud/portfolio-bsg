@@ -11,7 +11,7 @@ const projects = [
     title: "Family Health Concierge AI",
     description: "An AI-powered family healthcare platform using OCR, RAG, embeddings, and Gemini to securely index, retrieve, and summarize medical records for entire families.",
     tags: ["Agentic AI", "Healthcare", "RAG", "FastAPI"],
-    image: "/Images/family-health-concierge.jpg",
+    image: "/Images/family-health-concierge.webp",
     link: "",
     github: "https://github.com/sarweshwargoud/Family-AI-Health-Concierge"
   },
@@ -19,7 +19,7 @@ const projects = [
     title: "SkillWeave AI",
     description: "Intelligent AI/ML platform that transforms scattered educational content into structured syllabi and ranked YouTube playlists with accent & style matching.",
     tags: ["Gen AI", "Gemini", "FastAPI", "React"],
-    image: "/Images/Skillweave.png",
+    image: "/Images/Skillweave.webp",
     link: "https://skill-weave-ai.vercel.app/",
     github: "https://github.com/sarweshwargoud/SkillWeave-AI"
   },
@@ -27,7 +27,7 @@ const projects = [
     title: "LLM Safety Evaluator",
     description: "Advanced real-time prompt injection & jailbreak detection system combining Random Forest classifiers and Isolation Forest anomaly detection to safeguard LLMs.",
     tags: ["LLM Security", "Machine Learning", "Python", "Scikit-Learn"],
-    image: "/Images/llm-safety-evaluator.jpg",
+    image: "/Images/llm-safety-evaluator.webp",
     link: "https://llmsafetyevaluator.onrender.com/",
     github: "https://github.com/sarweshwargoud/llmSafetyEvaluator"
   },
@@ -35,7 +35,7 @@ const projects = [
     title: "LLM Usage Metering & Billing Engine",
     description: "Production-grade usage metering, quota enforcement, and billing engine for LLM APIs with micro-cent token pricing, TOCTOU-free atomic quotas, and Stripe webhooks.",
     tags: ["FastAPI", "PostgreSQL", "Stripe", "System Design"],
-    image: "/Images/llm-metering-billing.jpg",
+    image: "/Images/llm-metering-billing.webp",
     link: "",
     github: "https://github.com/sarweshwargoud/LLM-Usage-Metering-Billing-Engine"
   },
@@ -43,7 +43,7 @@ const projects = [
     title: "Interview Guru AI",
     description: "AI-powered mock interview platform that generates tailored technical and behavioral questions and scores answers with real-time feedback and radar analytics via Gemini.",
     tags: ["Next.js", "Gemini AI", "FastAPI", "Clerk"],
-    image: "/Images/interview-guru.jpg",
+    image: "/Images/interview-guru.webp",
     link: "https://interview-guru-pi.vercel.app",
     github: "https://github.com/sarweshwargoud/student-mock-interview-ai"
   },
@@ -51,7 +51,7 @@ const projects = [
     title: "GEOlytics",
     description: "An AI-powered intelligence platform combining traditional technical SEO analysis with GEO (Generative Engine Optimization) and AI-search visibility tracking.",
     tags: ["AI Search", "GEO", "SEO Analytics", "Supabase"],
-    image: "/Images/geolytics.jpg",
+    image: "/Images/geolytics.webp",
     link: "",
     github: "https://github.com/sarweshwargoud/GEOlytics"
   }
@@ -134,10 +134,17 @@ const Projects = () => {
             <div key={index} className="project-card group relative bg-card/20 rounded-2xl overflow-hidden border border-white/5 hover:border-primary/50 transition-all duration-500 hover:shadow-[0_10px_40px_-10px_rgba(124,58,237,0.3)] hover:-translate-y-2 flex flex-col">
 
               {/* Image Area */}
-              <div className="relative h-48 overflow-hidden">
-                <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                  style={{ backgroundImage: `url(${project.image})` }} />
-                <div className="absolute inset-0 bg-black/50 group-hover:bg-black/20 transition-colors duration-500" />
+              <div className="relative h-48 overflow-hidden bg-slate-900/60">
+                <img
+                  src={project.image}
+                  alt={`${project.title} Preview`}
+                  loading="lazy"
+                  decoding="async"
+                  width="800"
+                  height="450"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-colors duration-500 pointer-events-none" />
               </div>
 
               {/* Content Area */}
@@ -156,11 +163,23 @@ const Projects = () => {
                 </div>
 
                 <div className="flex justify-between items-center mt-auto border-t border-white/5 pt-4">
-                  <a href={project.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-white transition-colors">
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`View ${project.title} source code on GitHub`}
+                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-white transition-colors"
+                  >
                     <GithubLogo size={18} /> Code
                   </a>
                   {project.link && project.link !== "#" && project.link !== "" && (
-                    <a href={project.link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:text-primary-glow transition-colors font-medium">
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Visit live demo for ${project.title}`}
+                      className="flex items-center gap-2 text-sm text-primary hover:text-primary-glow transition-colors font-medium"
+                    >
                       Live Demo <ArrowUpRight size={18} />
                     </a>
                   )}

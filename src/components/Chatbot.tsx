@@ -672,34 +672,63 @@ const Chatbot: React.FC = () => {
     'sess_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now()
   );
 
-  // Pre-warm connection to Gemini API and probe backend health on site load for instant 1st response
+  // Defer connection check to Gemini API and backend health to avoid blocking initial page load & Lighthouse audit
   useEffect(() => {
-    const checkBackend = async () => {
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 600);
-        const res = await fetch(`${BACKEND_URL}/api/health`, {
-          method: 'GET',
-          signal: controller.signal
-        }).catch(() => null);
-        clearTimeout(timeoutId);
-        backendAvailableRef.current = Boolean(res && res.ok);
-      } catch {
-        backendAvailableRef.current = false;
+    let hasWarmed = false;
+
+    const performWarmup = () => {
+      if (hasWarmed) return;
+      hasWarmed = true;
+
+      const checkBackend = async () => {
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 600);
+          const res = await fetch(`${BACKEND_URL}/api/health`, {
+            method: 'GET',
+            signal: controller.signal
+          }).catch(() => null);
+          clearTimeout(timeoutId);
+          backendAvailableRef.current = Boolean(res && res.ok);
+        } catch {
+          backendAvailableRef.current = false;
+        }
+      };
+
+      const prewarmGemini = () => {
+        const key = GEMINI_API_KEY.trim();
+        if (!key) return;
+        // Lightweight GET to establish HTTP/2 TLS socket & DNS cache early
+        fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}&pageSize=1`, {
+          method: 'GET'
+        }).catch(() => {});
+      };
+
+      checkBackend();
+      prewarmGemini();
+    };
+
+    // Warm up only when browser is completely idle after 4 seconds, or on first interaction
+    const idleTimer = setTimeout(() => {
+      if ('requestIdleCallback' in window) {
+        (window as any).requestIdleCallback(performWarmup);
+      } else {
+        performWarmup();
       }
+    }, 4000);
+
+    const onUserInteraction = () => {
+      performWarmup();
     };
 
-    const prewarmGemini = () => {
-      const key = GEMINI_API_KEY.trim();
-      if (!key) return;
-      // Lightweight GET to establish HTTP/2 TLS socket & DNS cache early
-      fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}&pageSize=1`, {
-        method: 'GET'
-      }).catch(() => {});
-    };
+    window.addEventListener('pointerdown', onUserInteraction, { once: true, passive: true });
+    window.addEventListener('keydown', onUserInteraction, { once: true, passive: true });
 
-    checkBackend();
-    prewarmGemini();
+    return () => {
+      clearTimeout(idleTimer);
+      window.removeEventListener('pointerdown', onUserInteraction);
+      window.removeEventListener('keydown', onUserInteraction);
+    };
   }, []);
 
   /**

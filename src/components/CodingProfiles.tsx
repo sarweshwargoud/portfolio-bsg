@@ -142,6 +142,7 @@ const CodingProfiles = () => {
                                     href={profile.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
+                                    aria-label={`Visit my ${profile.name} profile`}
                                     className={`flex items-center gap-3.5 px-8 py-5 rounded-2xl border-2 backdrop-blur-sm transition-all duration-300 group
                                         ${profile.accentBg} ${profile.accentBorder} ${profile.accentHover}
                                         ${isHovered ? 'shadow-lg -translate-y-1 scale-[1.03]' : 'shadow-sm'}

@@ -21,6 +21,10 @@ const Footer = () => {
           <img
             src="/favicon.png"
             alt="Sarweshwar Logo"
+            width="44"
+            height="44"
+            loading="lazy"
+            decoding="async"
             className="w-11 h-11 rounded-xl object-contain border border-white/15 shadow-[0_0_20px_rgba(59,130,246,0.35)] shrink-0"
           />
           <div>
@@ -62,7 +66,11 @@ const Footer = () => {
         </div>
 
         <div className="flex flex-col items-center md:items-end gap-2">
-          <button onClick={scrollToTop} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-white transition-colors">
+          <button
+            onClick={scrollToTop}
+            aria-label="Scroll back to top of page"
+            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-white transition-colors"
+          >
             Back to Top <ArrowUp size={16} />
           </button>
           <span className="text-[11px] text-white/40 font-mono">
