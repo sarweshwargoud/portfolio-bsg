@@ -21,18 +21,51 @@ declare global {
 }
 
 /**
+ * Helper to detect mobile devices based on screen width, touch capability, or user-agent
+ */
+const isMobileDevice = () => {
+  if (typeof window === 'undefined') return false;
+  const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  const isSmallScreen = window.innerWidth < 768;
+  const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
+  return (hasTouch && isSmallScreen) || isMobileUA || isSmallScreen;
+};
+
+/**
  * SwarmCursors — Manages the cursor swarm experience across the entire website:
  * 1. Ambient Swarm Follower: The multi-colored cursor flock actively follows mouse
- *    movements and scroll momentum directly on the main website (clean cursor arrows, no names).
+ *    movements and scroll momentum on desktop. On mobile, it is DISABLED by default.
  * 2. Toggle Controls: A persistent floating button that displays "Disable Swarm" when active,
  *    allowing users to turn it off at any moment, or "Enable Swarm" to turn it back on.
- * 3. Page Rebuild Mode: Accessible via "Rebuild" button or Alt+Shift+S.
+ * 3. Page Rebuild Mode: Accessible via "Rebuild" button (visible on both mobile & desktop) or Alt+Shift+S.
  * 4. Rendered via React Portal at document.body with max z-index so it is ALWAYS on top and clickable.
  */
 const SwarmCursors = () => {
+  // Default: Disabled on mobile devices, enabled on desktop!
   const [isSwarmOn, setIsSwarmOn] = useState<boolean>(() => {
+    const isMobile = isMobileDevice();
     const saved = localStorage.getItem('swarm-follower-enabled');
-    return saved !== null ? saved === 'true' : true;
+
+    if (saved !== null) {
+      // Ensure existing mobile visitors start with disabled by default
+      const mobileInit = localStorage.getItem('swarm-mobile-init-v1');
+      if (isMobile && !mobileInit) {
+        localStorage.setItem('swarm-mobile-init-v1', 'true');
+        localStorage.setItem('swarm-follower-enabled', 'false');
+        return false;
+      }
+      return saved === 'true';
+    }
+
+    if (isMobile) {
+      localStorage.setItem('swarm-mobile-init-v1', 'true');
+      localStorage.setItem('swarm-follower-enabled', 'false');
+      return false;
+    }
+
+    return true;
   });
 
   const [isRebuilding, setIsRebuilding] = useState(false);
@@ -205,7 +238,7 @@ const SwarmCursors = () => {
     <aside
       aria-label="Swarm Controls"
       style={{ zIndex: 2147483647, position: 'fixed' }}
-      className="bottom-6 left-6 flex items-center gap-2 pointer-events-auto select-none"
+      className="bottom-4 left-4 sm:bottom-6 sm:left-6 flex items-center gap-2 pointer-events-auto select-none"
     >
       {isRebuilding ? (
         // When Rebuild animation is active, show prominent button to stop it immediately
@@ -214,7 +247,7 @@ const SwarmCursors = () => {
           onClick={handleStopRebuild}
           title="Stop Swarm Rebuild and return to live website"
           aria-label="Disable Swarm"
-          className="group relative flex items-center gap-2 px-5 py-3
+          className="group relative flex items-center gap-2 px-4 py-2.5 sm:px-5 sm:py-3
                      rounded-full cursor-pointer
                      bg-rose-600 hover:bg-rose-700
                      text-white text-xs sm:text-sm font-semibold tracking-wide
@@ -227,8 +260,8 @@ const SwarmCursors = () => {
           <span>Disable Swarm</span>
         </button>
       ) : (
-        // Main website controls: Toggle Swarm On/Off + Rebuild option
-        <div className="flex items-center gap-2">
+        // Main website controls: Toggle Swarm On/Off + Rebuild button (visible on mobile & desktop)
+        <div className="flex items-center gap-1.5 sm:gap-2">
           <button
             type="button"
             onClick={toggleSwarmFollower}
@@ -238,7 +271,7 @@ const SwarmCursors = () => {
                 : 'Enable cursor swarm following animation'
             }
             aria-label={isSwarmOn ? 'Disable Swarm' : 'Enable Swarm'}
-            className={`group relative flex items-center gap-2.5 px-4 py-2.5 sm:px-5 sm:py-3
+            className={`group relative flex items-center gap-2 px-3.5 py-2 sm:px-5 sm:py-3
                        rounded-full cursor-pointer
                        text-white text-xs sm:text-sm font-semibold tracking-wide
                        transition-all duration-300 ease-out border backdrop-blur-md
@@ -251,8 +284,8 @@ const SwarmCursors = () => {
             {/* Cursor Icon */}
             <span className="relative flex items-center justify-center">
               <svg
-                width="16"
-                height="16"
+                width="15"
+                height="15"
                 viewBox="0 0 24 24"
                 fill="none"
                 className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300"
@@ -273,19 +306,33 @@ const SwarmCursors = () => {
             <span>{isSwarmOn ? 'Disable Swarm' : 'Enable Swarm'}</span>
           </button>
 
-          {/* Quick Rebuild Page button */}
+          {/* Rebuild Page button — now visible on both mobile and desktop! */}
           <button
             type="button"
             onClick={handleStartRebuild}
             title="Wipe & rebuild page live with swarm cursors (Alt+Shift+S)"
             aria-label="Rebuild Page"
-            className="hidden sm:flex items-center gap-1.5 px-3 py-2.5 rounded-full
-                       bg-white/5 hover:bg-white/15 text-white/80 hover:text-white
-                       text-xs font-medium border border-white/10 backdrop-blur-md
-                       transition-all duration-300 hover:scale-105 active:scale-95"
+            className="flex items-center gap-1.5 px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-full
+                       bg-white/10 hover:bg-white/20 text-white/90 hover:text-white
+                       text-xs font-medium border border-white/15 backdrop-blur-md
+                       shadow-md transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
           >
+            {/* Rebuild icon */}
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-sky-300"
+            >
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+            </svg>
             <span>Rebuild</span>
-            <span className="text-[10px] font-mono text-white/50 bg-white/10 px-1 py-0.5 rounded">
+            <span className="hidden md:inline-block text-[10px] font-mono text-white/50 bg-white/10 px-1 py-0.5 rounded">
               Alt+Shift+S
             </span>
           </button>
