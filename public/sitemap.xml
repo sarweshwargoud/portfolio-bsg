@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <!-- Homepage: Sarweshwar Buddolla Official Portfolio -->
+  <url>
+    <loc>https://sarweshwarr.com/</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://sarweshwarr.com/logo.png</image:loc>
+      <image:title>Sarweshwar Buddolla - Official AI Portfolio</image:title>
+      <image:caption>Sarweshwar Buddolla (Sarweshwar Goud) - Aspiring AI Engineer, GenAI and Agentic AI Specialist</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://sarweshwarr.com/favicon.png</image:loc>
+      <image:title>Sarweshwar Buddolla Icon</image:title>
+    </image:image>
+  </url>
+
+  <!-- Privacy Policy -->
+  <url>
+    <loc>https://sarweshwarr.com/privacy</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Terms of Service -->
+  <url>
+    <loc>https://sarweshwarr.com/terms</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+</urlset>
