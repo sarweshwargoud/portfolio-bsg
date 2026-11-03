@@ -1631,7 +1631,7 @@
       for (const old of document.querySelectorAll("swarm-rebuild")) old.remove();
       const host = document.createElement("swarm-rebuild");
       host.style.cssText =
-        "all:initial !important;position:fixed !important;inset:0 !important;z-index:99990 !important;display:block !important;pointer-events:auto !important;contain:strict !important;opacity:1;transition:opacity .6s ease;";
+        "all:initial !important;position:fixed !important;inset:0 !important;z-index:99990 !important;display:block !important;pointer-events:none !important;contain:strict !important;opacity:1;transition:opacity .6s ease;";
       env.host = host;
       this.host = host;
       const root = host.attachShadow({ mode: "open" });
@@ -1654,6 +1654,7 @@
   <button data-a="speed" title="Build speed">1×</button>
   <button data-a="sound" class="snd" title="Sound (M)"></button>
   <button data-a="live" class="pri" title="Fade back to the real page">Go live</button>
+  <button data-a="disable" class="pri" style="background:#e11d48;font-weight:600;" title="Disable Swarm and stop rebuild">Disable Swarm</button>
   <button data-a="replay" hidden title="Wipe and rebuild again">Replay</button>
   <button data-a="close" class="x" title="Exit (Esc)">✕</button>
 </div>`;
@@ -3614,9 +3615,13 @@
         const b = e.target.closest("button");
         if (!b) return;
         const a = b.dataset.a;
-        if (a === "close") stop(false);
-        else if (a === "live") stop(true);
-        else if (a === "replay") restart();
+        if (a === "close" || a === "disable") {
+          stop(false);
+          window.dispatchEvent(new CustomEvent("swarm-disabled-by-user"));
+        } else if (a === "live") {
+          stop(true);
+          window.dispatchEvent(new CustomEvent("swarm-live-by-user"));
+        } else if (a === "replay") restart();
         else if (a === "tour") {
           this.tour = !this.tour;
           b.classList.toggle("on", this.tour);
