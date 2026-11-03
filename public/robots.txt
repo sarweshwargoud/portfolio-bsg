@@ -1,5 +1,5 @@
-# Robots.txt for Sarweshwar Buddolla Portfolio (BSG Portfolio)
-# https://github.com/sarweshwargoud/portfolio-bsg
+# Robots.txt for Sarweshwar Buddolla Portfolio
+# Official Website: https://sarweshwarr.com
 
 User-agent: Googlebot
 Allow: /
@@ -35,3 +35,7 @@ User-agent: *
 Allow: /
 Disallow: /backend/
 Disallow: /api/
+
+# Sitemap location for Google Search Console & Search Engines
+Sitemap: https://sarweshwarr.com/sitemap.xml
+Host: https://sarweshwarr.com
