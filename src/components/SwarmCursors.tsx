@@ -22,7 +22,7 @@ declare global {
 /**
  * SwarmCursors — Manages the cursor swarm experience across the entire website:
  * 1. Ambient Swarm Follower: The multi-colored cursor flock actively follows mouse
- *    movements and scroll momentum directly on the main website.
+ *    movements and scroll momentum directly on the main website (clean cursor arrows, no names).
  * 2. Toggle Controls: A persistent floating button that displays "Disable Swarm" when active,
  *    allowing users to turn it off at any moment, or "Enable Swarm" to turn it back on.
  * 3. Page Rebuild Mode: Accessible via "Rebuild" button or Alt+Shift+S.
@@ -105,8 +105,9 @@ const SwarmCursors = () => {
   const handleStartRebuild = useCallback(async () => {
     if (isRebuilding) {
       if (window.__swarmRebuild) {
-        window.__swarmRebuild.stop(true);
+        window.__swarmRebuild.stop(false);
       }
+      document.querySelectorAll('swarm-rebuild').forEach((el) => el.remove());
       setIsRebuilding(false);
       return;
     }
@@ -144,9 +145,12 @@ const SwarmCursors = () => {
 
   const handleStopRebuild = useCallback(() => {
     if (window.__swarmRebuild) {
-      window.__swarmRebuild.stop(true);
+      window.__swarmRebuild.stop(false);
     }
+    document.querySelectorAll('swarm-rebuild').forEach((el) => el.remove());
     setIsRebuilding(false);
+    setIsSwarmOn(false);
+    localStorage.setItem('swarm-follower-enabled', 'false');
   }, []);
 
   // Listen for global custom event and keyboard shortcut (Alt+Shift+S)
@@ -171,25 +175,26 @@ const SwarmCursors = () => {
 
   return (
     <>
-      {/* 1. Ambient Flocking Cursors that follow mouse & scroll on the main website */}
+      {/* 1. Ambient Flocking Cursors that follow mouse & scroll on the main website (clean arrows, no names) */}
       <SwarmFollower enabled={isSwarmOn && !isRebuilding} />
 
-      {/* 2. Persistent Floating Controls at bottom-left */}
+      {/* 2. Persistent Floating Controls at bottom-left with top-most z-index */}
       <aside
         aria-label="Swarm Controls"
-        className="fixed bottom-6 left-6 z-[99999] flex items-center gap-2 pointer-events-auto select-none"
+        style={{ zIndex: 2147483647 }}
+        className="fixed bottom-6 left-6 flex items-center gap-2 pointer-events-auto select-none"
       >
         {isRebuilding ? (
-          // When Rebuild animation is active, show prominent button to stop it
+          // When Rebuild animation is active, show prominent button to stop it immediately
           <button
             onClick={handleStopRebuild}
             title="Stop Swarm Rebuild and return to live website"
             aria-label="Disable Swarm"
-            className="group relative flex items-center gap-2 px-4 py-2.5 sm:px-5 sm:py-3
+            className="group relative flex items-center gap-2 px-5 py-3
                        rounded-full cursor-pointer
                        bg-rose-600 hover:bg-rose-700
                        text-white text-xs sm:text-sm font-semibold tracking-wide
-                       shadow-[0_4px_24px_rgba(244,63,94,0.55)]
+                       shadow-[0_4px_24px_rgba(244,63,94,0.65)]
                        hover:scale-105 active:scale-95
                        transition-all duration-300 ease-out
                        border border-white/20 backdrop-blur-md"

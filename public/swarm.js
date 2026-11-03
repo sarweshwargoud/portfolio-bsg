@@ -1631,7 +1631,7 @@
       for (const old of document.querySelectorAll("swarm-rebuild")) old.remove();
       const host = document.createElement("swarm-rebuild");
       host.style.cssText =
-        "all:initial !important;position:fixed !important;inset:0 !important;z-index:2147483647 !important;display:block !important;pointer-events:auto !important;contain:strict !important;opacity:1;transition:opacity .6s ease;";
+        "all:initial !important;position:fixed !important;inset:0 !important;z-index:99990 !important;display:block !important;pointer-events:auto !important;contain:strict !important;opacity:1;transition:opacity .6s ease;";
       env.host = host;
       this.host = host;
       const root = host.attachShadow({ mode: "open" });
