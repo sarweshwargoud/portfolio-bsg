@@ -167,6 +167,7 @@ const Experience = () => {
                                     {(exp as any).certificateUrl && (
                                         <button
                                             type="button"
+                                            aria-label={`View ${exp.title} internship certificate from ${exp.company}`}
                                             onClick={() => setPreviewModal({
                                                 title: exp.title,
                                                 company: exp.company,

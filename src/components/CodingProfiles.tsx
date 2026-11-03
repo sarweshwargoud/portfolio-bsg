@@ -148,10 +148,16 @@ const CodingProfiles = () => {
                                         ${isHovered ? 'shadow-lg -translate-y-1 scale-[1.03]' : 'shadow-sm'}
                                     `}
                                 >
-                                    <profile.Icon size={28} className={`${profile.iconColor} transition-transform duration-300 ${isHovered ? 'scale-110' : ''}`} />
+                                    <profile.Icon
+                                        size={28}
+                                        role="img"
+                                        aria-label={`${profile.name} Profile`}
+                                        className={`${profile.iconColor} transition-transform duration-300 ${isHovered ? 'scale-110' : ''}`}
+                                    />
                                     <span className="text-lg font-bold text-white">{profile.name}</span>
                                     <ArrowSquareOut
                                         size={14}
+                                        aria-hidden="true"
                                         className={`text-slate-400 transition-all duration-200 ${isHovered ? 'opacity-100 translate-x-0.5 -translate-y-0.5' : 'opacity-0'}`}
                                     />
                                 </a>

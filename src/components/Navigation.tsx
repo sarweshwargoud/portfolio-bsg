@@ -88,7 +88,7 @@ const Navigation = () => {
             variant="outline"
             className="rounded-full border-sky-400/40 bg-sky-500/10 hover:bg-sky-500/20 text-sky-300 hover:text-white transition-all duration-300 gap-2 font-medium"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" role="img" aria-label="Swarm Rebuild icon">
               <path d="M4.6 3.9C4.2 3.1 4.9 2.4 5.7 2.8L20.6 9.4C21.5 9.8 21.4 11.1 20.4 11.3L13.9 12.9C13.4 13 13 13.4 12.9 13.9L11.3 20.4C11.1 21.4 9.8 21.5 9.4 20.6Z" />
             </svg>
             Swarm Rebuild

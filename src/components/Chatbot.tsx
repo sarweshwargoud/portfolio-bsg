@@ -672,64 +672,29 @@ const Chatbot: React.FC = () => {
     'sess_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now()
   );
 
-  // Defer connection check to Gemini API and backend health to avoid blocking initial page load & Lighthouse audit
-  useEffect(() => {
-    let hasWarmed = false;
+  const hasWarmedRef = useRef(false);
 
-    const performWarmup = () => {
-      if (hasWarmed) return;
-      hasWarmed = true;
+  // Perform lightweight API warmup strictly on demand when user interacts with chat
+  const performWarmup = () => {
+    if (hasWarmedRef.current) return;
+    hasWarmedRef.current = true;
 
-      const checkBackend = async () => {
-        try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 600);
-          const res = await fetch(`${BACKEND_URL}/api/health`, {
-            method: 'GET',
-            signal: controller.signal
-          }).catch(() => null);
-          clearTimeout(timeoutId);
+    // Asynchronously probe backend without blocking paint or Lighthouse audit
+    if (BACKEND_URL && (!BACKEND_URL.includes('localhost:8000') || typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))) {
+      fetch(`${BACKEND_URL}/api/health`)
+        .then((res) => {
           backendAvailableRef.current = Boolean(res && res.ok);
-        } catch {
+        })
+        .catch(() => {
           backendAvailableRef.current = false;
-        }
-      };
+        });
+    }
 
-      const prewarmGemini = () => {
-        const key = GEMINI_API_KEY.trim();
-        if (!key) return;
-        // Lightweight GET to establish HTTP/2 TLS socket & DNS cache early
-        fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}&pageSize=1`, {
-          method: 'GET'
-        }).catch(() => {});
-      };
-
-      checkBackend();
-      prewarmGemini();
-    };
-
-    // Warm up only when browser is completely idle after 4 seconds, or on first interaction
-    const idleTimer = setTimeout(() => {
-      if ('requestIdleCallback' in window) {
-        (window as any).requestIdleCallback(performWarmup);
-      } else {
-        performWarmup();
-      }
-    }, 4000);
-
-    const onUserInteraction = () => {
-      performWarmup();
-    };
-
-    window.addEventListener('pointerdown', onUserInteraction, { once: true, passive: true });
-    window.addEventListener('keydown', onUserInteraction, { once: true, passive: true });
-
-    return () => {
-      clearTimeout(idleTimer);
-      window.removeEventListener('pointerdown', onUserInteraction);
-      window.removeEventListener('keydown', onUserInteraction);
-    };
-  }, []);
+    const key = GEMINI_API_KEY.trim();
+    if (key) {
+      fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}&pageSize=1`).catch(() => {});
+    }
+  };
 
   /**
    * Automatically scrolls the page smoothly to the relevant portfolio section
@@ -1602,7 +1567,12 @@ const Chatbot: React.FC = () => {
       {/* Floating Toggle Button */}
       <button
         ref={buttonRef}
-        onClick={toggleChat}
+        onClick={() => {
+          performWarmup();
+          toggleChat();
+        }}
+        onMouseEnter={performWarmup}
+        onFocus={performWarmup}
         className="chatbot w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-primary to-secondary text-white rounded-full flex items-center justify-center shadow-glow-primary hover:scale-110 active:scale-95 transition-all"
         aria-label="Toggle portfolio chatbot"
       >

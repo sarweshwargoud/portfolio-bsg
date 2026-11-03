@@ -495,7 +495,7 @@ const Certifications = () => {
                                                             {cert.categories.map((cat, ci) => (
                                                                 <span
                                                                     key={ci}
-                                                                    className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${cert.accentBg} ${cert.accentText}`}
+                                                                    className={`text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full ${cert.accentBg} text-slate-800`}
                                                                 >
                                                                     {cat}
                                                                 </span>
@@ -522,6 +522,7 @@ const Certifications = () => {
                                                     {cert.certificateUrl.startsWith('/Images/') ? (
                                                         <button
                                                             type="button"
+                                                            aria-label={`View ${cert.title} certificate from ${cert.issuer}`}
                                                             onClick={(e) => {
                                                                 e.stopPropagation();
                                                                 setPreviewModal({
@@ -550,6 +551,7 @@ const Certifications = () => {
                                                             href={cert.certificateUrl}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
+                                                            aria-label={`Verify ${cert.title} credential from ${cert.issuer}`}
                                                             onClick={(e) => e.stopPropagation()}
                                                             className={`flex items-center justify-between w-full text-sm font-semibold transition-all duration-200 group/btn ${isHovered
                                                                     ? `${cert.accentText} opacity-100`
