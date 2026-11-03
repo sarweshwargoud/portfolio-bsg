@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import { List, X } from "phosphor-react";
 import { gsap } from "gsap";
+import { triggerSwarm } from "./SwarmCursors";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -78,6 +79,16 @@ const Navigation = () => {
               {link.name}
             </button>
           ))}
+          <Button
+            onClick={triggerSwarm}
+            variant="outline"
+            className="rounded-full border-sky-400/40 bg-sky-500/10 hover:bg-sky-500/20 text-sky-300 hover:text-white transition-all duration-300 gap-2 font-medium"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M4.6 3.9C4.2 3.1 4.9 2.4 5.7 2.8L20.6 9.4C21.5 9.8 21.4 11.1 20.4 11.3L13.9 12.9C13.4 13 13 13.4 12.9 13.9L11.3 20.4C11.1 21.4 9.8 21.5 9.4 20.6Z" />
+            </svg>
+            Swarm Rebuild
+          </Button>
           <Button onClick={() => scrollTo('contact')} variant="default" className="rounded-full shadow-neon bg-primary hover:bg-primary/90 text-white">
             Hire Me
           </Button>
@@ -101,6 +112,19 @@ const Navigation = () => {
               {link.name}
             </button>
           ))}
+          <Button
+            onClick={() => {
+              setIsOpen(false);
+              triggerSwarm();
+            }}
+            variant="outline"
+            className="w-full py-5 text-base border-sky-400/40 bg-sky-500/10 text-sky-300 hover:bg-sky-500/20 gap-2"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M4.6 3.9C4.2 3.1 4.9 2.4 5.7 2.8L20.6 9.4C21.5 9.8 21.4 11.1 20.4 11.3L13.9 12.9C13.4 13 13 13.4 12.9 13.9L11.3 20.4C11.1 21.4 9.8 21.5 9.4 20.6Z" />
+            </svg>
+            Swarm Rebuild
+          </Button>
           <Button onClick={() => scrollTo('contact')} className="w-full py-6 text-lg bg-primary text-white">
             Hire Me
           </Button>
