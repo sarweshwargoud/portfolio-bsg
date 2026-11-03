@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { gsap } from 'gsap';
 import { Button } from './ui/button';
 import { Handshake, ArrowRight, Brain, Cloud, Rocket } from 'phosphor-react';
@@ -7,20 +7,29 @@ const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const splineRef = useRef<HTMLDivElement>(null);
+  const [shouldLoadSpline, setShouldLoadSpline] = useState(false);
+  const [splineLoaded, setSplineLoaded] = useState(false);
 
   useEffect(() => {
-    const tl = gsap.timeline({ delay: 1 });
+    const tl = gsap.timeline({ delay: 0.3 });
 
     // Fade in main text
     tl.fromTo(contentRef.current,
       { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 1.5, ease: "power3.out" }
+      { opacity: 1, y: 0, duration: 1.2, ease: "power3.out" }
     )
       .fromTo(splineRef.current,
-        { opacity: 0, scale: 0.9 },
-        { opacity: 1, scale: 1, duration: 2, ease: "power2.out" },
-        "-=1"
+        { opacity: 0, scale: 0.95 },
+        { opacity: 1, scale: 1, duration: 1.2, ease: "power2.out" },
+        "-=0.6"
       );
+
+    // Defer the heavy 3D Spline iframe until after initial paint & main thread settle
+    const loadTimeout = setTimeout(() => {
+      setShouldLoadSpline(true);
+    }, 1500);
+
+    return () => clearTimeout(loadTimeout);
   }, []);
 
   const scrollToContact = () => {
@@ -80,17 +89,36 @@ const Hero = () => {
         </div>
 
         {/* Right Side: 3D Spline Robot */}
-        <div ref={splineRef} className="lg:col-span-5 w-full h-[350px] sm:h-[450px] lg:h-[600px] relative z-0">
-          <div className="absolute inset-y-0 w-[140%] -left-[20%] pointer-events-none">
-            <iframe
-              src="https://my.spline.design/genkubgreetingrobot-MW4W3iAFsJj5olFfT1MhN0TH/"
-              frameBorder="0"
-              width="100%"
-              height="100%"
-              className="w-full h-full opacity-80"
-              style={{ pointerEvents: 'auto' }}
-            />
-          </div>
+        <div ref={splineRef} className="lg:col-span-5 w-full h-[350px] sm:h-[450px] lg:h-[600px] relative z-0 flex items-center justify-center">
+          {/* Subtle glowing ambient aura */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 via-secondary/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+
+          {/* Fallback skeleton/glow while 3D scene loads */}
+          {!splineLoaded && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 pointer-events-none transition-opacity duration-700">
+              <div className="relative w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-gradient-to-tr from-primary/15 via-secondary/10 to-transparent border border-white/10 flex items-center justify-center animate-pulse shadow-[0_0_50px_rgba(124,58,237,0.15)]">
+                <Brain size={44} className="text-primary/70 animate-bounce" weight="duotone" />
+                <div className="absolute inset-0 rounded-full border border-primary/30 animate-ping opacity-20" />
+              </div>
+              <span className="text-xs font-mono text-muted-foreground/60 tracking-wider">Loading 3D Experience...</span>
+            </div>
+          )}
+
+          {shouldLoadSpline && (
+            <div className="absolute inset-y-0 w-[140%] -left-[20%] pointer-events-none">
+              <iframe
+                src="https://my.spline.design/genkubgreetingrobot-MW4W3iAFsJj5olFfT1MhN0TH/"
+                title="Interactive 3D Greeting Robot"
+                loading="lazy"
+                frameBorder="0"
+                width="100%"
+                height="100%"
+                onLoad={() => setSplineLoaded(true)}
+                className={`w-full h-full transition-opacity duration-700 ${splineLoaded ? 'opacity-80' : 'opacity-0'}`}
+                style={{ pointerEvents: 'auto' }}
+              />
+            </div>
+          )}
         </div>
 
       </div>

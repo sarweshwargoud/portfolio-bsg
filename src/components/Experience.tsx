@@ -12,7 +12,7 @@ const experience = [
         period: "July 2026 - September 2026 (2.5 months)",
         description: "Completed Backend AI Engineering internship program at FlyRank.ai (FlyRank Corp.). Demonstrated excellence in backend AI systems, technical competency, and collaborative engineering. (Credential ID: FR-D11-C6946-B9F28)",
         stack: ["Backend AI", "AI Engineering", "Python", "FastAPI", "LLMs"],
-        certificateUrl: "/Images/FlyRank-Internship-Certificate.png"
+        certificateUrl: "/Images/FlyRank-Internship-Certificate.webp"
     },
     {
         title: "Gen AI Intern",
@@ -20,7 +20,7 @@ const experience = [
         period: "March 2026 - September 2026 (6 months)",
         description: "Completed 6-Month Generative AI internship in collaboration with AICTE with a GPA of 9.7/10.0, followed by a 3-week soft skills training. Mastered LLMs, similarity search, RAG architectures, and built Family Health Concierge AI. (Certificate ID: SP2026G5GA14)",
         stack: ["Generative AI", "LLMs", "RAG", "Agentic Workflows"],
-        certificateUrl: "/Images/SURE-TRUST-Generative-AI-Certificate.png"
+        certificateUrl: "/Images/SURE-TRUST-Generative-AI-Certificate.webp"
     },
     {
         title: "AI/ML Intern",
@@ -28,7 +28,7 @@ const experience = [
         period: "December 2025 - March 2026 (3 months)",
         description: "Built CodeSkills, a LeetCode-style platform for practicing coding problems and applied AI skills (model fine-tuning), using a FastAPI backend and React.js frontend. Developed an LLM-powered question generation pipeline, fine-tuning models to auto-generate domain-specific coding practice problems at scale. (Verified at hr@uptoskills.com)",
         stack: ["Generative AI", "FineTuning", "FastAPI", "React.js"],
-        certificateUrl: "/Images/UptoSkills-AIML-Internship-Certificate.png"
+        certificateUrl: "/Images/UptoSkills-AIML-Internship-Certificate.webp"
     }
 ];
 
@@ -233,6 +233,8 @@ const Experience = () => {
                         <img
                             src={previewModal.imageUrl}
                             alt={previewModal.title}
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-auto max-h-[56vh] object-contain rounded-lg transition-transform duration-300 group-hover:scale-[1.01]"
                         />
                     </div>
