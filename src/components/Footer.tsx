@@ -73,7 +73,7 @@ const Footer = () => {
           >
             Back to Top <ArrowUp size={16} />
           </button>
-          <span className="text-[11px] text-white/40 font-mono">
+          <span className="text-[11px] text-slate-400 font-mono">
             © {new Date().getFullYear()} sarweshwarr.com
           </span>
         </div>

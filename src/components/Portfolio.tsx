@@ -31,11 +31,17 @@ const Portfolio = () => {
 
   const handleLoadingComplete = () => {
     setIsLoading(false);
-    setTimeout(() => {
+    const scheduleRefresh = () => {
       import('gsap/ScrollTrigger').then(({ ScrollTrigger }) => {
         ScrollTrigger.refresh();
       });
-    }, 100);
+    };
+
+    if ('requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(scheduleRefresh);
+    } else {
+      setTimeout(scheduleRefresh, 300);
+    }
   };
 
   return (

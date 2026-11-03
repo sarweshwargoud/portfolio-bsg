@@ -1,7 +1,9 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, lazy, Suspense } from 'react';
 import { gsap } from 'gsap';
 import { Button } from './ui/button';
 import { Handshake, ArrowRight, Brain, Cloud, Rocket } from 'phosphor-react';
+
+const SplineRobot = lazy(() => import('./SplineRobot'));
 
 const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -31,9 +33,17 @@ const Hero = () => {
     // Only load the heavy 3D Spline scene on desktop devices (eliminates 1,700ms CPU / 550KB wasm on mobile)
     let loadTimeout: NodeJS.Timeout | null = null;
     if (desktopCheck) {
-      loadTimeout = setTimeout(() => {
-        setShouldLoadSpline(true);
-      }, 1500);
+      const scheduleSpline = () => {
+        loadTimeout = setTimeout(() => {
+          setShouldLoadSpline(true);
+        }, 1800);
+      };
+
+      if ('requestIdleCallback' in window) {
+        (window as any).requestIdleCallback(scheduleSpline);
+      } else {
+        scheduleSpline();
+      }
     }
 
     return () => {
@@ -131,19 +141,9 @@ const Hero = () => {
               )}
 
               {shouldLoadSpline && (
-                <div className="absolute inset-y-0 w-[140%] -left-[20%] pointer-events-none">
-                  <iframe
-                    src="https://my.spline.design/genkubgreetingrobot-MW4W3iAFsJj5olFfT1MhN0TH/"
-                    title="Interactive 3D Greeting Robot"
-                    loading="lazy"
-                    frameBorder="0"
-                    width="100%"
-                    height="100%"
-                    onLoad={() => setSplineLoaded(true)}
-                    className={`w-full h-full transition-opacity duration-700 ${splineLoaded ? 'opacity-80' : 'opacity-0'}`}
-                    style={{ pointerEvents: 'auto' }}
-                  />
-                </div>
+                <Suspense fallback={null}>
+                  <SplineRobot onLoad={() => setSplineLoaded(true)} />
+                </Suspense>
               )}
             </>
           )}
