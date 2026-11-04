@@ -76,7 +76,8 @@ const Projects = () => {
           scrollTrigger: {
             trigger: heading,
             start: "top bottom-=100",
-            toggleActions: "play none none reverse"
+            toggleActions: "play none none none",
+            once: true
           }
         }
       );
@@ -94,7 +95,8 @@ const Projects = () => {
           scrollTrigger: {
             trigger: description,
             start: "top bottom-=100",
-            toggleActions: "play none none reverse"
+            toggleActions: "play none none none",
+            once: true
           }
         }
       );
@@ -112,7 +114,8 @@ const Projects = () => {
           scrollTrigger: {
             trigger: card,
             start: "top bottom-=80",
-            toggleActions: "play none none reverse"
+            toggleActions: "play none none none",
+            once: true
           }
         }
       );
@@ -120,18 +123,18 @@ const Projects = () => {
   }, []);
 
   return (
-    <section id="projects" className="py-24 px-6 md:px-12 bg-background relative border-t border-white/5">
+    <section id="projects" className="py-24 px-6 md:px-12 bg-background relative border-t border-white/10">
       <div ref={containerRef} className="max-w-7xl mx-auto">
-        <h2 className="text-4xl md:text-5xl font-semibold mb-4 text-center tracking-tight">
+        <h2 className="text-4xl md:text-5xl font-semibold mb-4 text-center tracking-tight text-white">
           Featured <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Projects</span>
         </h2>
-        <p className="section-description text-center text-muted-foreground/80 mb-16 max-w-3xl mx-auto text-sm md:text-base">
+        <p className="section-description text-center text-zinc-300 mb-16 max-w-3xl mx-auto text-sm md:text-base">
           A curated collection of full-stack projects demonstrating my expertise in building modern, scalable web applications — from intuitive frontends to robust backend systems.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project, index) => (
-            <div key={index} className="project-card group relative bg-card/20 rounded-2xl overflow-hidden border border-white/5 hover:border-primary/50 transition-all duration-500 hover:shadow-[0_10px_40px_-10px_rgba(124,58,237,0.3)] hover:-translate-y-2 flex flex-col">
+            <div key={index} className="project-card group relative bg-zinc-900/95 rounded-2xl overflow-hidden border border-white/15 hover:border-primary/60 transition-all duration-500 hover:shadow-[0_10px_40px_-10px_rgba(124,58,237,0.4)] hover:-translate-y-2 flex flex-col shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
 
               {/* Image Area */}
               <div className="relative h-48 overflow-hidden bg-slate-900/60">
@@ -142,21 +145,20 @@ const Projects = () => {
                   decoding="async"
                   width="800"
                   height="450"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-colors duration-500 pointer-events-none" />
               </div>
 
               {/* Content Area */}
               <div className="p-6 flex flex-col flex-grow">
-                <h3 className="text-2xl font-bold mb-2 group-hover:text-primary-glow transition-colors">{project.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed mb-4 flex-grow">
+                <h3 className="text-2xl font-bold mb-2 text-white group-hover:text-primary-glow transition-colors">{project.title}</h3>
+                <p className="text-zinc-200 text-sm leading-relaxed mb-4 flex-grow font-normal">
                   {project.description}
                 </p>
 
                 <div className="flex flex-wrap gap-2 mb-6">
                   {project.tags.map((tag, i) => (
-                    <span key={i} className="text-xs font-medium text-primary/80 bg-primary/10 px-2 py-1 rounded border border-primary/10">
+                    <span key={i} className="text-xs font-medium text-purple-300 bg-purple-950/70 px-2.5 py-1 rounded border border-purple-500/40">
                       {tag}
                     </span>
                   ))}

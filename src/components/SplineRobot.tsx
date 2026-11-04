@@ -20,7 +20,7 @@ const SplineRobot: React.FC<SplineRobotProps> = ({ onLoad }) => {
           setIsLoaded(true);
           onLoad?.();
         }}
-        className={`w-full h-full transition-opacity duration-700 ${isLoaded ? 'opacity-80' : 'opacity-0'}`}
+        className={`w-full h-full transition-opacity duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
         style={{ pointerEvents: 'auto' }}
       />
     </div>

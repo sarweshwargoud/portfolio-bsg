@@ -71,7 +71,8 @@ const Education = () => {
                     scrollTrigger: {
                         trigger: heading,
                         start: "top bottom-=100",
-                        toggleActions: "play none none reverse"
+                        toggleActions: "play none none none",
+                        once: true
                     }
                 }
             );
@@ -107,7 +108,8 @@ const Education = () => {
                     scrollTrigger: {
                         trigger: dot,
                         start: "top bottom-=120",
-                        toggleActions: "play none none reverse"
+                        toggleActions: "play none none none",
+                        once: true
                     }
                 }
             );
@@ -129,7 +131,8 @@ const Education = () => {
                     scrollTrigger: {
                         trigger: item,
                         start: "top bottom-=80",
-                        toggleActions: "play none none reverse"
+                        toggleActions: "play none none none",
+                        once: true
                     }
                 }
             );
@@ -138,10 +141,10 @@ const Education = () => {
     }, []);
 
     return (
-        <section id="education" className="py-24 px-6 md:px-12 bg-background relative border-t border-white/5 overflow-hidden">
+        <section id="education" className="py-24 px-6 md:px-12 bg-background relative border-t border-white/10 overflow-hidden">
             <div ref={containerRef} className="max-w-5xl mx-auto">
                 <div className="text-center mb-20">
-                    <h2 className="text-4xl md:text-5xl font-semibold tracking-tight">
+                    <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-white">
                         Education
                     </h2>
                 </div>
@@ -158,7 +161,7 @@ const Education = () => {
                                 className="edu-item relative flex flex-col md:flex-row items-center justify-between w-full group"
                             >
                                 {/* Connector Dot */}
-                                <div className="edu-dot absolute left-4 md:left-1/2 top-8 md:top-1/2 -translate-y-1/2 -translate-x-1/2 z-10 w-5 h-5 rounded-full bg-background border-4 border-primary group-hover:border-secondary transition-all duration-300 shadow-[0_0_10px_rgba(124,58,237,0.3)]" />
+                                <div className="edu-dot absolute left-4 md:left-1/2 top-8 md:top-1/2 -translate-y-1/2 -translate-x-1/2 z-10 w-5 h-5 rounded-full bg-primary border-2 border-white group-hover:border-secondary transition-all duration-300 shadow-[0_0_12px_rgba(124,58,237,0.6)]" />
 
                                 {/* Card Container */}
                                 <div
@@ -171,21 +174,21 @@ const Education = () => {
                                         onMouseLeave={handleMouseLeave}
                                     >
                                         <div
-                                            className="premium-3d-card relative p-8 rounded-3xl bg-card/25 border border-white/5 hover:border-primary/40 transition-all duration-300 hover:bg-card/30 backdrop-blur-md"
+                                            className="premium-3d-card relative p-8 rounded-3xl bg-zinc-900/95 border border-white/15 hover:border-primary/60 transition-all duration-300 hover:bg-zinc-900 shadow-[0_8px_32px_rgba(0,0,0,0.5)] backdrop-blur-md"
                                         >
-                                            <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-l-3xl" />
+                                            <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-l-3xl" />
 
-                                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-2 translate-z-md">
-                                                <h3 className="text-xl md:text-2xl font-bold text-foreground group-hover:text-primary-glow transition-colors">
+                                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-3 translate-z-md">
+                                                <h3 className="text-xl md:text-2xl font-bold text-white group-hover:text-primary-glow transition-colors">
                                                     {edu.school}
                                                 </h3>
-                                                <span className="text-sm font-mono text-primary/80 bg-primary/10 px-3 py-1 rounded-full whitespace-nowrap">
+                                                <span className="text-sm font-mono text-purple-300 bg-purple-950/70 border border-purple-500/40 px-3 py-1 rounded-full whitespace-nowrap shadow-sm">
                                                     {edu.period}
                                                 </span>
                                             </div>
 
-                                            <h4 className="text-lg text-secondary font-medium mb-2 translate-z-sm">{edu.degree}</h4>
-                                            <p className="text-muted-foreground translate-z-sm font-light">{edu.description}</p>
+                                            <h4 className="text-lg text-cyan-400 font-semibold mb-2 translate-z-sm">{edu.degree}</h4>
+                                            <p className="text-zinc-200 translate-z-sm font-normal leading-relaxed">{edu.description}</p>
                                         </div>
                                     </div>
                                 </div>

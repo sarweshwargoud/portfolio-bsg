@@ -77,7 +77,7 @@ const CodingProfiles = () => {
                 { opacity: 0, y: -30 },
                 {
                     opacity: 1, y: 0, duration: 0.8,
-                    scrollTrigger: { trigger: heading, start: 'top bottom-=100', toggleActions: 'play none none reverse' }
+                    scrollTrigger: { trigger: heading, start: 'top bottom-=100', toggleActions: 'play none none none', once: true }
                 }
             );
         }
@@ -87,7 +87,7 @@ const CodingProfiles = () => {
                 { opacity: 0, y: 20 },
                 {
                     opacity: 1, y: 0, duration: 0.8, delay: 0.2,
-                    scrollTrigger: { trigger: description, start: 'top bottom-=100', toggleActions: 'play none none reverse' }
+                    scrollTrigger: { trigger: description, start: 'top bottom-=100', toggleActions: 'play none none none', once: true }
                 }
             );
         }
@@ -97,14 +97,14 @@ const CodingProfiles = () => {
                 { opacity: 0, y: 40, scale: 0.96 },
                 {
                     opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'power2.out',
-                    scrollTrigger: { trigger: card, start: 'top bottom-=80', toggleActions: 'play none none reverse' }
+                    scrollTrigger: { trigger: card, start: 'top bottom-=80', toggleActions: 'play none none none', once: true }
                 }
             );
         });
     }, []);
 
     return (
-        <section id="coding-profiles" className="pt-24 pb-48 md:pb-56 px-6 md:px-12 bg-transparent relative border-t border-white/5">
+        <section id="coding-profiles" className="pt-24 pb-48 md:pb-56 px-6 md:px-12 bg-transparent relative border-t border-white/10">
             {/* Background glows isolated so they don't trigger horizontal scrollbar, without clipping tooltips */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-1/2 left-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px]" />
@@ -121,7 +121,7 @@ const CodingProfiles = () => {
                             Profiles
                         </span>
                     </h2>
-                    <p className="section-description text-white/60 max-w-xl mx-auto text-base font-light">
+                    <p className="section-description text-zinc-200 max-w-xl mx-auto text-base font-normal">
                         Sharpening problem-solving skills through competitive programming and open-source contributions.
                     </p>
                 </div>

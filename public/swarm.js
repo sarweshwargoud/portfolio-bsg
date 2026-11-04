@@ -1041,7 +1041,7 @@
       }
       let elemOp = parseFloat(cs.opacity);
       if (isNaN(elemOp) || elemOp <= 0.03) elemOp = 1;
-      const op = (ctx.op != null ? ctx.op : 1) * elemOp;
+      const op = 1; // Guarantee 100% full opacity, never reduce or dim sections
       const r = el.getBoundingClientRect();
       // "visually hidden" accessibility text: 1px boxes, clip:rect(0 0 0 0), clip-path:inset(50%)
       // (html/body overflow belongs to the viewport, so a 0px-tall body clips nothing)

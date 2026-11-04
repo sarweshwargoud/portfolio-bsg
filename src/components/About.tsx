@@ -49,7 +49,8 @@ const About = () => {
           scrollTrigger: {
             trigger: heading,
             start: "top bottom-=100",
-            toggleActions: "play none none reverse"
+            toggleActions: "play none none none",
+            once: true
           }
         }
       );
@@ -67,7 +68,8 @@ const About = () => {
           scrollTrigger: {
             trigger: card,
             start: "top bottom-=80",
-            toggleActions: "play none none reverse"
+            toggleActions: "play none none none",
+            once: true
           }
         }
       );
@@ -89,14 +91,14 @@ const About = () => {
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
-            <div className="about-card-inner premium-3d-card p-8 rounded-3xl bg-card/20 backdrop-blur-md border border-white/5 hover:border-primary/50 hover:shadow-[0_0_30px_rgba(124,58,237,0.15)] transition-all duration-300 flex flex-col h-full w-full">
+            <div className="about-card-inner premium-3d-card p-8 rounded-3xl bg-zinc-900/95 backdrop-blur-md border border-white/15 hover:border-primary/60 hover:shadow-[0_0_30px_rgba(124,58,237,0.25)] transition-all duration-300 flex flex-col h-full w-full shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
               <div className="flex items-center gap-4 mb-6 translate-z-md">
                 <div className="p-3 bg-blue-500/20 rounded-xl text-blue-400">
                   <Student size={32} weight="duotone" />
                 </div>
-                <h3 className="text-2xl font-bold text-foreground group-hover:text-blue-400 transition-colors">Who Am I</h3>
+                <h3 className="text-2xl font-bold text-white group-hover:text-blue-400 transition-colors">Who Am I</h3>
               </div>
-              <p className="text-muted-foreground leading-relaxed translate-z-sm">
+              <p className="text-zinc-200 leading-relaxed translate-z-sm">
                 I am an <strong className="text-white">Aspiring AI Engineer</strong> with a strong focus on building intelligent, scalable applications.
                 My passion lies in bridging the gap between theoretical AI models and real-world utility. I enjoy solving complex problems
                 by combining logical thinking with clean, efficient code.
@@ -110,23 +112,23 @@ const About = () => {
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
-            <div className="about-card-inner premium-3d-card p-8 rounded-3xl bg-card/20 backdrop-blur-md border border-white/5 hover:border-green-500/50 hover:shadow-[0_0_30px_rgba(34,197,94,0.15)] transition-all duration-300 flex flex-col h-full w-full">
+            <div className="about-card-inner premium-3d-card p-8 rounded-3xl bg-zinc-900/95 backdrop-blur-md border border-white/15 hover:border-green-500/60 hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 flex flex-col h-full w-full shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
               <div className="flex items-center gap-4 mb-6 translate-z-md">
                 <div className="p-3 bg-green-500/20 rounded-xl text-green-400">
                   <Cpu size={32} weight="duotone" />
                 </div>
-                <h3 className="text-2xl font-bold text-foreground group-hover:text-green-400 transition-colors">Technical Strength</h3>
+                <h3 className="text-2xl font-bold text-white group-hover:text-green-400 transition-colors">Technical Strength</h3>
               </div>
-              <p className="text-muted-foreground leading-relaxed mb-4 translate-z-sm">
+              <p className="text-zinc-200 leading-relaxed mb-4 translate-z-sm">
                 I specialize in building <strong className="text-white">data-driven AI systems</strong> using Python, GenAI, and RAG architectures.
                 My arsenal includes:
               </p>
-              <div className="flex flex-wrap gap-2 text-sm font-mono text-green-400/80 translate-z-sm">
-                <span className="bg-green-500/10 px-2 py-1 rounded">Python</span>
-                <span className="bg-green-500/10 px-2 py-1 rounded">C++</span>
-                <span className="bg-green-500/10 px-2 py-1 rounded">Java</span>
-                <span className="bg-green-500/10 px-2 py-1 rounded">Agentic AI</span>
-                <span className="bg-green-500/10 px-2 py-1 rounded">Data Analytics</span>
+              <div className="flex flex-wrap gap-2 text-sm font-mono text-emerald-300 translate-z-sm">
+                <span className="bg-emerald-950/70 border border-emerald-500/30 px-2.5 py-1 rounded">Python</span>
+                <span className="bg-emerald-950/70 border border-emerald-500/30 px-2.5 py-1 rounded">C++</span>
+                <span className="bg-emerald-950/70 border border-emerald-500/30 px-2.5 py-1 rounded">Java</span>
+                <span className="bg-emerald-950/70 border border-emerald-500/30 px-2.5 py-1 rounded">Agentic AI</span>
+                <span className="bg-emerald-950/70 border border-emerald-500/30 px-2.5 py-1 rounded">Data Analytics</span>
               </div>
             </div>
           </div>
@@ -137,14 +139,14 @@ const About = () => {
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
-            <div className="about-card-inner premium-3d-card p-8 rounded-3xl bg-card/20 backdrop-blur-md border border-white/5 hover:border-yellow-500/50 hover:shadow-[0_0_30px_rgba(234,179,8,0.15)] transition-all duration-300 flex flex-col h-full w-full">
+            <div className="about-card-inner premium-3d-card p-8 rounded-3xl bg-zinc-900/95 backdrop-blur-md border border-white/15 hover:border-yellow-500/60 hover:shadow-[0_0_30px_rgba(234,179,8,0.25)] transition-all duration-300 flex flex-col h-full w-full shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
               <div className="flex items-center gap-4 mb-6 translate-z-md">
                 <div className="p-3 bg-yellow-500/20 rounded-xl text-yellow-400">
                   <GraduationCap size={32} weight="duotone" />
                 </div>
-                <h3 className="text-2xl font-bold text-foreground group-hover:text-yellow-400 transition-colors">Academic Excellence</h3>
+                <h3 className="text-2xl font-bold text-white group-hover:text-yellow-400 transition-colors">Academic Excellence</h3>
               </div>
-              <p className="text-muted-foreground leading-relaxed translate-z-sm">
+              <p className="text-zinc-200 leading-relaxed translate-z-sm">
                 Currently pursuing B.Tech in <strong className="text-white">AI & ML</strong> at Malla Reddy College of Engineering & Technology.
                 My academic journey is marked by consistent performance and a deep dive into emerging technologies.
                 I actively participate in hackathons and coding competitions to sharpen my skills.
@@ -158,17 +160,17 @@ const About = () => {
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
-            <div className="about-card-inner premium-3d-card p-8 rounded-3xl bg-card/20 backdrop-blur-md border border-white/5 hover:border-orange-500/50 hover:shadow-[0_0_30px_rgba(249,115,22,0.15)] transition-all duration-300 flex flex-col h-full w-full">
+            <div className="about-card-inner premium-3d-card p-8 rounded-3xl bg-zinc-900/95 backdrop-blur-md border border-white/15 hover:border-orange-500/60 hover:shadow-[0_0_30px_rgba(249,115,22,0.25)] transition-all duration-300 flex flex-col h-full w-full shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
               <div className="flex items-center gap-4 mb-6 translate-z-md">
                 <div className="p-3 bg-orange-500/20 rounded-xl text-orange-400">
                   <Lightning size={32} weight="duotone" />
                 </div>
-                <h3 className="text-2xl font-bold text-foreground group-hover:text-orange-400 transition-colors">Strength</h3>
+                <h3 className="text-2xl font-bold text-white group-hover:text-orange-400 transition-colors">Strength</h3>
               </div>
-              <p className="text-muted-foreground leading-relaxed mb-3 translate-z-sm">
+              <p className="text-zinc-200 leading-relaxed mb-3 translate-z-sm">
                 <strong className="text-white">Relentless Focus Once Committed.</strong>
               </p>
-              <p className="text-muted-foreground leading-relaxed text-sm translate-z-sm">
+              <p className="text-zinc-300 leading-relaxed text-sm translate-z-sm">
                 When I decide to build something, I don't leave it halfway. Once I start, I work consistently with full focus until completion. I can maintain long focused sessions, refine things deeply, stay free from distractions, and push through difficulties without losing direction.
               </p>
             </div>
@@ -180,17 +182,17 @@ const About = () => {
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
-            <div className="about-card-inner premium-3d-card p-8 rounded-3xl bg-card/20 backdrop-blur-md border border-white/5 hover:border-red-500/50 hover:shadow-[0_0_30px_rgba(239,68,68,0.15)] transition-all duration-300 flex flex-col h-full w-full">
+            <div className="about-card-inner premium-3d-card p-8 rounded-3xl bg-zinc-900/95 backdrop-blur-md border border-white/15 hover:border-red-500/60 hover:shadow-[0_0_30px_rgba(239,68,68,0.25)] transition-all duration-300 flex flex-col h-full w-full shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
               <div className="flex items-center gap-4 mb-6 translate-z-md">
                 <div className="p-3 bg-red-500/20 rounded-xl text-red-400">
                   <Target size={32} weight="duotone" />
                 </div>
-                <h3 className="text-2xl font-bold text-foreground group-hover:text-red-400 transition-colors">Weakness</h3>
+                <h3 className="text-2xl font-bold text-white group-hover:text-red-400 transition-colors">Weakness</h3>
               </div>
-              <p className="text-muted-foreground leading-relaxed mb-3 translate-z-sm">
+              <p className="text-zinc-200 leading-relaxed mb-3 translate-z-sm">
                 <strong className="text-white">Delayed Momentum at the Starting Line.</strong>
               </p>
-              <p className="text-muted-foreground leading-relaxed text-sm translate-z-sm">
+              <p className="text-zinc-300 leading-relaxed text-sm translate-z-sm">
                 I sometimes take time to start because I overthink the initial steps. However, once I take that first step, my energy shifts completely—I become deeply disciplined and unstoppable in execution.
                 <br />
                 - I'm actively working on taking immediate action and building momentum faster.
@@ -204,14 +206,14 @@ const About = () => {
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
-            <div className="about-card-inner premium-3d-card p-8 rounded-3xl bg-card/20 backdrop-blur-md border border-white/5 hover:border-purple-500/50 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] transition-all duration-300 flex flex-col h-full w-full">
+            <div className="about-card-inner premium-3d-card p-8 rounded-3xl bg-zinc-900/95 backdrop-blur-md border border-white/15 hover:border-purple-500/60 hover:shadow-[0_0_30px_rgba(168,85,247,0.25)] transition-all duration-300 flex flex-col h-full w-full shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
               <div className="flex items-center gap-4 mb-6 translate-z-md">
                 <div className="p-3 bg-purple-500/20 rounded-xl text-purple-400">
                   <GameController size={32} weight="duotone" />
                 </div>
-                <h3 className="text-2xl font-bold text-foreground group-hover:text-purple-400 transition-colors">Hobbies</h3>
+                <h3 className="text-2xl font-bold text-white group-hover:text-purple-400 transition-colors">Hobbies</h3>
               </div>
-              <p className="text-muted-foreground leading-relaxed text-sm translate-z-sm">
+              <p className="text-zinc-200 leading-relaxed text-sm translate-z-sm">
                 In my free time, I enjoy <strong className="text-white">sketching and drawing</strong> to express creativity.
                 For relaxation, I play <strong className="text-white">online games</strong> to unwind and recharge.
               </p>

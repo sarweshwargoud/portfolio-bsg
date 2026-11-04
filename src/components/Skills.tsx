@@ -45,7 +45,8 @@ const Skills = () => {
                     scrollTrigger: {
                         trigger: heading,
                         start: "top bottom-=100",
-                        toggleActions: "play none none reverse"
+                        toggleActions: "play none none none",
+                        once: true
                     }
                 }
             );
@@ -63,7 +64,8 @@ const Skills = () => {
                     scrollTrigger: {
                         trigger: skill,
                         start: "top bottom-=80",
-                        toggleActions: "play none none reverse"
+                        toggleActions: "play none none none",
+                        once: true
                     }
                 }
             );
@@ -71,23 +73,23 @@ const Skills = () => {
     }, []);
 
     return (
-        <section id="skills" ref={containerRef} className="py-24 bg-background relative overflow-hidden">
+        <section id="skills" ref={containerRef} className="py-24 bg-background relative overflow-hidden border-t border-white/10">
             <div className="max-w-7xl mx-auto px-6 md:px-12">
-                <h2 className="text-4xl md:text-5xl font-semibold mb-16 text-center tracking-tight">
+                <h2 className="text-4xl md:text-5xl font-semibold mb-16 text-center tracking-tight text-white">
                     Technical <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary to-primary">Skills</span>
                 </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {skillCategories.map((category, index) => (
-                        <div key={index} className="skill-card space-y-6 p-6 rounded-2xl bg-card/20 backdrop-blur-sm border border-white/5 hover:border-primary/40 transition-all duration-300 hover:shadow-lg hover:bg-card/30 group">
+                        <div key={index} className="skill-card space-y-6 p-6 rounded-2xl bg-zinc-900/95 backdrop-blur-md border border-white/15 hover:border-primary/60 transition-all duration-300 hover:shadow-[0_8px_32px_rgba(124,58,237,0.25)] hover:bg-zinc-900 group shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
 
-                            <h3 className={`text-2xl font-semibold mb-4 border-b border-white/10 pb-2 ${category.color}`}>
+                            <h3 className={`text-2xl font-semibold mb-4 border-b border-white/15 pb-2 ${category.color}`}>
                                 {category.title}
                             </h3>
 
                             <div className="flex flex-wrap gap-2">
                                 {category.skills.map((skill, i) => (
-                                    <span key={i} className="inline-block px-3 py-1 rounded-md text-sm font-medium bg-white/5 text-muted-foreground group-hover:text-white group-hover:bg-white/10 transition-all duration-300 cursor-default hover:scale-105">
+                                    <span key={i} className="inline-block px-3 py-1 rounded-md text-sm font-medium bg-white/10 text-zinc-200 border border-white/10 group-hover:text-white group-hover:bg-white/20 group-hover:border-primary/40 transition-all duration-300 cursor-default hover:scale-105">
                                         {skill}
                                     </span>
                                 ))}

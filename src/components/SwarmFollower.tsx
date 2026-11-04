@@ -314,7 +314,7 @@ const SwarmFollower = ({ enabled }: SwarmFollowerProps) => {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-[9995] w-full h-full"
-      style={{ display: 'block' }}
+      style={{ display: 'block', background: 'transparent' }}
     />
   );
 };

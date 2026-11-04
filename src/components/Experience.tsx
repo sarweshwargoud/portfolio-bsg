@@ -73,7 +73,8 @@ const Experience = () => {
                     scrollTrigger: {
                         trigger: heading,
                         start: "top 80%",
-                        toggleActions: "play none none reverse"
+                        toggleActions: "play none none none",
+                        once: true
                     }
                 }
             );
@@ -91,7 +92,8 @@ const Experience = () => {
                     scrollTrigger: {
                         trigger: description,
                         start: "top 80%",
-                        toggleActions: "play none none reverse"
+                        toggleActions: "play none none none",
+                        once: true
                     }
                 }
             );
@@ -109,57 +111,54 @@ const Experience = () => {
                     scrollTrigger: {
                         trigger: item,
                         start: "top 85%",
-                        toggleActions: "play none none reverse"
+                        toggleActions: "play none none none",
+                        once: true
                     }
                 }
             );
         });
 
-        return () => {
-            ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-        };
-
     }, []);
 
     return (
-        <section id="experience" className="py-24 px-6 md:px-12 bg-background relative overflow-hidden">
+        <section id="experience" className="py-24 px-6 md:px-12 bg-background relative overflow-hidden border-t border-white/10">
             <div className="max-w-5xl mx-auto">
                 <div className="text-center mb-20">
-                    <h2 className="text-4xl md:text-5xl font-semibold tracking-tight mb-4">
+                    <h2 className="text-4xl md:text-5xl font-semibold tracking-tight mb-4 text-white">
                         Professional <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary to-primary">Experience</span>
                     </h2>
-                    <p className="section-description text-muted-foreground/80 max-w-2xl mx-auto text-sm md:text-base">
+                    <p className="section-description text-zinc-300 max-w-2xl mx-auto text-sm md:text-base">
                         A journey through impactful internships and collaborations, building AI-driven solutions and gaining hands-on experience in cutting-edge technologies.
                     </p>
                 </div>
 
-                <div ref={timelineRef} className="relative border-l-2 border-white/10 ml-4 md:ml-12 space-y-12">
+                <div ref={timelineRef} className="relative border-l-2 border-white/15 ml-4 md:ml-12 space-y-12">
                     {experience.map((exp, index) => (
                         <div key={index} className="timeline-item relative pl-8 md:pl-16 group">
                             {/* Connector Dot */}
-                            <div className="absolute left-[-9px] top-6 w-4 h-4 rounded-full bg-background border-2 border-secondary group-hover:bg-secondary group-hover:scale-125 transition-all duration-300 shadow-[0_0_10px_rgba(0,255,255,0.3)]" />
+                            <div className="absolute left-[-9px] top-6 w-4 h-4 rounded-full bg-cyan-400 border-2 border-white group-hover:bg-secondary group-hover:scale-125 transition-all duration-300 shadow-[0_0_12px_rgba(0,255,255,0.6)]" />
 
-                            <div className="p-6 md:p-8 rounded-2xl bg-card/20 border border-white/5 hover:border-secondary/30 transition-all duration-300 hover:bg-card/40 backdrop-blur-sm">
+                            <div className="p-6 md:p-8 rounded-2xl bg-zinc-900/95 border border-white/15 hover:border-secondary/60 transition-all duration-300 hover:bg-zinc-900 backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
                                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-4">
                                     <div>
-                                        <h3 className="text-xl md:text-2xl font-bold text-foreground group-hover:text-secondary-glow transition-colors">
+                                        <h3 className="text-xl md:text-2xl font-bold text-white group-hover:text-secondary-glow transition-colors">
                                             {exp.title}
                                         </h3>
-                                        <h4 className="text-lg text-primary font-medium">{exp.company}</h4>
+                                        <h4 className="text-lg text-purple-400 font-semibold">{exp.company}</h4>
                                     </div>
-                                    <span className="text-sm font-mono text-muted-foreground bg-white/5 px-3 py-1 rounded-md whitespace-nowrap border border-white/5">
+                                    <span className="text-sm font-mono text-zinc-200 bg-white/10 px-3 py-1 rounded-md whitespace-nowrap border border-white/10">
                                         {exp.period}
                                     </span>
                                 </div>
 
-                                <p className="text-muted-foreground/90 leading-relaxed mb-4 font-light">
+                                <p className="text-zinc-200 leading-relaxed mb-4 font-normal">
                                     {exp.description}
                                 </p>
 
                                 <div className="flex flex-wrap items-center justify-between gap-3 mt-4">
                                     <div className="flex flex-wrap gap-2">
                                         {exp.stack.map((tech, i) => (
-                                            <span key={i} className="text-xs font-mono text-secondary/80 bg-secondary/10 px-2 py-1 rounded">
+                                            <span key={i} className="text-xs font-mono text-cyan-300 bg-cyan-950/70 border border-cyan-500/30 px-2.5 py-1 rounded">
                                                 {tech}
                                             </span>
                                         ))}

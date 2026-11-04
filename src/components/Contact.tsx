@@ -67,7 +67,8 @@ const Contact = () => {
           scrollTrigger: {
             trigger: heading,
             start: 'top bottom-=100',
-            toggleActions: 'play none none reverse',
+            toggleActions: 'play none none none',
+            once: true,
           },
         }
       );
@@ -87,7 +88,8 @@ const Contact = () => {
           scrollTrigger: {
             trigger: description,
             start: 'top bottom-=100',
-            toggleActions: 'play none none reverse',
+            toggleActions: 'play none none none',
+            once: true,
           },
         }
       );
@@ -106,7 +108,8 @@ const Contact = () => {
           scrollTrigger: {
             trigger: leftContent,
             start: 'top bottom-=50',
-            toggleActions: 'play none none reverse',
+            toggleActions: 'play none none none',
+            once: true,
           },
         }
       );
@@ -125,7 +128,8 @@ const Contact = () => {
           scrollTrigger: {
             trigger: item,
             start: 'top bottom-=30',
-            toggleActions: 'play none none reverse',
+            toggleActions: 'play none none none',
+            once: true,
           },
         }
       );
@@ -144,7 +148,8 @@ const Contact = () => {
           scrollTrigger: {
             trigger: formSide,
             start: 'top bottom-=50',
-            toggleActions: 'play none none reverse',
+            toggleActions: 'play none none none',
+            once: true,
           },
         }
       );
@@ -259,18 +264,18 @@ const Contact = () => {
   return (
     <section
       id="contact"
-      className="py-24 px-6 md:px-12 bg-background relative overflow-hidden border-t border-white/5"
+      className="py-24 px-6 md:px-12 bg-background relative overflow-hidden border-t border-white/10"
     >
       <div ref={containerRef} className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-semibold tracking-tight mb-4">
+          <h2 className="text-4xl md:text-5xl font-semibold tracking-tight mb-4 text-white">
             Get In{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
               Touch
             </span>
           </h2>
-          <p className="intro-text text-muted-foreground/80 max-w-2xl mx-auto text-sm md:text-base">
+          <p className="intro-text text-zinc-300 max-w-2xl mx-auto text-sm md:text-base">
             Have a project in mind, an opportunity to discuss, or just want to say
             hello? Drop me a message and let's create something amazing together.
           </p>
@@ -280,10 +285,10 @@ const Contact = () => {
           {/* Left Side - Contact Info */}
           <div className="space-y-8">
             <div className="left-content">
-              <h3 className="text-3xl md:text-4xl font-semibold mb-6 leading-tight">
+              <h3 className="text-3xl md:text-4xl font-semibold mb-6 leading-tight text-white">
                 Let's <span className="text-secondary">Connect</span>
               </h3>
-              <p className="text-muted-foreground/80 leading-relaxed mb-8 font-light">
+              <p className="text-zinc-200 leading-relaxed mb-8 font-normal">
                 I'm always excited to collaborate on Generative AI, LLM systems,
                 Agentic workflows, and cutting-edge software engineering. Reach out
                 directly or submit the form — I reply promptly!
@@ -292,12 +297,12 @@ const Contact = () => {
 
             {/* Contact Details Cards */}
             <div className="space-y-4">
-              <div className="contact-info-item flex items-start gap-4 p-4 rounded-2xl bg-primary/5 border border-primary/10 hover:border-primary/30 transition-all duration-300 group">
+              <div className="contact-info-item flex items-start gap-4 p-4 rounded-2xl bg-zinc-900/90 border border-purple-500/20 hover:border-primary/50 transition-all duration-300 group shadow-md">
                 <div className="p-3 bg-primary/20 rounded-xl text-primary group-hover:scale-110 transition-transform">
                   <Envelope size={22} weight="duotone" />
                 </div>
                 <div>
-                  <p className="text-xs uppercase font-mono tracking-wider text-muted-foreground mb-1">
+                  <p className="text-xs uppercase font-mono tracking-wider text-purple-300 mb-1">
                     Direct Email
                   </p>
                   <a
@@ -309,12 +314,12 @@ const Contact = () => {
                 </div>
               </div>
 
-              <div className="contact-info-item flex items-start gap-4 p-4 rounded-2xl bg-secondary/5 border border-secondary/10 hover:border-secondary/30 transition-all duration-300 group">
+              <div className="contact-info-item flex items-start gap-4 p-4 rounded-2xl bg-zinc-900/90 border border-cyan-500/20 hover:border-secondary/50 transition-all duration-300 group shadow-md">
                 <div className="p-3 bg-secondary/20 rounded-xl text-secondary group-hover:scale-110 transition-transform">
                   <Phone size={22} weight="duotone" />
                 </div>
                 <div>
-                  <p className="text-xs uppercase font-mono tracking-wider text-muted-foreground mb-1">
+                  <p className="text-xs uppercase font-mono tracking-wider text-cyan-300 mb-1">
                     Phone / WhatsApp
                   </p>
                   <a
@@ -326,12 +331,12 @@ const Contact = () => {
                 </div>
               </div>
 
-              <div className="contact-info-item flex items-start gap-4 p-4 rounded-2xl bg-purple-500/5 border border-purple-500/10 hover:border-purple-500/30 transition-all duration-300 group">
+              <div className="contact-info-item flex items-start gap-4 p-4 rounded-2xl bg-zinc-900/90 border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300 group shadow-md">
                 <div className="p-3 bg-purple-500/20 rounded-xl text-purple-400 group-hover:scale-110 transition-transform">
                   <MapPin size={22} weight="duotone" />
                 </div>
                 <div>
-                  <p className="text-xs uppercase font-mono tracking-wider text-muted-foreground mb-1">
+                  <p className="text-xs uppercase font-mono tracking-wider text-purple-300 mb-1">
                     Location
                   </p>
                   <p className="text-white font-medium text-sm sm:text-base">
@@ -343,13 +348,13 @@ const Contact = () => {
 
             {/* Social Profiles */}
             <div className="pt-4">
-              <p className="text-xs uppercase font-mono tracking-wider text-muted-foreground mb-3">
+              <p className="text-xs uppercase font-mono tracking-wider text-zinc-300 mb-3">
                 Social Profiles
               </p>
               <div className="flex gap-3">
                 <a
                   href="https://github.com/sarweshwargoud"
-                  className="p-3 bg-white/5 rounded-xl hover:bg-white/10 hover:text-primary transition-all duration-300 border border-white/10 hover:border-primary/50 hover:scale-105"
+                  className="p-3 bg-white/10 rounded-xl hover:bg-white/20 hover:text-primary transition-all duration-300 border border-white/15 hover:border-primary/50 hover:scale-105 text-white"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="GitHub Profile"
@@ -358,7 +363,7 @@ const Contact = () => {
                 </a>
                 <a
                   href="https://www.linkedin.com/in/sarweshwar-buddolla-25673b312/"
-                  className="p-3 bg-white/5 rounded-xl hover:bg-white/10 hover:text-secondary transition-all duration-300 border border-white/10 hover:border-secondary/50 hover:scale-105"
+                  className="p-3 bg-white/10 rounded-xl hover:bg-white/20 hover:text-secondary transition-all duration-300 border border-white/15 hover:border-secondary/50 hover:scale-105 text-white"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="LinkedIn Profile"
@@ -370,7 +375,7 @@ const Contact = () => {
           </div>
 
           {/* Right Side - Form or Success State */}
-          <div className="form-side bg-card/30 backdrop-blur-md p-6 sm:p-8 rounded-3xl border border-white/10 shadow-2xl hover:border-white/20 transition-all relative">
+          <div className="form-side bg-zinc-900/95 backdrop-blur-md p-6 sm:p-8 rounded-3xl border border-white/15 shadow-[0_8px_32px_rgba(0,0,0,0.5)] hover:border-white/25 transition-all relative">
             {submitSuccess ? (
               /* Success Feedback Card */
               <div
