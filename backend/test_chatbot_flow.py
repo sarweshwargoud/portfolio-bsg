@@ -56,6 +56,13 @@ print("\nReply 2 (Follow-up: 'say his lover name'):\n", res5_2["reply"])
 
 assert res5_1["reply"] != res5_2["reply"], "Responses must NOT be hardcoded identical strings!"
 assert len(res5_1["reply"]) > 10 and len(res5_2["reply"]) > 10, "Responses must be generated!"
+
+res5_3 = generate_rag_response("tell me about his relationship and love", [])
+print("\nReply 3 ('tell me about his relationship and love'):\n", res5_3["reply"])
+
+res5_4 = generate_rag_response("does he have a gfit?", [])
+print("\nReply 4 ('does he have a gfit?'):\n", res5_4["reply"])
+
 print(">>> TEST 5 PASSED (Dynamic responses generated successfully)!")
 
 # TEST 6: Internships query (removed internships must NOT appear)

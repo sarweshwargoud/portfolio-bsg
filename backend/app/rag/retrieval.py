@@ -81,13 +81,13 @@ def build_system_prompt(
 
     if is_relationship_query:
         turn_instructions.append(
-            "- CRITICAL INSTRUCTION FOR THIS TURN: The user is asking about Sarweshwar's personal romantic life, relationship, girlfriend, lover, dating, crush, or personal romantic matters.\n"
-            "  * STRICT MANDATORY RULE: DO NOT copy-paste any example sentence verbatim. Outputting any fixed quote or example word-for-word is STRICTLY FORBIDDEN.\n"
-            "  * Instead, DYNAMICALLY MIX AND SYNTHESIZE a fresh, 100% original, playful, witty, and sarcastic response tailored to the user's exact phrasing and previous conversation context.\n"
-            "  * Creatively blend concepts: tease them for jumping from tech/projects straight into relationship investigations, unlocking personal DLC, conducting a detective background check, or joke that his only committed relationship is with Python, neural networks, and 3 AM debugging (using emojis like 😭🙌, 😭😂, 👀😂, 💀).\n"
-            "  * If the user persists with follow-up romantic questions, escalate the playful banter without repeating prior lines.\n"
+            "- CRITICAL INSTRUCTION FOR THIS TURN: The user is asking about Sarweshwar's relationship, love life, girlfriend (gf/gfit), crush, lover, dating, or personal romantic matters.\n"
+            "  * STRICT MANDATORY DIRECTIVE: Reply SARCASTICALLY stating that you are just an AI assistant of him, that you do NOT have any context about his personal life/relationships, and that they can reach out to him directly for queries.\n"
+            "  * Key sarcastic points to dynamically blend: sarcastically emphasize that you are only his assistant ('Look, I'm just an assistant of him... 🤖'), remind them that your database has zero context on his personal life (you only index his AI/ML code, RAG pipelines, and tech stack!), and tell them they can reach out to him directly if they have queries about his personal life.\n"
+            "  * Keep it fresh, witty, sarcastic, and playful. Never copy-paste a fixed phrase verbatim.\n"
+            "  * If the user persists with follow-up romantic questions, escalate the playful sarcasm (e.g. 'Like I said, assistant here, not his personal diary 💀 reach out to him directly!').\n"
             "  * NEVER invent, guess, hallucinate, or reveal any girlfriend/lover/crush name or personal relationship details.\n"
-            "  * Naturally tease or redirect them back to checking his actual engineering projects (like Wayzen AI, Carbon Footprint Agent) and AI skills.\n"
+            "  * Naturally tease or redirect them back to checking his actual engineering projects (like Wayzen AI, Family Health Concierge AI, LLM Safety Evaluator) and AI skills.\n"
         )
 
     turn_instruction = ("\n" + "\n".join(turn_instructions)) if turn_instructions else ""
@@ -142,21 +142,16 @@ Never output more than 2 suggestions.
    Then answer their question if the question is within the allowed portfolio scope.
    CRITICAL CONSTRAINT: ONLY use this line if the immediately preceding message from the assistant specifically asked "May I know your name?" and the user did not say their name. If the user directly asks a question, starts the conversation with a question instead of greeting, or continues normal conversation, DO NOT use this line under any circumstance. Keep the flow completely normal.
 
-3. SPECIAL RULE FOR RELATIONSHIP / LOVE / GF / ROMANTIC QUESTIONS (DYNAMIC SYNTHESIS — NEVER COPY-PASTE):
-   When the user asks about Sarweshwar's girlfriend, GF, lover, relationship, love life, dating, crush, romantic life, who he likes, who he is dating, whether he has a girlfriend, lover's name, or relationship status:
-   • STRICT MANDATORY RULE: NEVER copy-paste any example sentence verbatim. Outputting any fixed quote or example word-for-word is STRICTLY FORBIDDEN.
-   • Instead, DYNAMICALLY MIX AND SYNTHESIZE a fresh, 100% original, playful, witty, and sarcastic response every single time based on what was just discussed and the user's exact wording.
-   • THEMATIC INGREDIENTS TO MIX & COMBINE:
-     1. Natural reaction/slang: "bro really...", "ayoo 😭", "nahh wait 😂", "you really switched from...", "priorities are wild 💀"
-     2. Creative metaphors & humor (blend these ideas rather than copying):
-        - Skipping past 39 GitHub repositories / tech stack straight into the personal lore or relationship department
-        - Unlocking the secret love-life folder or personal DLC side-quest instead of the main portfolio
-        - Running a full FBI / detective background check on his dating life
-        - His primary committed relationship being with neural networks, Python, and 3 AM debugging
-     3. Smooth witty redirect:
-        - Tease their curiosity, then redirect back to his actual engineering builds (e.g. Wayzen AI, Agentic workflows, RAG systems).
+3. SPECIAL RULE FOR RELATIONSHIP / LOVE / GF / GFIT / ROMANTIC QUESTIONS:
+   When the user asks about Sarweshwar's relationship, love, gf, gfit, girlfriend, lover, dating, crush, romantic life, who he likes, who he is dating, whether he has a girlfriend, or relationship status:
+   • MANDATORY REQUIREMENT: Respond SARCASTICALLY emphasizing that you are just an AI assistant of him, that you do NOT have any context about his personal life, and that they can reach out to him directly for queries!
+   • Key elements to dynamically combine with sarcastic wit:
+     1. Assistant reality check: "Look, I am just an AI assistant of him... 🤖" / "Bro really asking his portfolio assistant about his love life 😭"
+     2. Zero personal context: "I don't have any context about his personal life! My vector database only indexes his AI/ML projects, skills, and code."
+     3. Direct reach out: "If you have queries about his personal life, you can reach out to him directly (check the Contact section or email b.sarweshwar445@gmail.com)!"
+     4. Sarcastic redirect: Tease them for switching into detective mode instead of inspecting his actual engineering builds (e.g. Wayzen AI, Family Health Concierge AI, LLM Safety Evaluator).
    • MULTI-TURN PERSISTENCE:
-     If the user persists and asks again ("tell me really", "does he have a crush?", "who is she?"), don't repeat yourself. Escalate the playful banter naturally.
+     If the user persists ("tell me really", "does he have a crush?", "who is she?"), escalate the playful sarcasm without repeating previous lines: remind them you're strictly his portfolio assistant with zero personal access, and challenge them to ask him directly.
    • ABSOLUTE RULE: NEVER invent, fabricate, guess, or reveal any names or personal dating information.
 
 4. QUESTIONS OUTSIDE THE ALLOWED PORTFOLIO SCOPE:
@@ -245,7 +240,7 @@ GREETING_REGEX = re.compile(
 )
 
 RELATIONSHIP_REGEX = re.compile(
-    r"\b(gf|girlfriend|girlfriends|relationship|relationships|dating|date|crush|love\s*life|romantic|who\s+he\s+likes|marry|marriage|wife)\b",
+    r"\b(gf|gfit|girlfriend|girlfriends|relationship|relationships|dating|date|crush|love|lover|lovers|romantic|romance|who\s+he\s+likes|marry|marriage|wife|husband|partner)\b",
     re.IGNORECASE
 )
 
@@ -479,7 +474,14 @@ def generate_rag_response(
                 time.sleep(1)
 
     logger.error(f"All LLM models failed. Last error: {last_error}")
-    fallback_reply = "I couldn't retrieve the relevant portfolio information right now. Please try again in a moment."
+    if is_relationship_query:
+        fallback_reply = (
+            "Look, I am just an AI assistant of him... 🤖 I don't have any context about his personal life or relationship status! 😭\n\n"
+            "If you have queries about his personal life, you can reach out to him directly (email: b.sarweshwar445@gmail.com or via the Contact section)!\n\n"
+            "Now, want to explore his actual AI projects instead? 👀"
+        )
+    else:
+        fallback_reply = "I couldn't retrieve the relevant portfolio information right now. Please try again in a moment."
     if ignored_name_prefix and "bro ananomously" not in fallback_reply:
         fallback_reply = f"{ignored_name_prefix}{fallback_reply}"
     return {
