@@ -1,4 +1,5 @@
 import sys
+import re
 from pathlib import Path
 
 # Add backend directory to path
@@ -63,7 +64,14 @@ print("\nReply 3 ('tell me about his relationship and love'):\n", res5_3["reply"
 res5_4 = generate_rag_response("does he have a gfit?", [])
 print("\nReply 4 ('does he have a gfit?'):\n", res5_4["reply"])
 
-print(">>> TEST 5 PASSED (Dynamic responses generated successfully)!")
+trope_re = re.compile(r"(committed\s+to|commitment|relationship\s+(is\s+)?with|married\s+to|career|main\s+branch|3\s*am\s*debug)", re.IGNORECASE)
+for idx, r in enumerate([res5_1, res5_2, res5_3, res5_4], 1):
+    reply_txt = r["reply"].lower()
+    assert not trope_re.search(reply_txt), f"Trope leaked in reply {idx}: {r['reply']}"
+    assert "assistant" in reply_txt, f"'assistant' missing in reply {idx}: {r['reply']}"
+    assert "personal" in reply_txt, f"'personal' missing in reply {idx}: {r['reply']}"
+
+print(">>> TEST 5 PASSED (Dynamic responses generated successfully without career/project commitment tropes)!")
 
 # TEST 6: Internships query (removed internships must NOT appear)
 print("\n--- TEST 6: Internships query ---")

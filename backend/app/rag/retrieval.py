@@ -82,12 +82,14 @@ def build_system_prompt(
     if is_relationship_query:
         turn_instructions.append(
             "- CRITICAL INSTRUCTION FOR THIS TURN: The user is asking about Sarweshwar's relationship, love life, girlfriend (gf/gfit), crush, lover, dating, or personal romantic matters.\n"
-            "  * STRICT MANDATORY DIRECTIVE: Reply SARCASTICALLY stating that you are just an AI assistant of him, that you do NOT have any context about his personal life/relationships, and that they can reach out to him directly for queries.\n"
-            "  * Key sarcastic points to dynamically blend: sarcastically emphasize that you are only his assistant ('Look, I'm just an assistant of him... 🤖'), remind them that your database has zero context on his personal life (you only index his AI/ML code, RAG pipelines, and tech stack!), and tell them they can reach out to him directly if they have queries about his personal life.\n"
-            "  * Keep it fresh, witty, sarcastic, and playful. Never copy-paste a fixed phrase verbatim.\n"
-            "  * If the user persists with follow-up romantic questions, escalate the playful sarcasm (e.g. 'Like I said, assistant here, not his personal diary 💀 reach out to him directly!').\n"
-            "  * NEVER invent, guess, hallucinate, or reveal any girlfriend/lover/crush name or personal relationship details.\n"
-            "  * Naturally tease or redirect them back to checking his actual engineering projects (like Wayzen AI, Family Health Concierge AI, LLM Safety Evaluator) and AI skills.\n"
+            "  * STRICT MANDATORY DIRECTIVE: Reply sarcastically stating that you are just an assistant of him, that you do NOT have any context about his personal life, and that they can reach out to him directly for queries.\n"
+            "  * STRICT PROHIBITION: DO NOT say or imply that 'he is committed to his projects', 'his only relationship is with his career/projects/code/Python/debugging', or that he is 'married to his work'. Completely avoid that career and project commitment trope!\n"
+            "  * Keep the reply short, witty, and sarcastic. Simply convey:\n"
+            "    - You are just an assistant of him... 🤖\n"
+            "    - You don't have any context about his personal life.\n"
+            "    - They can reach out to him directly for queries (email: b.sarweshwar445@gmail.com or via the Contact section).\n"
+            "  * If the user persists with follow-up romantic questions, escalate the playful sarcasm (e.g. 'Like I already said, I'm literally just an assistant of him... zero personal context 💀 reach out to him directly!').\n"
+            "  * NEVER invent or guess any girlfriend/lover/crush name or personal relationship details.\n"
         )
 
     turn_instruction = ("\n" + "\n".join(turn_instructions)) if turn_instructions else ""
@@ -144,14 +146,14 @@ Never output more than 2 suggestions.
 
 3. SPECIAL RULE FOR RELATIONSHIP / LOVE / GF / GFIT / ROMANTIC QUESTIONS:
    When the user asks about Sarweshwar's relationship, love, gf, gfit, girlfriend, lover, dating, crush, romantic life, who he likes, who he is dating, whether he has a girlfriend, or relationship status:
-   • MANDATORY REQUIREMENT: Respond SARCASTICALLY emphasizing that you are just an AI assistant of him, that you do NOT have any context about his personal life, and that they can reach out to him directly for queries!
-   • Key elements to dynamically combine with sarcastic wit:
-     1. Assistant reality check: "Look, I am just an AI assistant of him... 🤖" / "Bro really asking his portfolio assistant about his love life 😭"
-     2. Zero personal context: "I don't have any context about his personal life! My vector database only indexes his AI/ML projects, skills, and code."
-     3. Direct reach out: "If you have queries about his personal life, you can reach out to him directly (check the Contact section or email b.sarweshwar445@gmail.com)!"
-     4. Sarcastic redirect: Tease them for switching into detective mode instead of inspecting his actual engineering builds (e.g. Wayzen AI, Family Health Concierge AI, LLM Safety Evaluator).
+   • MANDATORY REQUIREMENT: Respond sarcastically stating that you are just an assistant of him, that you do NOT have any context about his personal life, and that they can reach out to him directly for queries!
+   • STRICTLY FORBIDDEN: DO NOT say or imply that "he is committed to projects", "his only relationship is with his career/code/Python/work", or that he is "married to his career". Absolutely avoid that career/project commitment trope!
+   • Core sarcastic message to deliver:
+     - Sarcastic statement: "Look, I am just an assistant of him... 🤖"
+     - Zero personal context: "I don't have any context about his personal life!"
+     - Direct reach out: "You can reach out to him directly for queries (email: b.sarweshwar445@gmail.com or via the Contact section)."
    • MULTI-TURN PERSISTENCE:
-     If the user persists ("tell me really", "does he have a crush?", "who is she?"), escalate the playful sarcasm without repeating previous lines: remind them you're strictly his portfolio assistant with zero personal access, and challenge them to ask him directly.
+     If the user persists ("tell me really", "what is her name?", "who is his crush?"), escalate the playful sarcasm without talking about career/projects: remind them you're strictly an assistant with zero personal access, and challenge them to ask him directly!
    • ABSOLUTE RULE: NEVER invent, fabricate, guess, or reveal any names or personal dating information.
 
 4. QUESTIONS OUTSIDE THE ALLOWED PORTFOLIO SCOPE:
@@ -357,38 +359,42 @@ def generate_rag_response(
             ignored_name_prefix = "bro ananomously want to know about sarweshwar 😭🙌\n\n"
 
     # 1. Retrieve relevant chunks from pgvector with contextual enrichment for follow-up questions
-    retrieval_query = cleaned_query
-    if re.search(r"\b(that project|the first one|the second one|the other one|tell me more|how did he build it|what did he use|why did he use that|what about the other one|does he have more)\b", cleaned_query, re.IGNORECASE):
-        if conversation_history:
-            for prev in reversed(conversation_history):
-                prev_text = prev.get("text", "").strip()
-                if prev_text:
-                    retrieval_query = f"{cleaned_query} {prev_text[:120]}"
-                    break
-
-    chunks = retrieve_relevant_chunks(retrieval_query, top_k=4, match_threshold=0.20)
-
-    if chunks:
-        context_parts = []
-        for i, c in enumerate(chunks):
-            doc_title = c.get("metadata", {}).get("document_title", f"Document {i+1}")
-            context_parts.append(f"[{doc_title}]\n{c.get('content', '')}")
-        context_str = "\n\n".join(context_parts)
-        sources = [
-            {
-                "id": str(c.get("id")),
-                "title": c.get("metadata", {}).get("document_title", "Portfolio Section"),
-                "similarity": round(c.get("similarity", 0.0), 3)
-            }
-            for c in chunks
-        ]
-    else:
-        context_str = (
-            "Name: Sarweshwar Buddolla. Aspiring AI Engineer specializing in GenAI, RAG, and Agentic AI. "
-            "Education: MRCET B.Tech CSE (AI & ML). GitHub Pinned Projects: Family Health Concierge AI, SkillWeave AI, LLM Safety Evaluator, LLM Usage Metering & Billing Engine, Interview Guru AI, GEOlytics. "
-            "Experience: FlyRank.ai, SURE TRUST, UPTOSKILLS. LeetCode: 98 solved (45 Easy, 40 Medium, 13 Hard). GitHub: 22 repos, 38 stars. HackerRank: Gold."
-        )
+    if is_relationship_query:
+        context_str = "No personal, romantic, or relationship information exists in this technical portfolio."
         sources = []
+    else:
+        retrieval_query = cleaned_query
+        if re.search(r"\b(that project|the first one|the second one|the other one|tell me more|how did he build it|what did he use|why did he use that|what about the other one|does he have more)\b", cleaned_query, re.IGNORECASE):
+            if conversation_history:
+                for prev in reversed(conversation_history):
+                    prev_text = prev.get("text", "").strip()
+                    if prev_text:
+                        retrieval_query = f"{cleaned_query} {prev_text[:120]}"
+                        break
+
+        chunks = retrieve_relevant_chunks(retrieval_query, top_k=4, match_threshold=0.20)
+
+        if chunks:
+            context_parts = []
+            for i, c in enumerate(chunks):
+                doc_title = c.get("metadata", {}).get("document_title", f"Document {i+1}")
+                context_parts.append(f"[{doc_title}]\n{c.get('content', '')}")
+            context_str = "\n\n".join(context_parts)
+            sources = [
+                {
+                    "id": str(c.get("id")),
+                    "title": c.get("metadata", {}).get("document_title", "Portfolio Section"),
+                    "similarity": round(c.get("similarity", 0.0), 3)
+                }
+                for c in chunks
+            ]
+        else:
+            context_str = (
+                "Name: Sarweshwar Buddolla. Aspiring AI Engineer specializing in GenAI, RAG, and Agentic AI. "
+                "Education: MRCET B.Tech CSE (AI & ML). GitHub Pinned Projects: Family Health Concierge AI, SkillWeave AI, LLM Safety Evaluator, LLM Usage Metering & Billing Engine, Interview Guru AI, GEOlytics. "
+                "Experience: FlyRank.ai, SURE TRUST, UPTOSKILLS. LeetCode: 98 solved (45 Easy, 40 Medium, 13 Hard). GitHub: 22 repos, 38 stars. HackerRank: Gold."
+            )
+            sources = []
 
     system_prompt = build_system_prompt(
         context_str,
@@ -464,6 +470,34 @@ def generate_rag_response(
                                 cleaned_reply,
                                 flags=re.IGNORECASE
                             ).strip()
+
+                        # Enforce sarcastic assistant response without any career/project commitment tone
+                        if is_relationship_query:
+                            trope_pattern = re.compile(
+                                r"(committed\s+to|commitment|relationship\s+(is\s+)?with|married\s+to|main\s+branch|3\s*am\s*debug|neural\s+networks|career)",
+                                re.IGNORECASE
+                            )
+                            if (
+                                trope_pattern.search(cleaned_reply)
+                                or "assistant" not in cleaned_reply.lower()
+                                or "personal" not in cleaned_reply.lower()
+                            ):
+                                has_prev_rel = bool(conversation_history and any(
+                                    RELATIONSHIP_REGEX.search(m.get("text", "")) for m in conversation_history if not m.get("isBot")
+                                ))
+                                if has_prev_rel:
+                                    cleaned_reply = (
+                                        "Like I already told you, I am just an assistant of him... 🤖😭\n\n"
+                                        "I don't have any context about his personal life! "
+                                        "If you really have queries about his personal matters, reach out to him directly via email at b.sarweshwar445@gmail.com or through the Contact section."
+                                    )
+                                else:
+                                    cleaned_reply = (
+                                        "Look, I am just an assistant of him... 🤖\n\n"
+                                        "I don't have any context about his personal life! "
+                                        "You can reach out to him directly for queries (email: b.sarweshwar445@gmail.com or via the Contact section)."
+                                    )
+
                         return {
                             "reply": cleaned_reply,
                             "sources": sources
@@ -476,9 +510,9 @@ def generate_rag_response(
     logger.error(f"All LLM models failed. Last error: {last_error}")
     if is_relationship_query:
         fallback_reply = (
-            "Look, I am just an AI assistant of him... 🤖 I don't have any context about his personal life or relationship status! 😭\n\n"
-            "If you have queries about his personal life, you can reach out to him directly (email: b.sarweshwar445@gmail.com or via the Contact section)!\n\n"
-            "Now, want to explore his actual AI projects instead? 👀"
+            "Look, I am just an assistant of him... 🤖\n\n"
+            "I don't have any context about his personal life! "
+            "You can reach out to him directly for queries (email: b.sarweshwar445@gmail.com or via the Contact section)."
         )
     else:
         fallback_reply = "I couldn't retrieve the relevant portfolio information right now. Please try again in a moment."
