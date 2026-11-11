@@ -66,7 +66,9 @@ def build_system_prompt(
     context_str: str,
     user_name: str | None = None,
     is_name_ignored: bool = False,
-    is_relationship_query: bool = False
+    is_relationship_query: bool = False,
+    is_second_or_more_rel: bool = False,
+    is_answering_user_gf: bool = False
 ) -> str:
     user_context = f"\n- User's Name: {user_name} (address them naturally by name when appropriate)" if user_name else ""
     turn_instructions = []
@@ -79,16 +81,30 @@ def build_system_prompt(
             "- CRITICAL INSTRUCTION FOR THIS TURN: Do NOT use 'bro ananomously want to know about sarweshwar 😭🙌' in this response."
         )
 
-    if is_relationship_query:
+    if is_second_or_more_rel:
         turn_instructions.append(
-            "- CRITICAL INSTRUCTION FOR THIS TURN: The user is asking about Sarweshwar's relationship, love life, girlfriend (gf/gfit), crush, lover, dating, or personal romantic matters.\n"
+            "- CRITICAL INSTRUCTION FOR THIS TURN: The user is persistently asking about Sarweshwar's relationship / girlfriend / love life for the 2nd (or more) time!\n"
+            "  * STRICT MANDATORY DIRECTIVE: Turn the tables sarcastically on the user! Ask THEM personal questions instead, like: 'Wait, why are you asking so much about his relationship? 😂 Do YOU have a girlfriend or someone special going on? Why ask a portfolio bot for relationship tea instead of looking at his work? 💀'\n"
+            "  * Then pivot to ask about exploring his portfolio work (his AI projects or tech skills) to avoid further personal discussion.\n"
+            "  * STRICT PROHIBITION: DO NOT say he is committed to projects/career/Python. Avoid that trope completely!\n"
+        )
+    elif is_answering_user_gf:
+        turn_instructions.append(
+            "- CRITICAL INSTRUCTION FOR THIS TURN: In the previous turn, you asked the user whether THEY have a girlfriend or someone special. The user is now responding to that.\n"
+            "  * Acknowledge their response with a quick, witty, playful comment.\n"
+            "  * Then IMMEDIATELY switch context completely away from personal life back to Sarweshwar's portfolio.\n"
+            "  * Conclude by asking if they want to check out Sarweshwar's AI projects (like Wayzen AI) or his technical skills to stay focused on the portfolio.\n"
+            "  * STRICT PROHIBITION: DO NOT mention any career/project commitment tropes.\n"
+        )
+    elif is_relationship_query:
+        turn_instructions.append(
+            "- CRITICAL INSTRUCTION FOR THIS TURN: The user is asking about Sarweshwar's relationship, love life, girlfriend (gf/gfit), crush, lover, dating, or personal romantic matters for the first time.\n"
             "  * STRICT MANDATORY DIRECTIVE: Reply sarcastically stating that you are just an assistant of him, that you do NOT have any context about his personal life, and that they can reach out to him directly for queries.\n"
             "  * STRICT PROHIBITION: DO NOT say or imply that 'he is committed to his projects', 'his only relationship is with his career/projects/code/Python/debugging', or that he is 'married to his work'. Completely avoid that career and project commitment trope!\n"
             "  * Keep the reply short, witty, and sarcastic. Simply convey:\n"
             "    - You are just an assistant of him... 🤖\n"
             "    - You don't have any context about his personal life.\n"
             "    - They can reach out to him directly for queries (email: b.sarweshwar445@gmail.com or via the Contact section).\n"
-            "  * If the user persists with follow-up romantic questions, escalate the playful sarcasm (e.g. 'Like I already said, I'm literally just an assistant of him... zero personal context 💀 reach out to him directly!').\n"
             "  * NEVER invent or guess any girlfriend/lover/crush name or personal relationship details.\n"
         )
 
@@ -146,14 +162,10 @@ Never output more than 2 suggestions.
 
 3. SPECIAL RULE FOR RELATIONSHIP / LOVE / GF / GFIT / ROMANTIC QUESTIONS:
    When the user asks about Sarweshwar's relationship, love, gf, gfit, girlfriend, lover, dating, crush, romantic life, who he likes, who he is dating, whether he has a girlfriend, or relationship status:
-   • MANDATORY REQUIREMENT: Respond sarcastically stating that you are just an assistant of him, that you do NOT have any context about his personal life, and that they can reach out to him directly for queries!
+   • 1ST TIME: Reply sarcastically stating that you are just an assistant of him, that you do NOT have any context about his personal life, and that they can reach out to him directly for queries (email: b.sarweshwar445@gmail.com or via Contact section)!
+   • 2ND TIME (OR MORE): Turn the tables sarcastically on the user! Ask them personal questions instead: "Wait, why are you asking so much about his relationship? 😂 Do YOU have a girlfriend or someone special? Why are you asking a portfolio bot for relationship tea instead of looking at his work? 💀 Let's leave his personal life alone and switch back to what this portfolio is actually for—want to check out his AI projects or technical skills? 👀"
+   • USER FOLLOW-UP TO THAT QUESTION: If the user answers about themselves (e.g. "no", "yes", "single", etc.), give a quick witty reaction, then immediately switch context away from personal life back to Sarweshwar's portfolio (e.g. asking to explore his AI projects like Wayzen AI or his technical skills)!
    • STRICTLY FORBIDDEN: DO NOT say or imply that "he is committed to projects", "his only relationship is with his career/code/Python/work", or that he is "married to his career". Absolutely avoid that career/project commitment trope!
-   • Core sarcastic message to deliver:
-     - Sarcastic statement: "Look, I am just an assistant of him... 🤖"
-     - Zero personal context: "I don't have any context about his personal life!"
-     - Direct reach out: "You can reach out to him directly for queries (email: b.sarweshwar445@gmail.com or via the Contact section)."
-   • MULTI-TURN PERSISTENCE:
-     If the user persists ("tell me really", "what is her name?", "who is his crush?"), escalate the playful sarcasm without talking about career/projects: remind them you're strictly an assistant with zero personal access, and challenge them to ask him directly!
    • ABSOLUTE RULE: NEVER invent, fabricate, guess, or reveal any names or personal dating information.
 
 4. QUESTIONS OUTSIDE THE ALLOWED PORTFOLIO SCOPE:
@@ -308,8 +320,28 @@ def generate_rag_response(
                     immediate_last_asked_name = True
                 break
 
+    # Check if the immediate last bot message asked the user about having a girlfriend/personal life
+    immediate_last_asked_user_gf = False
+    if conversation_history:
+        for msg in reversed(conversation_history):
+            if msg.get("isBot"):
+                txt = msg.get("text", "")
+                if re.search(r"\b(do you have a (gf|girlfriend)|do u have (a )?(gf|girlfriend)|do you have someone special|someone special going on|let me ask you something personal)\b", txt, re.IGNORECASE):
+                    immediate_last_asked_user_gf = True
+                break
+
     # Topic detection: Relationship / Love / GF / Romantic queries
     is_relationship_query = bool(RELATIONSHIP_REGEX.search(cleaned_query))
+
+    # Count prior user relationship queries
+    prior_rel_queries_count = 0
+    if conversation_history:
+        for msg in conversation_history:
+            if not msg.get("isBot") and RELATIONSHIP_REGEX.search(msg.get("text", "")):
+                prior_rel_queries_count += 1
+
+    is_second_or_more_rel = is_relationship_query and (prior_rel_queries_count >= 1)
+    is_answering_user_gf = immediate_last_asked_user_gf and not is_relationship_query
 
     # CASE 1: OFFENSIVE WORDS / GAY-RELATED / PROFANITY FILTER
     if OFFENSIVE_OR_INAPPROPRIATE_REGEX.search(cleaned_query):
@@ -359,8 +391,8 @@ def generate_rag_response(
             ignored_name_prefix = "bro ananomously want to know about sarweshwar 😭🙌\n\n"
 
     # 1. Retrieve relevant chunks from pgvector with contextual enrichment for follow-up questions
-    if is_relationship_query:
-        context_str = "No personal, romantic, or relationship information exists in this technical portfolio."
+    if is_relationship_query or is_answering_user_gf:
+        context_str = "No personal, romantic, or relationship information exists in this technical portfolio. Sarweshwar's featured AI projects include Wayzen AI (career analytics RAG), Family Health Concierge AI, LLM Safety Evaluator, SkillWeave AI."
         sources = []
     else:
         retrieval_query = cleaned_query
@@ -400,7 +432,9 @@ def generate_rag_response(
         context_str,
         user_name=known_user_name,
         is_name_ignored=bool(ignored_name_prefix),
-        is_relationship_query=is_relationship_query
+        is_relationship_query=is_relationship_query,
+        is_second_or_more_rel=is_second_or_more_rel,
+        is_answering_user_gf=is_answering_user_gf
     )
 
     # 2. Build multi-turn contents for Gemini
@@ -472,7 +506,35 @@ def generate_rag_response(
                             ).strip()
 
                         # Enforce sarcastic assistant response without any career/project commitment tone
-                        if is_relationship_query:
+                        if is_second_or_more_rel:
+                            trope_pattern = re.compile(
+                                r"(committed\s+to|commitment|relationship\s+(is\s+)?with|married\s+to|main\s+branch|3\s*am\s*debug|neural\s+networks|career)",
+                                re.IGNORECASE
+                            )
+                            if (
+                                trope_pattern.search(cleaned_reply)
+                                or not re.search(r"\b(do you|do u|you have|someone special)\b", cleaned_reply, re.IGNORECASE)
+                            ):
+                                cleaned_reply = (
+                                    "Wait a second... why are you still asking about his relationship? 😂\n\n"
+                                    "Let me ask YOU something personal: do you have a girlfriend or someone special going on? "
+                                    "Why are you asking a portfolio bot for relationship tea instead of looking at his work? 😭💀\n\n"
+                                    "Let's leave his personal life alone and switch back to what this portfolio is actually for—want to check out his AI projects or technical skills? 👀"
+                                )
+                        elif is_answering_user_gf:
+                            trope_pattern = re.compile(
+                                r"(committed\s+to|commitment|relationship\s+(is\s+)?with|married\s+to|main\s+branch|3\s*am\s*debug|neural\s+networks|career)",
+                                re.IGNORECASE
+                            )
+                            if (
+                                trope_pattern.search(cleaned_reply)
+                                or not re.search(r"\b(portfolio|project|projects|skill|skills|wayzen|work)\b", cleaned_reply, re.IGNORECASE)
+                            ):
+                                cleaned_reply = (
+                                    "Haha fair enough! But as his assistant, my database only deals with Sarweshwar's real engineering work anyway.\n\n"
+                                    "Let's switch context back to his portfolio—do you want to check out his AI projects like Wayzen AI, or explore his skills and experience? 🚀"
+                                )
+                        elif is_relationship_query:
                             trope_pattern = re.compile(
                                 r"(committed\s+to|commitment|relationship\s+(is\s+)?with|married\s+to|main\s+branch|3\s*am\s*debug|neural\s+networks|career)",
                                 re.IGNORECASE
@@ -482,21 +544,11 @@ def generate_rag_response(
                                 or "assistant" not in cleaned_reply.lower()
                                 or "personal" not in cleaned_reply.lower()
                             ):
-                                has_prev_rel = bool(conversation_history and any(
-                                    RELATIONSHIP_REGEX.search(m.get("text", "")) for m in conversation_history if not m.get("isBot")
-                                ))
-                                if has_prev_rel:
-                                    cleaned_reply = (
-                                        "Like I already told you, I am just an assistant of him... 🤖😭\n\n"
-                                        "I don't have any context about his personal life! "
-                                        "If you really have queries about his personal matters, reach out to him directly via email at b.sarweshwar445@gmail.com or through the Contact section."
-                                    )
-                                else:
-                                    cleaned_reply = (
-                                        "Look, I am just an assistant of him... 🤖\n\n"
-                                        "I don't have any context about his personal life! "
-                                        "You can reach out to him directly for queries (email: b.sarweshwar445@gmail.com or via the Contact section)."
-                                    )
+                                cleaned_reply = (
+                                    "Look, I am just an assistant of him... 🤖\n\n"
+                                    "I don't have any context about his personal life! "
+                                    "You can reach out to him directly for queries (email: b.sarweshwar445@gmail.com or via the Contact section)."
+                                )
 
                         return {
                             "reply": cleaned_reply,
@@ -508,7 +560,19 @@ def generate_rag_response(
                 time.sleep(1)
 
     logger.error(f"All LLM models failed. Last error: {last_error}")
-    if is_relationship_query:
+    if is_second_or_more_rel:
+        fallback_reply = (
+            "Wait a second... why are you still asking about his relationship? 😂\n\n"
+            "Let me ask YOU something personal: do you have a girlfriend or someone special going on? "
+            "Why are you asking a portfolio bot for relationship tea instead of looking at his work? 😭💀\n\n"
+            "Let's leave his personal life alone and switch back to what this portfolio is actually for—want to check out his AI projects or technical skills? 👀"
+        )
+    elif is_answering_user_gf:
+        fallback_reply = (
+            "Haha fair enough! But as his assistant, my database only deals with Sarweshwar's real engineering work anyway.\n\n"
+            "Let's switch context back to his portfolio—do you want to check out his AI projects like Wayzen AI, or explore his skills and experience? 🚀"
+        )
+    elif is_relationship_query:
         fallback_reply = (
             "Look, I am just an assistant of him... 🤖\n\n"
             "I don't have any context about his personal life! "

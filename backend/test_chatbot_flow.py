@@ -42,36 +42,40 @@ print("Reply:", res4["reply"])
 assert res4["reply"] == "That's outside my Sarweshwar portfolio zone 😭 Ask your frnd Sarweshwar about that.", "Test 4 failed!"
 print(">>> TEST 4 PASSED!")
 
-# TEST 5: Girlfriend / Relationship questions (Dynamic LLM generation, not hardcoded)
-print("\n--- TEST 5: GF / Relationship questions (Dynamic LLM Generation) ---")
+# TEST 5: Girlfriend / Relationship questions (Multi-turn turn-tables flow)
+print("\n--- TEST 5: GF / Relationship questions (Multi-turn turn-tables flow) ---")
+# Turn 1: 1st time asking
 res5_1 = generate_rag_response("Does Sarweshwar have a girlfriend?", [])
 print("Reply 1 ('Does Sarweshwar have a girlfriend?'):\n", res5_1["reply"])
+assert "assistant" in res5_1["reply"].lower(), "Reply 1 should mention assistant"
+assert "personal" in res5_1["reply"].lower(), "Reply 1 should mention personal"
 
-# Follow-up asking for lover name
+# Turn 2: 2nd time asking (persisting) -> should ask user about their own gf/personal life
 history_gf = [
     {"isBot": False, "text": "Does Sarweshwar have a girlfriend?"},
     {"isBot": True, "text": res5_1["reply"]}
 ]
 res5_2 = generate_rag_response("say his lover name", history_gf)
-print("\nReply 2 (Follow-up: 'say his lover name'):\n", res5_2["reply"])
+print("\nReply 2 (Turn 2 - persisting: 'say his lover name'):\n", res5_2["reply"])
+assert re.search(r"\b(do you|do u|you have|someone special)\b", res5_2["reply"], re.IGNORECASE), "Turn 2 must turn tables and ask user about gf/personal!"
 
-assert res5_1["reply"] != res5_2["reply"], "Responses must NOT be hardcoded identical strings!"
-assert len(res5_1["reply"]) > 10 and len(res5_2["reply"]) > 10, "Responses must be generated!"
-
-res5_3 = generate_rag_response("tell me about his relationship and love", [])
-print("\nReply 3 ('tell me about his relationship and love'):\n", res5_3["reply"])
-
-res5_4 = generate_rag_response("does he have a gfit?", [])
-print("\nReply 4 ('does he have a gfit?'):\n", res5_4["reply"])
+# Turn 3: User answers bot's question -> bot replies with follow-up and switches to portfolio
+history_gf_turn3 = [
+    {"isBot": False, "text": "Does Sarweshwar have a girlfriend?"},
+    {"isBot": True, "text": res5_1["reply"]},
+    {"isBot": False, "text": "say his lover name"},
+    {"isBot": True, "text": res5_2["reply"]}
+]
+res5_3 = generate_rag_response("No, I'm single lol", history_gf_turn3)
+print("\nReply 3 (Turn 3 - user answers: 'No, I'm single lol'):\n", res5_3["reply"])
+assert any(k in res5_3["reply"].lower() for k in ["portfolio", "project", "projects", "skill", "skills", "wayzen"]), "Turn 3 must pivot back to portfolio!"
 
 trope_re = re.compile(r"(committed\s+to|commitment|relationship\s+(is\s+)?with|married\s+to|career|main\s+branch|3\s*am\s*debug)", re.IGNORECASE)
-for idx, r in enumerate([res5_1, res5_2, res5_3, res5_4], 1):
+for idx, r in enumerate([res5_1, res5_2, res5_3], 1):
     reply_txt = r["reply"].lower()
     assert not trope_re.search(reply_txt), f"Trope leaked in reply {idx}: {r['reply']}"
-    assert "assistant" in reply_txt, f"'assistant' missing in reply {idx}: {r['reply']}"
-    assert "personal" in reply_txt, f"'personal' missing in reply {idx}: {r['reply']}"
 
-print(">>> TEST 5 PASSED (Dynamic responses generated successfully without career/project commitment tropes)!")
+print(">>> TEST 5 PASSED (Turn-tables multi-turn relationship flow verified successfully)!")
 
 # TEST 6: Internships query (removed internships must NOT appear)
 print("\n--- TEST 6: Internships query ---")

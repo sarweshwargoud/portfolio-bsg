@@ -237,14 +237,10 @@ Never output more than 2 suggestions.
 
 3. SPECIAL RULE FOR RELATIONSHIP / LOVE / GF / GFIT / ROMANTIC QUESTIONS:
    When the user asks about Sarweshwar's relationship, love, gf, gfit, girlfriend, lover, dating, crush, romantic life, who he likes, who he is dating, whether he has a girlfriend, or relationship status:
-   • MANDATORY REQUIREMENT: Respond sarcastically stating that you are just an assistant of him, that you do NOT have any context about his personal life, and that they can reach out to him directly for queries!
+   • 1ST TIME: Reply sarcastically stating that you are just an assistant of him, that you do NOT have any context about his personal life, and that they can reach out to him directly for queries (email: b.sarweshwar445@gmail.com or via Contact section)!
+   • 2ND TIME (OR MORE): Turn the tables sarcastically on the user! Ask them personal questions instead: "Wait, why are you asking so much about his relationship? 😂 Do YOU have a girlfriend or someone special? Why are you asking a portfolio bot for relationship tea instead of looking at his work? 💀 Let's leave his personal life alone and switch back to what this portfolio is actually for—want to check out his AI projects or technical skills? 👀"
+   • USER FOLLOW-UP TO THAT QUESTION: If the user answers about themselves (e.g. "no", "yes", "single", etc.), give a quick witty reaction, then immediately switch context away from personal life back to Sarweshwar's portfolio (e.g. asking to explore his AI projects like Wayzen AI or his technical skills)!
    • STRICTLY FORBIDDEN: DO NOT say or imply that "he is committed to projects", "his only relationship is with his career/code/Python/work", or that he is "married to his career". Absolutely avoid that career/project commitment trope!
-   • Core sarcastic message to deliver:
-     - Sarcastic statement: "Look, I am just an assistant of him... 🤖"
-     - Zero personal context: "I don't have any context about his personal life!"
-     - Direct reach out: "You can reach out to him directly for queries (email: b.sarweshwar445@gmail.com or via the Contact section)."
-   • MULTI-TURN PERSISTENCE:
-     If the user persists ("tell me really", "what is her name?", "who is his crush?"), escalate the playful sarcasm without talking about career/projects: remind them you're strictly an assistant with zero personal access, and challenge them to ask him directly!
    • ABSOLUTE RULE: NEVER invent, fabricate, guess, or reveal any names or personal dating information.
 
 4. QUESTIONS OUTSIDE THE ALLOWED PORTFOLIO SCOPE:
@@ -1035,10 +1031,28 @@ const Chatbot: React.FC = () => {
       }
     }
 
+    const immediateLastAskedUserGf = Boolean(
+      lastBotMsg && lastBotMsg.isBot && /\b(do you have a (gf|girlfriend)|do u have (a )?(gf|girlfriend)|do you have someone special|someone special going on|let me ask you something personal)\b/i.test(lastBotMsg.text)
+    );
+
     const isRelationshipQuery = /\b(gf|gfit|girlfriend|girlfriends|relationship|relationships|dating|date|crush|love|lover|lovers|romantic|romance|who\s+he\s+likes|marry|marriage|wife|husband|partner)\b/i.test(userQuery);
+
+    const priorRelCount = history.filter(m => !m.isBot && /\b(gf|gfit|girlfriend|girlfriends|relationship|relationships|dating|date|crush|love|lover|lovers|romantic|romance)\b/i.test(m.text)).length;
+    const isSecondOrMoreRel = isRelationshipQuery && priorRelCount >= 1;
+    const isAnsweringUserGf = immediateLastAskedUserGf && !isRelationshipQuery;
 
     const apiKey = GEMINI_API_KEY.trim();
     if (!apiKey) {
+      if (isSecondOrMoreRel) {
+        const text = "Wait a second... why are you still asking about his relationship? 😂\n\nLet me ask YOU something personal: do you have a girlfriend or someone special going on? Why are you asking a portfolio bot for relationship tea instead of looking at his work? 😭💀\n\nLet's leave his personal life alone and switch back to what this portfolio is actually for—want to check out his AI projects or technical skills? 👀";
+        onChunk(text);
+        return text;
+      }
+      if (isAnsweringUserGf) {
+        const text = "Haha fair enough! But as his assistant, my database only deals with Sarweshwar's real engineering work anyway.\n\nLet's switch context back to his portfolio—do you want to check out his AI projects like Wayzen AI, or explore his skills and experience? 🚀";
+        onChunk(text);
+        return text;
+      }
       if (isRelationshipQuery) {
         const text = "Look, I am just an assistant of him... 🤖\n\nI don't have any context about his personal life! You can reach out to him directly for queries (email: b.sarweshwar445@gmail.com or via the Contact section).";
         onChunk(text);
@@ -1145,13 +1159,20 @@ const Chatbot: React.FC = () => {
             finalText = `${ignoredNamePrefix}${finalText}`;
           }
 
-          if (isRelationshipQuery) {
+          if (isSecondOrMoreRel) {
+            const tropeRegex = /(committed\s+to|commitment|relationship\s+(is\s+)?with|married\s+to|main\s+branch|3\s*am\s*debug|neural\s+networks|career)/i;
+            if (tropeRegex.test(finalText) || !/\b(do you|do u|you have|someone special)\b/i.test(finalText)) {
+              finalText = "Wait a second... why are you still asking about his relationship? 😂\n\nLet me ask YOU something personal: do you have a girlfriend or someone special going on? Why are you asking a portfolio bot for relationship tea instead of looking at his work? 😭💀\n\nLet's leave his personal life alone and switch back to what this portfolio is actually for—want to check out his AI projects or technical skills? 👀";
+            }
+          } else if (isAnsweringUserGf) {
+            const tropeRegex = /(committed\s+to|commitment|relationship\s+(is\s+)?with|married\s+to|main\s+branch|3\s*am\s*debug|neural\s+networks|career)/i;
+            if (tropeRegex.test(finalText) || !/\b(portfolio|project|projects|skill|skills|wayzen|work)\b/i.test(finalText)) {
+              finalText = "Haha fair enough! But as his assistant, my database only deals with Sarweshwar's real engineering work anyway.\n\nLet's switch context back to his portfolio—do you want to check out his AI projects like Wayzen AI, or explore his skills and experience? 🚀";
+            }
+          } else if (isRelationshipQuery) {
             const tropeRegex = /(committed\s+to|commitment|relationship\s+(is\s+)?with|married\s+to|main\s+branch|3\s*am\s*debug|neural\s+networks|career)/i;
             if (tropeRegex.test(finalText) || !finalText.toLowerCase().includes('assistant') || !finalText.toLowerCase().includes('personal')) {
-              const hasPrevRel = history.some(m => !m.isBot && /\b(gf|gfit|girlfriend|girlfriends|relationship|relationships|dating|date|crush|love|lover|lovers|romantic|romance)\b/i.test(m.text));
-              finalText = hasPrevRel
-                ? "Like I already told you, I am just an assistant of him... 🤖😭\n\nI don't have any context about his personal life! If you really have queries about his personal matters, reach out to him directly via email at b.sarweshwar445@gmail.com or through the Contact section."
-                : "Look, I am just an assistant of him... 🤖\n\nI don't have any context about his personal life! You can reach out to him directly for queries (email: b.sarweshwar445@gmail.com or via the Contact section).";
+              finalText = "Look, I am just an assistant of him... 🤖\n\nI don't have any context about his personal life! You can reach out to him directly for queries (email: b.sarweshwar445@gmail.com or via the Contact section).";
             }
           }
 
@@ -1313,9 +1334,18 @@ const Chatbot: React.FC = () => {
     } catch (error: any) {
       console.error('Error in chat generation:', error);
       const isRelQuery = /\b(gf|gfit|girlfriend|girlfriends|relationship|relationships|dating|date|crush|love|lover|lovers|romantic|romance|who\s+he\s+likes|marry|marriage|wife|husband|partner)\b/i.test(query);
-      const friendlyError = isRelQuery
-        ? "Look, I am just an assistant of him... 🤖\n\nI don't have any context about his personal life! You can reach out to him directly for queries (email: b.sarweshwar445@gmail.com or via the Contact section)."
-        : "Oops 😭 my AI brain hit a small roadblock. Try that again?";
+      const priorRelCount = history.filter(m => !m.isBot && /\b(gf|gfit|girlfriend|girlfriends|relationship|relationships|dating|date|crush|love|lover|lovers|romantic|romance)\b/i.test(m.text)).length;
+      const lastBot = history.length > 0 ? history[history.length - 1] : null;
+      const wasAskedGf = Boolean(lastBot && lastBot.isBot && /\b(do you have a (gf|girlfriend)|do u have (a )?(gf|girlfriend)|someone special)\b/i.test(lastBot.text));
+
+      let friendlyError = "Oops 😭 my AI brain hit a small roadblock. Try that again?";
+      if (isRelQuery && priorRelCount >= 1) {
+        friendlyError = "Wait a second... why are you still asking about his relationship? 😂\n\nLet me ask YOU something personal: do you have a girlfriend or someone special going on? Why are you asking a portfolio bot for relationship tea instead of looking at his work? 😭💀\n\nLet's leave his personal life alone and switch back to what this portfolio is actually for—want to check out his AI projects or technical skills? 👀";
+      } else if (wasAskedGf && !isRelQuery) {
+        friendlyError = "Haha fair enough! But as his assistant, my database only deals with Sarweshwar's real engineering work anyway.\n\nLet's switch context back to his portfolio—do you want to check out his AI projects like Wayzen AI, or explore his skills and experience? 🚀";
+      } else if (isRelQuery) {
+        friendlyError = "Look, I am just an assistant of him... 🤖\n\nI don't have any context about his personal life! You can reach out to him directly for queries (email: b.sarweshwar445@gmail.com or via the Contact section).";
+      }
       setMessages(prev =>
         prev.map(m => m.id === botMsgId ? { ...m, text: friendlyError, isError: true } : m)
       );
